@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>"C:\Users\Public\SampleIsoDir\SPITutorial\Pipes\LI-0044%281%29.POD" "1771211F-8D1A-427B-843A-3CA4C13D53DF" "D:\Benchmark\2019R1HF2\I-Configure.exe.manifest"</StartArguments>
+  </PropertyGroup>
+</Project>
