@@ -15,22 +15,23 @@ namespace AliasGeometryUnitTests
     public class RectalTest
     {
         private MockCreationHelper _mockCreationHelper;
+        private Point2d _mockedPointa;
+        private Point2d _mockedPointb;
 
         private Rectangle2d RectalMake()
         {
-            Point2d mockedPointa = _mockCreationHelper.Create<Point2d>();
-            Point2d mockedPointb = _mockCreationHelper.Create<AliasGeometry.Point2d>();
+            _mockedPointa = _mockCreationHelper.Create<Point2d>();
+            _mockedPointb = _mockCreationHelper.Create<AliasGeometry.Point2d>();
       
+            //_mockedPointa.Arrange(x => x.X).Returns(-100);
+            //_mockedPointa.Arrange(x => x.Y).Returns(500);
 
-            mockedPointa.Arrange(x => x.X).Returns(-100);
-            mockedPointa.Arrange(x => x.Y).Returns(500);
-
-            mockedPointb.Arrange(x => x.X).Returns(700);
-            mockedPointb.Arrange(x => x.Y).Returns(-800);
+            //_mockedPointb.Arrange(x => x.X).Returns(700);
+            //_mockedPointb.Arrange(x => x.Y).Returns(-800);
 
          
 
-            AliasGeometry.Rectangle2d rectangle2d = new AliasGeometry.Rectangle2d(mockedPointa, mockedPointb);
+            AliasGeometry.Rectangle2d rectangle2d = new AliasGeometry.Rectangle2d(_mockedPointa, _mockedPointb);
             return rectangle2d;
         }
 
@@ -59,78 +60,28 @@ namespace AliasGeometryUnitTests
             _mockCreationHelper.AssertAll();
         }
 
-        /*   public void LineInside()
-           {
-               Point2d intersection;
-               Rectangle2d rectangle2d = RectalMake();
-               Line2d mockLine = _mockCreationHelper.Create<Line2d>();
-
-               Point2d mockedPointp = _mockCreationHelper.Create<AliasGeometry.Point2d>();
-               mockedPointp.Arrange(x => x.X).Returns(-50);
-               mockedPointp.Arrange(x => x.Y).Returns(-100);
-
-               Point2d mockedPointq = _mockCreationHelper.Create<AliasGeometry.Point2d>();
-               mockedPointq.Arrange(x => x.X).Returns(600);
-               mockedPointq.Arrange(x => x.Y).Returns(-700);
-
-               mockLine.Arrange(x => x.start).Returns(mockedPointp);
-               mockLine.Arrange(x => x.end).Returns(mockedPointq);
-
-               RectalProbeLineResult rectalProbeLineResult = rectangle2d.BoundaryIntersection(mockLine, out intersection);
-               Assert.IsTrue(rectalProbeLineResult == RectalProbeLineResult.Contained);
-
-               _mockCreationHelper.AssertAll();
-           }
-
-           public void LineOutside()
-           {
-               Point2d intersection;
-               Rectangle2d rectangle2d = RectalMake();
-               Line2d mockLine = _mockCreationHelper.Create<Line2d>();
-               RectalProbeLineResult rectalProbeLineResult = rectangle2d.BoundaryIntersection(mockLine, out intersection);
-               Assert.IsTrue(rectalProbeLineResult == RectalProbeLineResult.Outside);
-               _mockCreationHelper.AssertAll();
-           }*/
 
         [TestMethod]
         public void LineIntersect()
         {
             Point2d intersection;
             Rectangle2d rectangle2d = RectalMake();
+            Line2d mockedLine = _mockCreationHelper.Create<Line2d>();
+     
+            Point2d intersectionLeft = null; 
+            Point2d intersectionRight = null;
+            Point2d intersectionTop = null;
+            Point2d intersectionBottom = new Point2d(30, -800);
 
-            Point2d mockedPointp = _mockCreationHelper.Create<AliasGeometry.Point2d>();
-            mockedPointp.Arrange(x => x.X).Returns(-50);
-            mockedPointp.Arrange(x => x.Y).Returns(-100);
+            _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(mockedLine, Arg.Matches<Line2d>(x=>object.ReferenceEquals(x.start,rectangle2d.a) && object.ReferenceEquals(x.end,rectangle2d.c)), out intersectionLeft)).Returns(false);
+            _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(mockedLine, Arg.Matches<Line2d>(x => object.ReferenceEquals(x.start, rectangle2d.b) && object.ReferenceEquals(x.end, rectangle2d.d)), out intersectionRight)).Returns(false);
+            _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(mockedLine, Arg.Matches<Line2d>(x => object.ReferenceEquals(x.start, rectangle2d.a) && object.ReferenceEquals(x.end, rectangle2d.b)), out intersectionTop)).Returns(false);
+            _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(mockedLine, Arg.Matches<Line2d>(x => object.ReferenceEquals(x.start, rectangle2d.c) && object.ReferenceEquals(x.end, rectangle2d.d)), out intersectionBottom)).Returns(true);
 
-            Point2d mockedPointq = _mockCreationHelper.Create<AliasGeometry.Point2d>();
-            mockedPointq.Arrange(x => x.X).Returns(600);
-            mockedPointq.Arrange(x => x.Y).Returns(-700);
-
-            Line2d l = _mockCreationHelper.Create<Line2d>();
-            l.Arrange(x => x.start).Returns(mockedPointp);
-            l.Arrange(x => x.end).Returns(mockedPointq);
-
-
-
-            Point2d i = null;
-            _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(l, rectangle2d.Left, out i)).Returns(false);
-            _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(l, rectangle2d.Right, out i)).Returns(false);
-
-
-            RectalProbeLineResult rectalProbeLineResult = rectangle2d.BoundaryIntersection(l, out intersection);
+            RectalProbeLineResult rectalProbeLineResult = rectangle2d.BoundaryIntersection(mockedLine, out intersection);
             Assert.IsTrue(rectalProbeLineResult == RectalProbeLineResult.Boundary);
-            Assert.IsTrue(intersection.X == 31.25);
+            Assert.IsTrue(intersection.X == 30);
             Assert.IsTrue(intersection.Y == -800);
-            _mockCreationHelper.AssertAll();
-        }
-
-        public void LineVertical()
-        {
-            Point2d intersection;
-            Rectangle2d rectangle2d = RectalMake();
-            Line2d mockLine = _mockCreationHelper.Create<Line2d>();
-            RectalProbeLineResult rectalProbeLineResult = rectangle2d.BoundaryIntersection(mockLine, out intersection);
-            Assert.IsTrue(rectalProbeLineResult == RectalProbeLineResult.Boundary);
             _mockCreationHelper.AssertAll();
         }
     }

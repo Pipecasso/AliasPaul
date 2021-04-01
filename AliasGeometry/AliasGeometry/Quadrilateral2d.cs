@@ -30,12 +30,9 @@ namespace AliasGeometry
         }
 
         //a  //b
-        //c                   //d
+        //c  //d
 
         //points are stored in traditional cartesian.
-
-
-
 
         public Point2d a { get; protected set; }
         public Point2d b { get; protected set; }
@@ -78,19 +75,18 @@ namespace AliasGeometry
             RectalProbeLineResult rectalProbeLineResult = RectalProbeLineResult.Unset;
 
 
-
             //intersection
             Point2d i;
             List<Point2d> intersections = new List<Point2d>();
-            if (Line2d.Intersection(l, this.Left, out i)) intersections.Add(i);
-            if (Line2d.Intersection(l, this.Right, out i)) intersections.Add(i);
-            if (Line2d.Intersection(l, this.Top, out i)) intersections.Add(i);
-            if (Line2d.Intersection(l, this.Bottom, out i)) intersections.Add(i);
+            if (Line2d.Intersection(l, Left, out i)) intersections.Add(i);
+            if (Line2d.Intersection(l, Right, out i)) intersections.Add(i);
+            if (Line2d.Intersection(l, Top, out i)) intersections.Add(i);
+            if (Line2d.Intersection(l, Bottom, out i)) intersections.Add(i);
             
             if (intersections.Count ==0)
             {
                 intersection = null;
-                rectalProbeLineResult = this.IsPointInside(l.start) && this.IsPointInside(l.end) ? RectalProbeLineResult.Contained : RectalProbeLineResult.CompletelyOutside;
+                rectalProbeLineResult = IsPointInside(l.start) && IsPointInside(l.end) ? RectalProbeLineResult.Contained : RectalProbeLineResult.CompletelyOutside;
             }
             else if (intersections.Count == 1)
             {
