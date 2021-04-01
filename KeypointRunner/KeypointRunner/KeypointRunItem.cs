@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Pipecasso.Geometry;
+using AliasGeometry;
 using AliasPOD;
 
 namespace KeypointRunner
@@ -52,15 +52,17 @@ namespace KeypointRunner
         {
             get 
             { 
+                string name = string.Empty;
                 if (InNetwork())
                 {
-                    return _componentKeypoint.Name;
+                     name = _componentKeypoint.Name;
                 }
                 else
                 {
                     ComponentKeypoint master = _componentKeypoint.Component.GetParentLink(0).Master;
-                    return $"Support-{master.Name}";
-                }    
+                     name= $"Support-{master.Name}";
+                }   
+                return name;
             }
         }
 

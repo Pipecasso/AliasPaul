@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace AliasGeometry
+{
+    public class Plane3d
+    {
+        private Vector3d _N;
+        private Point3d _P;
+
+        public Plane3d(Vector3d v,Point3d p)
+        {
+            _N = Vector3d.Normalise(v);
+            _P = p;
+        }
+
+        public Vector3d N { get => _N; }
+        public Point3d P { get => _P;}
+
+        public bool Intersection(Point3d Q, Vector3d d,ref Point3d I)
+        {
+            Vector3d vn = Vector3d.Normalise(d);
+            if (Math.Abs(Vector3d.Dot(vn,_N)) < 1e-6)
+            {
+                return false;
+            }
+            else
+            {
+                //make a right angle triangle with Q,P and R where R intersection of the plane and Q + N
+                Vector3d vHypotenuse = new Vector3d(Q, _P);
+                double hypotenuse = vHypotenuse.Magnitude();
+                vHypotenuse.Normalise();
+                double PQR = Vector3d.Dot(vHypotenuse, _N);
+                if (Math.Abs(PQR) < 1e-6)
+                {
+                    //its already on the plane
+                    I = Q;
+                    return true;
+                }
+                else
+                {
+                    double QR = hypotenuse * PQR;
+                    Point3d R = Q + _N * QR;
+                    //make another right angle triangle with QRI
+                    double IQR = Vector3d.Dot(_N,vn);
+                    double QI = QR / IQR;
+                    I = Q + vn * QI;
+                    return true;
+                }
+            }
+        }
+
+
+  
+    }
+}
