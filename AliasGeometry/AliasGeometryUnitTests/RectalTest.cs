@@ -23,13 +23,13 @@ namespace AliasGeometryUnitTests
             _mockedPointa = _mockCreationHelper.Create<Point2d>();
             _mockedPointb = _mockCreationHelper.Create<AliasGeometry.Point2d>();
       
-            //_mockedPointa.Arrange(x => x.X).Returns(-100);
-            //_mockedPointa.Arrange(x => x.Y).Returns(500);
+            _mockedPointa.Arrange(x => x.X).Returns(-100);
+            _mockedPointa.Arrange(x => x.Y).Returns(500);
 
-            //_mockedPointb.Arrange(x => x.X).Returns(700);
-            //_mockedPointb.Arrange(x => x.Y).Returns(-800);
+            _mockedPointb.Arrange(x => x.X).Returns(700);
+            _mockedPointb.Arrange(x => x.Y).Returns(-800);
 
-         
+
 
             AliasGeometry.Rectangle2d rectangle2d = new AliasGeometry.Rectangle2d(_mockedPointa, _mockedPointb);
             return rectangle2d;
@@ -51,7 +51,7 @@ namespace AliasGeometryUnitTests
             mockedPointp.Arrange(x => x.Y).Returns(-750);
 
             mockedPointq.Arrange(x => x.X).Returns(-300);
-            mockedPointq.Arrange(x => x.Y).Returns(-400);
+           // mockedPointq.Arrange(x => x.Y).Returns(-400);
 
             Rectangle2d rectangle2d = RectalMake();
             Assert.IsTrue(rectangle2d.IsPointInside(mockedPointp));
@@ -71,7 +71,7 @@ namespace AliasGeometryUnitTests
             Point2d intersectionLeft = null; 
             Point2d intersectionRight = null;
             Point2d intersectionTop = null;
-            Point2d intersectionBottom = new Point2d(30, -800);
+            Point2d intersectionBottom = new Point2d(31, -800);
 
             _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(mockedLine, Arg.Matches<Line2d>(x=>object.ReferenceEquals(x.start,rectangle2d.a) && object.ReferenceEquals(x.end,rectangle2d.c)), out intersectionLeft)).Returns(false);
             _mockCreationHelper.ArrangeStatic<bool>(() => Line2d.Intersection(mockedLine, Arg.Matches<Line2d>(x => object.ReferenceEquals(x.start, rectangle2d.b) && object.ReferenceEquals(x.end, rectangle2d.d)), out intersectionRight)).Returns(false);
@@ -80,7 +80,7 @@ namespace AliasGeometryUnitTests
 
             RectalProbeLineResult rectalProbeLineResult = rectangle2d.BoundaryIntersection(mockedLine, out intersection);
             Assert.IsTrue(rectalProbeLineResult == RectalProbeLineResult.Boundary);
-            Assert.IsTrue(intersection.X == 30);
+            Assert.IsTrue(intersection.X == 31);
             Assert.IsTrue(intersection.Y == -800);
             _mockCreationHelper.AssertAll();
         }
