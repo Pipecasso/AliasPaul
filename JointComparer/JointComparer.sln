@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JointComparer", "JointComparer\JointComparer.csproj", "{33ED6A88-ED87-4BE3-83A7-BDFC44CDC733}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JointRunner", "JointRunner\JointRunner.csproj", "{0860E04E-04F6-4FB1-9016-1643C1F9D1AE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33ED6A88-ED87-4BE3-83A7-BDFC44CDC733}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33ED6A88-ED87-4BE3-83A7-BDFC44CDC733}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33ED6A88-ED87-4BE3-83A7-BDFC44CDC733}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33ED6A88-ED87-4BE3-83A7-BDFC44CDC733}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0860E04E-04F6-4FB1-9016-1643C1F9D1AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0860E04E-04F6-4FB1-9016-1643C1F9D1AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0860E04E-04F6-4FB1-9016-1643C1F9D1AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0860E04E-04F6-4FB1-9016-1643C1F9D1AE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {56283828-4A75-45D1-9032-938B6A99636F}
+	EndGlobalSection
+EndGlobal
