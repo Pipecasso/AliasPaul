@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Intergraph.PersonalISOGEN;
 using PodHandshake;
 using System.Xml;
+using System.IO;
 
 namespace JointComparer
 {
@@ -13,6 +14,7 @@ namespace JointComparer
     {
 
         private List<JointRun> _JointRuns;
+        private List<string> _XmlPaths;
         public JointCompare()
         {
             _JointRuns = new List<JointRun>();
@@ -20,18 +22,39 @@ namespace JointComparer
         }
 
      
+        public void Smoke(List<string> pods,string manifest,string xmlfolder)
+        {
+            _XmlPaths = new List<string>();
+            string manifestRootFolder = System.IO.Path.GetDirectoryName(manifest);
+            IsogenAssemblyLoader ial = new IsogenAssemblyLoader(manifest, manifestRootFolder, manifestRootFolder, true);
+            foreach (string pod in pods)
+            {
+                Smoke(pod, manifestRootFolder, ial,xmlfolder);
+            }
+        }
 
-        public void Smoke(string pod, string manifest,string xmlpath)
+
+        public void Smoke(string pod, string manifest)
         {
             string manifestRootFolder = System.IO.Path.GetDirectoryName(manifest);
-
-
             IsogenAssemblyLoader ial = new IsogenAssemblyLoader(manifest, manifestRootFolder, manifestRootFolder, true);
+            Smoke(pod, manifestRootFolder, ial,string.Empty);
+        }
+
+
+        private void Smoke(string pod, string manifestroot,IsogenAssemblyLoader ial,string xmlfolder)
+        {
+
+            string outfolder = xmlfolder == string.Empty ? Path.GetDirectoryName(pod) : xmlfolder;
+            string podname = Path.GetFileNameWithoutExtension(pod);
+
+            string xmlpath = $@"{outfolder}\{podname}.xml";
+
 
             using (IsogenAssemblyLoaderCookie monster = new IsogenAssemblyLoaderCookie(ial))
             {
                 AliasPOD.POD p = new AliasPOD.POD();
-                p.Handshake = HandshakeTools.GetPODHandshake(manifestRootFolder);
+                p.Handshake = HandshakeTools.GetPODHandshake(manifestroot);
                 p.Load(pod);
                 Smoke(p);
             }
@@ -54,10 +77,11 @@ namespace JointComparer
                 jr.Save(xDoc, xNode);
             }
 
-            xDoc.Save(xmlpath);
-         
-        }
 
+            _XmlPaths.Add(xmlpath);
+            xDoc.Save(xmlpath);
+
+        }
         public void Light(string xmlpath)
         {
             XmlDocument xDoc = new XmlDocument();
@@ -73,6 +97,7 @@ namespace JointComparer
 
         }
 
+      
 
         public void Smoke(AliasPOD.POD pod)
         {

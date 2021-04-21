@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenerateJoints.cs" />
     <Compile Include="HandshakeStrings.cs" />
     <Compile Include="HandshakeTools.cs" />
     <Compile Include="Joint.cs" />
