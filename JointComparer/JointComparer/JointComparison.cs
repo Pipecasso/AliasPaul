@@ -24,5 +24,15 @@ namespace JointComparer
             Type = j.Type == k.Type;
             ConnectorCount = j.Connectors.Count == k.Connectors.Count;
         }
+
+        public bool Identical
+        { 
+            get
+            {
+                return (KeypointA && KeypointB && Type && ConnectorCount);
+            }
+        
+        }
+
     }
 }

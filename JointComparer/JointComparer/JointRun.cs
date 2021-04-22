@@ -10,7 +10,7 @@ namespace JointComparer
     public class JointRun
     {
         private Dictionary<int, Joint> _Joints;
-        private string Name { get; }
+        public string Name { get; }
 
         public JointRun(AliasPOD.PipelineItemGroup pig,string name)
         {
@@ -70,7 +70,13 @@ namespace JointComparer
                     {
                         if (jr2.Joints.ContainsKey(kvp.Key))
                         {
-                            ret = kvp.Value == jr2.Joints[kvp.Key];
+                           
+                            Joint j1 = kvp.Value;
+                            Joint j2 = jr2.Joints[kvp.Key];
+                            bool wtf = Object.ReferenceEquals(j1, j2);
+                            ret = j1==j2;
+                        
+                        
                         }
                         else
                         {

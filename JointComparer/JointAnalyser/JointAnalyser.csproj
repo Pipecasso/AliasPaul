@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0860E04E-04F6-4FB1-9016-1643C1F9D1AE}</ProjectGuid>
+    <ProjectGuid>{1771300F-861E-4022-AEAF-D39F2A3705B6}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>JointRunner</RootNamespace>
-    <AssemblyName>JointRunner</AssemblyName>
+    <RootNamespace>JointAnalyser</RootNamespace>
+    <AssemblyName>JointAnalyser</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,22 +27,15 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IsogenAssemblyLoader">
-      <HintPath>..\..\bin\IsogenAssemblyLoader.dll</HintPath>
-    </Reference>
     <Reference Include="JointComparer">
       <HintPath>..\..\bin\JointComparer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Shared.Interop.POD">
-      <HintPath>..\..\bin\Shared.Interop.POD.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,12 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HandshakeStrings.cs" />
-    <Compile Include="HandshakeTools.cs" />
-    <Compile Include="PODHandshaker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scramble.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

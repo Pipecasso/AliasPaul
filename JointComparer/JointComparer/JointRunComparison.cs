@@ -33,7 +33,10 @@ namespace JointComparer
                 Joint k = larger.Joints[kvp.Key];
                 JointPair jp = new JointPair(j, k);
                 JointComparison jc = new JointComparison(j, k);
-                Add(jp, jc);
+                if (jc.Identical == false)
+                {
+                    Add(jp, jc);
+                }
 
             }
         }
