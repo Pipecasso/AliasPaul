@@ -35,11 +35,28 @@ namespace JointComparer
 
         public override bool Equals(object obj)
         {
-            return obj is PODComponent component &&
-                   SequenceNumber == component.SequenceNumber &&
-                   ExternalUCI == component.ExternalUCI &&
-                   ExternalUCIIndex == component.ExternalUCIIndex &&
-                   FlyText == component.FlyText;
+            bool bRet;
+            if (obj is PODComponent component)
+            {
+                if (ExternalUCI == component.ExternalUCI &&
+                   ExternalUCIIndex == component.ExternalUCIIndex)
+                {
+                    bRet = true;
+                }
+                else
+                {
+                    //its possible that the cmponents are still the same not all components have an external UCI 
+                    //you can tell this by seeing if the internal UCI matches the External UCI this fact would have to be serialized to the xml
+                    bRet = SequenceNumber == component.SequenceNumber && FlyText == component.FlyText;
+
+                }
+            }
+            else
+            {
+                bRet = false;
+            }
+            return bRet;
+            
         }
 
         public override int GetHashCode()

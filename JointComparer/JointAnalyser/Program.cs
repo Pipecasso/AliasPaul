@@ -14,6 +14,8 @@ namespace JointAnalyser
             string folder = args[0];
             JointCompare jc = new JointCompare();
             jc.Light(folder);
+            jc.ComparisonReport(args[1]);
+            
 
             
         }

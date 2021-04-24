@@ -53,7 +53,7 @@ namespace JointComparer
 
         static public bool operator == (JointRun jr1, JointRun jr2)
         {
-            bool ret = false;
+            bool ret;
             if (jr1 is null && jr2 is null)
             {
                 ret = true;
@@ -64,6 +64,7 @@ namespace JointComparer
             }
             else
             {
+                ret = true;
                 if (jr1.Joints.Count == jr2.Joints.Count)
                 {
                     foreach (KeyValuePair<int,Joint> kvp in jr1.Joints)
@@ -73,8 +74,11 @@ namespace JointComparer
                            
                             Joint j1 = kvp.Value;
                             Joint j2 = jr2.Joints[kvp.Key];
-                            bool wtf = Object.ReferenceEquals(j1, j2);
-                            ret = j1==j2;
+                            if (j1!=j2)
+                            {
+                                ret = false;
+                                break;
+                            }
                         
                         
                         }

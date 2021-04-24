@@ -17,6 +17,7 @@ namespace JointComparer
         //the whole class needs splitting in two actually.
 
         private Dictionary<string,string> _XmlPaths;
+        private Dictionary<string, int> _XmlDuplicatePaths;
         private List<ConrepPair> _Diffs;
        
 
@@ -24,6 +25,7 @@ namespace JointComparer
         public void Smoke(Configuration configfile)
         {
             _XmlPaths = new Dictionary<string, string>();
+            _XmlDuplicatePaths = new Dictionary<string, int>();
             string manifestRootFolder = System.IO.Path.GetDirectoryName(configfile.manifest);
             IsogenAssemblyLoader ial = new IsogenAssemblyLoader(configfile.manifest, manifestRootFolder, manifestRootFolder, true);
             foreach (string pod in configfile.pods)
@@ -71,7 +73,31 @@ namespace JointComparer
                 jr.Save(xDoc, xNode);
             }
 
+            if (_XmlPaths.ContainsKey(xmlpath))
+            {
+                int dupCount = 0;
+                if (_XmlDuplicatePaths.ContainsKey(xmlpath))
+                {
+                    dupCount = _XmlDuplicatePaths[xmlpath];
+                    dupCount++;
+                    _XmlDuplicatePaths[xmlpath] = dupCount;
+                }
+                else
+                {
+                    dupCount = 1;
+                    _XmlDuplicatePaths.Add(xmlpath, dupCount);
+                }
 
+                string xmlDir = Path.GetDirectoryName(xmlpath);
+                string xmlFile = Path.GetFileNameWithoutExtension(xmlpath);
+                string xmlFileDup = $"{xmlFile}_duplicate{dupCount}.xml";
+                xmlpath = Path.Combine(xmlDir, xmlFileDup);
+      
+                    
+                    
+            
+
+            }
             _XmlPaths.Add(xmlpath,pod);
             xDoc.Save(xmlpath);
 
@@ -119,6 +145,7 @@ namespace JointComparer
             
             foreach(string s in Intersection)
             {
+
                 List<JointRun> ReferenceJointRuns = new List<JointRun>();
                 List<JointRun> CurrentJointRuns = new List<JointRun>();
                 string curxml = Path.Combine(current, s);
@@ -146,6 +173,7 @@ namespace JointComparer
                     {
                         differences++;
                         ConrepPair crp = new ConrepPair(s, ReferenceJointRuns, CurrentJointRuns);
+                        crp.Report();
                         _Diffs.Add(crp);
                     }
                 }
@@ -154,7 +182,9 @@ namespace JointComparer
                     differences++;
                 }
             }
-         
+
+           
+
         }
 
         private HashSet<string> GetXMLJoints(string path)
@@ -172,6 +202,7 @@ namespace JointComparer
 
         static public void Smoke(AliasPOD.POD pod,List<JointRun> jointRuns)
         {
+            bool bMultiPipeline = pod.Pipelines.Count > 1;
             for (int i = 0; i < pod.Pipelines.Count; i++)
             {
                 AliasPOD.Pipeline Pipeline = pod.Pipelines.Item(i);
@@ -180,15 +211,38 @@ namespace JointComparer
                 for (int j = 0; j < items.Count; j++)
                 {
                     AliasPOD.PipelineItemGroup pig = items.Item(j);
-                    string name = $"JointRun_{j+1}";
+                    string name = bMultiPipeline  ? $"Pipeline_{Pipeline.Name}_JointRun_{j+1}"  : $"JointRun_{j+1}";
                     JointRun jr = new JointRun(pig,name);
                     jointRuns.Add(jr);
                 }
             }
         }
 
-        void ComparisonReport()
+        public void ComparisonReport(string strFile)
         {
+            int unbalance = 0;
+            JointRunDifferenceTotals TotalSummary = new JointRunDifferenceTotals();
+            using (TextWriter sw = new StreamWriter(strFile))
+            {
+                foreach (ConrepPair conrepPair in _Diffs)
+                {
+                    unbalance += conrepPair.UnbalancedJoints;
+                    TotalSummary += conrepPair.Summary();
+                    sw.WriteLine($"{conrepPair.Name}\n");
+
+                    conrepPair.WriteReport(sw);
+                }
+
+                sw.WriteLine("\nFinal Totals");
+                sw.WriteLine($"\t Unbalanced Joint Runs {unbalance}");
+                sw.WriteLine($"\t Keypoint A  {TotalSummary.KeypointA}");
+                sw.WriteLine($"\t Keypoint B  {TotalSummary.KeypointB}");
+                sw.WriteLine($"\t Type        {TotalSummary.Type}");
+                sw.WriteLine($"\t Type+       {TotalSummary.TypeImprovement}");
+                sw.WriteLine($"\t Connectors  { TotalSummary.ConnectorCount}");
+            }
+
+           
         }
     }
 }

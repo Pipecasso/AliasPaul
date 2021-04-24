@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JointComparer
 {
-    class JointRunDifferenceTotals
+    public class JointRunDifferenceTotals
     {
         public JointRunDifferenceTotals(int keypointA, int keypointB, int type, int connectorCount,int typeImprovement)
         {
@@ -15,6 +15,15 @@ namespace JointComparer
             Type = type;
             ConnectorCount = connectorCount;
             TypeImprovement = typeImprovement;
+        }
+
+        public JointRunDifferenceTotals()
+        {
+            KeypointA = 0;
+            KeypointB = 0;
+            Type = 0;
+            ConnectorCount = 0;
+            TypeImprovement = 0;
         }
 
         public int KeypointA { get; set; }
@@ -50,6 +59,15 @@ namespace JointComparer
         {
             TypeImprovement++;
         }
+
+        public bool Identical
+        {
+            get
+            {
+                return KeypointA == 0 && KeypointB == 0 && Type == 0 && ConnectorCount == 0;
+            }
+        }
+
 
         static public JointRunDifferenceTotals operator + (JointRunDifferenceTotals jrdt1,JointRunDifferenceTotals jrdt2)
         {
