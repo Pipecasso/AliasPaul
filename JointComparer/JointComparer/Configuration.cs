@@ -60,7 +60,7 @@ namespace JointComparer
                 {
                     string[] subdirs = directory.Split(Path.DirectorySeparatorChar);
                     string lastdir = subdirs[subdirs.Length - 1];
-                    if ((reference == false && lastdir == "REFERENCE") || (reference && lastdir == "CURRENT"))
+                    if ((lastdir == "REFERENCE_BAD FILE NAMES") || (lastdir=="REFERENCE_OLD") ||  (reference == false && lastdir == "REFERENCE") || (reference && lastdir == "CURRENT"))
                     {
                         continue;
                     }

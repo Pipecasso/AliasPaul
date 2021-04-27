@@ -8,46 +8,36 @@ namespace JointComparer
 {
     public class JointRunComparison : Dictionary<JointPair, JointComparison>
     {
-        public int Excess { get; }
-        public JointRunComparison(JointRun jr1, JointRun jr2)
+        
+        public bool balanced { get; }
+
+
+        public JointRunComparison(JointRun jr1, JointRun jr2,int indexshift)
         {
-            Excess = jr1.Joints.Count - jr2.Joints.Count;
-
-            JointRun smaller;
-            JointRun larger;
-
-            if (Excess <= 0)
+         
+            if (jr1.Joints.Count == jr2.Joints.Count)
             {
-                smaller = jr1;
-                larger = jr2;
+                balanced = true; 
+                foreach (KeyValuePair<int, Joint> kvpjoint in jr1.Joints)
+                {
+                    int currentindex = kvpjoint.Key - indexshift;
+                    if (jr2.Joints.ContainsKey(currentindex))
+                    {
+                        Joint j1 = kvpjoint.Value;
+                        Joint j2 = jr2.Joints[currentindex];
+                        Add(new JointPair(j1, j2), new JointComparison(j1, j2));
+                    }
+                    else
+                    {
+                        balanced = false;
+                        break;
+                    }
+                }
             }
             else
             {
-                larger = jr1;
-                smaller = jr2;
-            }
-
-            foreach (KeyValuePair<int, Joint> kvp in smaller.Joints)
-            {
-                Joint j = kvp.Value;
-                Joint k = larger.Joints[kvp.Key];
-                JointPair jp = new JointPair(j, k);
-                JointComparison jc = new JointComparison(j, k);
-                if (jc.Identical == false)
-                {
-                    Add(jp, jc);
-                }
-
+                balanced = false;
             }
         }
-
-        public bool SameSize
-        {
-            get { return Excess == 0; }
-        }
-
-        
-
-    
     }
 }

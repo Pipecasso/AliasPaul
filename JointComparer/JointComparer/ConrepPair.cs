@@ -18,6 +18,7 @@ namespace JointComparer
         public ConrepPair(string name,List<JointRun> referencejoints,List<JointRun> currentjoints)
         {
             Name = name;
+            bool balanced = true;
             _Matchups = new Dictionary<Tuple<JointRun, JointRun>, JointRunComparison>();
             _DiffTotals = new Dictionary<string, JointRunDifferenceTotals>();
             _JointDiffs = new Dictionary<string, int>();
@@ -25,8 +26,17 @@ namespace JointComparer
             int tick = 0;
             foreach (JointRun jrref in referencejoints)
             {
+                int indexshift = 0;
                 JointRun jrrcur = currentjoints[tick];
-                JointRunComparison joint_compare = new JointRunComparison(jrref,jrrcur);
+                if (balanced == false)
+                {
+                    int lowestref = jrref.Joints.Keys.Count == 0 ? 0 : jrref.Joints.Keys.Min();
+                    int lowestcur = jrref.Joints.Keys.Count == 0 ? 0 : jrrcur.Joints.Keys.Min();
+                    indexshift = lowestref - lowestcur;
+                }
+                
+                JointRunComparison joint_compare = new JointRunComparison(jrref,jrrcur,indexshift);
+                if (balanced) balanced = joint_compare.balanced;
                 _Matchups.Add(new Tuple<JointRun, JointRun>(jrref, jrrcur), joint_compare);
                 tick++;
             }   
@@ -34,13 +44,14 @@ namespace JointComparer
 
         public void Report()
         {
+           
             foreach(KeyValuePair<Tuple<JointRun, JointRun>, JointRunComparison> kvp in _Matchups)
             {
                 string run_name = kvp.Key.Item1.Name;
                 _JointDiffs.Add(run_name, kvp.Value.Count);
 
                 JointRunComparison jrc = kvp.Value;
-                if (jrc.SameSize==false)
+                if (jrc.balanced==false)
                 {
                     _UnbalancedJointRuns.Add(run_name);
                     continue;
@@ -73,13 +84,16 @@ namespace JointComparer
             int total = _JointDiffs.Values.Sum();
             JointRunDifferenceTotals summary = Summary();
             stream.WriteLine($"\t{total} differing joints\n");
-            stream.WriteLine($"\t\t{summary.KeypointA} are Keypoint B");
+            stream.WriteLine($"\t\t{summary.KeypointA} are Keypoint A");
             stream.WriteLine($"\t\t{summary.KeypointB} are Keypoint B");
-            stream.WriteLine($"\t\t{summary.Type}      are Keypoint Type");
-            stream.WriteLine($"\t\t{summary.TypeImprovement} are Keypoint Type+");
-            stream.WriteLine($"\t\t{summary.ConnectorCount} are Keypoint Connectors");
+            stream.WriteLine($"\t\t{summary.Type}      are Type");
+            stream.WriteLine($"\t\t{summary.TypeImprovement} are Type+");
+            stream.WriteLine($"\t\t{summary.ConnectorCount} are Connectors");
 
-            stream.WriteLine($"\t{_UnbalancedJointRuns.Count} unbalanced joint runs\n");
+            if (_UnbalancedJointRuns.Count > 0)
+            {
+                stream.WriteLine($"\t{_UnbalancedJointRuns.Count} unbalanced joint runs\n");
+            }
            
 
             foreach (KeyValuePair<string, JointRunDifferenceTotals> kvp in _DiffTotals)
@@ -97,10 +111,13 @@ namespace JointComparer
                 }
             }
 
-            stream.WriteLine("\t Unbalanced Joints");
-            foreach (string s in _UnbalancedJointRuns)
+            if (_UnbalancedJointRuns.Count > 0)
             {
-                stream.WriteLine($"\t {s}");
+                stream.WriteLine("\t Unbalanced Joints");
+                foreach (string s in _UnbalancedJointRuns)
+                {
+                    stream.WriteLine($"\t {s}");
+                }
             }
 
             stream.WriteLine("\n");

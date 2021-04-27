@@ -61,6 +61,7 @@ namespace JointComparer
 
         public override int GetHashCode()
         {
+            //warning!! the hashing algortithm is different to the == algorithm
             int hashCode = 1689777945;
             hashCode = hashCode * -1521134295 + SequenceNumber.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(ExternalUCI);
