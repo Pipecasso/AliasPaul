@@ -53,6 +53,14 @@ namespace AliasGeometry
             }
         }
 
+        public bool IsPointOnPlane(Point3d P)
+        {
+            Vector3d vplane = new Vector3d(_P, P);
+            vplane.Normalise();
+            double dp = Vector3d.Dot(vplane, _N);
+            return Math.Abs(dp) < double.Epsilon;
+        }
+
 
   
     }

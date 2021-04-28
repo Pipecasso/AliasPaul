@@ -53,8 +53,8 @@ namespace Projector
         {
             double maxintasdouble = Convert.ToDouble(int.MaxValue);
             Vector3d camtopoint = Vector3d.Normalise(p - CameraPoint);
-            double theta = Math.Acos(Vector3d.Dot(camtopoint, Normal)); //the angle between normal and pointline
-            double planedistance = (_distance / Math.Cos(theta));  //the distance from planepoint and camera;
+            double theta2 = Vector3d.Dot(camtopoint, Normal); //the acos angle between normal and pointline
+            double planedistance = (_distance / theta2);  //the distance from planepoint and camera;
             Point3d P1 = CameraPoint + camtopoint * planedistance; //intersection of the cameraline and the plane
             Vector3d NP1 = P1 - _N;
             double hypdist = NP1.Magnitude();
@@ -79,10 +79,10 @@ namespace Projector
             {
                 return new Point2d(0, 0);
             }
-
-
-
         }
+
+        public Point3d N { get => _N; }
+
 
     }
 }
