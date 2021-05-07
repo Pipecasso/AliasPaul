@@ -7,9 +7,9 @@ namespace AliasGeometry
 {
     public class Point3d
     {
-        private float _x;
-        private float _y;
-        private float _z;
+        private double _x;
+        private double _y;
+        private double _z;
 
         public Point3d()
         {
@@ -18,21 +18,15 @@ namespace AliasGeometry
             _z = 0;
         }
 
-        public Point3d(float dx, float dy, float dz)
+ 
+        public Point3d(double dx, double dy, double dz)
         {
             _x = dx;
             _y = dy;
             _z = dz;
         }
 
-        public Point3d(double dx, double dy, double dz)
-        {
-            _x = (float)dx;
-            _y = (float)dy;
-            _z = (float)dz;
-        }
-
-        public float X
+        public double X
         {
             get
             {
@@ -45,7 +39,7 @@ namespace AliasGeometry
             }
         }
 
-        public float Y
+        public double Y
         {
             get
             {
@@ -58,7 +52,7 @@ namespace AliasGeometry
             }
         }
 
-        public float Z
+        public double Z
         {
             get
             {

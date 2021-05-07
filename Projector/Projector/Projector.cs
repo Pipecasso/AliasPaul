@@ -7,10 +7,10 @@ using AliasGeometry;
 
 namespace Projector
 {
-    public class Projector
+    public class Camera
     {
-       public Point3d CameraPoint { get; }
-        public Vector3d Normal { get; }
+       public Point3d CameraPoint { get; set; }
+        public Vector3d Normal { get; set; }
         public Vector3d _V1;
         public Vector3d _V2;
 
@@ -18,8 +18,9 @@ namespace Projector
 
         Point3d _N; //intersection of normal and plane
 
+        public Camera() { }
 
-        public Projector(Point3d campoint, double distance, Vector3d normal)
+        public Camera(Point3d campoint, double distance, Vector3d normal)
         {
             CameraPoint = campoint;
             _distance = distance;
@@ -28,8 +29,8 @@ namespace Projector
             _N = CameraPoint + Normal * _distance;
         }
 
-        public Vector3d V1 { get => _V1; }
-        public Vector3d V2 { get => _V2; }
+        public Vector3d V1 { get => _V1; set { _V1 = value; } }
+        public Vector3d V2 { get => _V2; set { _V2 = value; } }
 
         void ChooseOrthogonals()
         {
@@ -81,8 +82,9 @@ namespace Projector
             }
         }
 
-        public Point3d N { get => _N; }
+        public Point3d N { get => _N; set { _N = value; } }
 
+        public double distance { get => _distance; set { _distance = value; } }
 
     }
 }
