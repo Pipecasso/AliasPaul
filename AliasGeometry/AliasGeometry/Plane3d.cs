@@ -8,8 +8,8 @@ namespace AliasGeometry
 {
     public class Plane3d
     {
-        private Vector3d _N;
-        private Point3d _P;
+        protected Vector3d _N;
+        protected Point3d _P;
 
         public Plane3d(Vector3d v,Point3d p)
         {

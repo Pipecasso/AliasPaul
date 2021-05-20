@@ -7,13 +7,15 @@ using System.Threading.Tasks;
 namespace AliasGeometry
 {
 
-    internal class Vector2d : Tuple<double,double>
+    public class Vector2d : Tuple<double,double>
     { 
-        Vector2d(double d1,double d2)  : base(d1,d2)
+        public Vector2d(double d1,double d2)  : base(d1,d2)
         {
         }
 
-        Vector2d(Point2d p1, Point2d p2) : base(p2.dY - p1.dY, p2.dX - p1.dX)
+        public Vector2d() : base(0, 0) { }
+
+        public Vector2d(Point2d p1, Point2d p2) : base(p2.dY - p1.dY, p2.dX - p1.dX)
         {
         }
 

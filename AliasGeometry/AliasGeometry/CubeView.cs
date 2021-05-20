@@ -26,6 +26,16 @@ namespace AliasGeometry
         Back
     };
 
+    public enum LineCubeIntersection
+    {
+        Unset,
+        Miss,
+        Touch,
+        PassThrough,
+        Surface
+    };
+
+
     public class Vertex 
     {
         private Face _frontback;
@@ -428,6 +438,13 @@ namespace AliasGeometry
 
 
         public string Name { get; set; }
+
+        public LineCubeIntersection Intersection(Point3d point,Vector3d vector, out Point3d p1,out Point3d p2)
+        {
+            p1 = null;
+            p2 = null;
+            return LineCubeIntersection.Unset;
+        }
 
 
 

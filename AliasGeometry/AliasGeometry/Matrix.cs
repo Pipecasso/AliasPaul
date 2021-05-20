@@ -35,6 +35,23 @@ namespace AliasGeometry
 
         public double Determinant
         { get => a * d - b * c; }
+
+        public Matrix22 Inverse()
+        {
+            Matrix22 togo = null;
+            double determinant = Determinant;
+            if (determinant != 0)
+            {
+                togo = new Matrix22(d / determinant, -b / determinant, -c / determinant, a / determinant);
+            }
+            return togo;
+        }
+
+        static public Vector2d operator *(Matrix22 m,Vector2d v)
+        {
+            return new Vector2d(m.a * v.Item1 + m.b * v.Item2, m.c * v.Item1 + m.d * v.Item2);
+
+        }
     }
 
     public class Matrix33
