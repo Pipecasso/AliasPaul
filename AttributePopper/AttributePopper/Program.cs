@@ -7,6 +7,7 @@ using System.IO;
 using AliasPOD;
 using Intergraph.PersonalISOGEN;
 using PodHandshake;
+using AliasImportExport;
 
 namespace AttributePopper
 {
@@ -30,15 +31,33 @@ namespace AttributePopper
 
             if (attr.HasFlag(FileAttributes.Directory))
             {
+                var pods = Directory.EnumerateFiles(pathorpod, "*.pod", SearchOption.TopDirectoryOnly);
+                foreach (string pod in pods)
+                {
+                    string poddir = Path.GetDirectoryName(pod);
+                    string fname = Path.GetFileNameWithoutExtension(pod);
+                    string p = $"{fname}.pcf";
+                    string pcfpath = Path.Combine(poddir, p);
 
+                    if (!File.Exists(pcfpath))
+                    {
+                        PopAPod(pod, ial, mandir, pcfpath);
+                    }
+                }
             }
             else
             {
-                PopAPod(pathorpod, ial, mandir);
+                string poddir = Path.GetDirectoryName(pathorpod);
+                string fname = Path.GetFileNameWithoutExtension(pathorpod);
+                string pcfpath = Path.Combine(poddir, $"{fname}.pcf");
+                if (!File.Exists(pcfpath))
+                {
+                    PopAPod(pathorpod, ial, mandir, pcfpath);
+                }
             }
         }
 
-        static void PopAPod(string spod, IsogenAssemblyLoader ial, string bwfcfolder)
+        static void PopAPod(string spod, IsogenAssemblyLoader ial, string bwfcfolder,string pcfpath)
         {
             Func<int, string> RandomNumberFunction = (max) =>
             {
@@ -150,11 +169,8 @@ namespace AttributePopper
                 POD pod = new POD();
                 pod.Handshake = HandshakeTools.GetPODHandshake(bwfcfolder);
                 pod.Load(spod);
-                string poddir = Path.GetDirectoryName(spod);
-                string fname = Path.GetFileNameWithoutExtension(spod);
-                string fpop = $"{fname}pop.pod";
-                string newpath = Path.Combine(poddir, fpop);
 
+                Console.WriteLine(spod);
                 for (int i = 0; i < pod.Pipelines.Count; i++)
                 {
                     Pipeline pline = pod.Pipelines.Item(i);
@@ -184,7 +200,13 @@ namespace AttributePopper
                     }
                 }
 
-                pod.Save(newpath);
+                AliasImportExport.ImportExport importExport = new ImportExport();
+                importExport.InputObject = pod;
+                importExport.InputType = (int)InputType.eInputTypePOD;
+                importExport.OutputType = (int)OutputType.eOutputTypePCF;
+                importExport.OutputName = pcfpath;
+                int iExp = importExport.Execute();
+
             }
         }
 
@@ -194,6 +216,7 @@ namespace AttributePopper
             {
                 string AttributeName = $"{attkey}ATTRIBUTE{i}";
                 AliasPOD.Attribute attribute = attributes.Item(AttributeName);
+                if (attribute == null) break;
                 if (attribute.IsValueValid()) continue;
                 if (i==ioddoneout)
                 {

@@ -36,6 +36,10 @@
     <Reference Include="IsogenAssemblyLoader">
       <HintPath>..\..\Shared\IsogenAssemblyLoader.dll</HintPath>
     </Reference>
+    <Reference Include="Shared.Interop.ImportExport">
+      <HintPath>..\..\Shared\Shared.Interop.ImportExport.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Shared.Interop.POD">
       <HintPath>..\..\Shared\Shared.Interop.POD.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
