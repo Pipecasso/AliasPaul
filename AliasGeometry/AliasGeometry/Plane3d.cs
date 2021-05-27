@@ -17,9 +17,15 @@ namespace AliasGeometry
             _P = p;
         }
 
-        public Vector3d N { get => _N; }
-        public Point3d P { get => _P;}
+        internal Plane3d(Vector3d v)
+        {
+            _N = v;
+        }
 
+        public Vector3d N { get => _N; }
+        
+        public Point3d P { get => _P; internal set { _P = value; } }
+    
         public bool Intersection(Point3d Q, Vector3d d,ref Point3d I)
         {
             Vector3d vn = Vector3d.Normalise(d);
@@ -53,12 +59,12 @@ namespace AliasGeometry
             }
         }
 
-        public bool IsPointOnPlane(Point3d P)
+        public bool IsPointOnPlane(Point3d P,double tolerance = double.Epsilon)
         {
             Vector3d vplane = new Vector3d(_P, P);
             vplane.Normalise();
             double dp = Vector3d.Dot(vplane, _N);
-            return Math.Abs(dp) < double.Epsilon;
+            return Math.Abs(dp) < tolerance;
         }
 
 

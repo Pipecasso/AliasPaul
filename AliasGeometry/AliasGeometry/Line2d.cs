@@ -19,18 +19,27 @@ namespace AliasGeometry
         {
         }
 
-        double Magnitude()
+        public double Magnitude()
         {
             return Math.Sqrt(Item1 * Item1 + Item2 * Item2);
         }
 
-        static Vector2d Normalise(Vector2d vin)
+        public static Vector2d Normalise(Vector2d vin)
         {
             double mag = vin.Magnitude();
             return new Vector2d(vin.Item1 / mag, vin.Item2 / mag);
 
         }
 
+        public static Vector2d operator + (Vector2d one, Vector2d two)
+        {
+            return( new Vector2d(one.Item1 + two.Item1, one.Item2 + two.Item2));
+        }
+
+        public static Vector2d operator -(Vector2d one, Vector2d two)
+        {
+            return (new Vector2d(one.Item1 - two.Item1, one.Item2 - two.Item2));
+        }
 
     
      

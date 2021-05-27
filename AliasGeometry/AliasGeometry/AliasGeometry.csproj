@@ -47,6 +47,7 @@
     <Compile Include="Cone3d.cs" />
     <Compile Include="CubeView.cs" />
     <Compile Include="Ellipse2d.cs" />
+    <Compile Include="Equation3.cs" />
     <Compile Include="Line2d.cs" />
     <Compile Include="Line3d.cs" />
     <Compile Include="Matrix.cs" />

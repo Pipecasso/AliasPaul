@@ -110,7 +110,9 @@ namespace AliasGeometry
 
 			if (iInvertCount == 3)
 			{
-				if (solution12 == solution23 && solution12 == solution13)
+                Vector2d error1223 = solution12 - solution23;
+                Vector2d error1213 = solution12 - solution13;
+                if (error1223.Magnitude() <= tolerance && error1213.Magnitude()<=tolerance)
 				{
 					theta = solution12.Item1; //n and LineDir & Q
 					lambda = solution12.Item2;//r and CheckLineDir + P
@@ -124,7 +126,8 @@ namespace AliasGeometry
 				//find the imposter
 				if (!bInvert12)
 				{
-					if (solution23 == solution13)
+                    Vector2d error2313 = solution23 - solution13;
+                    if (error2313.Magnitude() <= tolerance)
 					{
 						theta = solution23.Item1; //n and LineDir & Q
 						lambda = solution23.Item2;//r and CheckLineDir + P
@@ -135,7 +138,8 @@ namespace AliasGeometry
 				}
 				else if (!bInvert13)
 				{
-					if (solution12 == solution23)
+                    Vector2d error1223 = solution12 - solution23;
+                    if (error1223.Magnitude() <= tolerance)
 					{
 						theta = solution12.Item1; //n and LineDir & Q
 						lambda = solution12.Item2;//r and CheckLineDir + P
@@ -146,7 +150,8 @@ namespace AliasGeometry
 				}
 				else if (!bInvert23)
 				{
-					if (solution13 == solution12)
+                    Vector2d error1312 = solution13 - solution12;
+                    if (error1312.Magnitude() <= tolerance)
 					{
 						theta = solution12.Item1; //n and LineDir & Q
 						lambda = solution12.Item2;//r and CheckLineDir + P
@@ -188,7 +193,7 @@ namespace AliasGeometry
 			{
 				Vector3d DiffPos = new Vector3d(checkPos, I);
 				double dError = DiffPos.Magnitude();
-				bReturn = dError < 1e-6;
+				bReturn = dError <= tolerance;
 			}
 			return bReturn;
 		}

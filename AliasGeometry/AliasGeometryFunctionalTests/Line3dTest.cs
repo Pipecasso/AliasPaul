@@ -22,9 +22,14 @@ namespace AliasGeometryFunctionalTests
             Point3d q2 = new Point3d(-25.44813802, 39.13473843, 14);
             Line3d l2 = new Line3d(p2, q2);
 
+            Point3d TargetPoint = new Point3d(5,6,14);
+
             Point3d I = new Point3d();
-            bool interescts = Line3d.Intersection(l1, l2, ref I);
+            bool interescts = Line3d.Intersection(l1, l2, ref I,1e-8);
             Assert.IsTrue(interescts);
+            double error = Point3d.Distance(TargetPoint, I);
+            Assert.IsTrue(Math.Abs(error) < 1e-8);
+
         }
     
     
