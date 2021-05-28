@@ -22,10 +22,13 @@ namespace AliasGeometry
             _N = v;
         }
 
-        public Vector3d N { get => _N; }
-        
+        internal Plane3d()
+        {}
+
         public Point3d P { get => _P; internal set { _P = value; } }
-    
+
+        public Vector3d N { get => _N; internal set { _N = value; } }
+
         public bool Intersection(Point3d Q, Vector3d d,ref Point3d I)
         {
             Vector3d vn = Vector3d.Normalise(d);

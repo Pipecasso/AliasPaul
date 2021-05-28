@@ -29,6 +29,11 @@ namespace Projector
             _N = CameraPoint + Normal * _distance;
         }
 
+        public Camera(Vector3d normal,CubeView cube)
+        {
+
+        }
+
         public Vector3d V1 { get => _V1; set { _V1 = value; } }
         public Vector3d V2 { get => _V2; set { _V2 = value; } }
 

@@ -446,6 +446,18 @@ namespace AliasGeometry
             return LineCubeIntersection.Unset;
         }
 
+        public BoundedPlane3d[] SixPlanes()
+        {
+            BoundedPlane3d Front = new BoundedPlane3d(FrontTopLeft, FrontBottomRight, FrontTopRight, FrontBottomLeft);
+            BoundedPlane3d Back = new BoundedPlane3d(BackTopLeft, BackBottomRight, BackTopRight, BackBottomLeft);
+            BoundedPlane3d Top = new BoundedPlane3d(BackTopLeft, FrontTopRight, BackTopRight, FrontTopLeft);
+            BoundedPlane3d Bottom = new BoundedPlane3d(BackBottomLeft, FrontBottomRight, BackBottomRight, FrontBottomLeft);
+            BoundedPlane3d Left = new BoundedPlane3d(BackTopLeft, FrontBottomLeft, FrontTopLeft, BackBottomLeft);
+            BoundedPlane3d Right = new BoundedPlane3d(BackTopRight, FrontBottomRight, FrontTopRight, BackBottomRight);
+            BoundedPlane3d[] togo = new BoundedPlane3d[] { Front ,Back,Top,Bottom,Left,Right};
+            return togo;
+        }
+
 
 
 

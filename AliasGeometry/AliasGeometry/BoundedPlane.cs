@@ -15,6 +15,18 @@ namespace AliasGeometry
         private Point3d _TopRight;
         private Point3d _BottomLeft;
        
+        public BoundedPlane3d(Point3d topleft, Point3d bottomright, Point3d topright, Point3d bottomleft)
+        {
+            _TopLeft = topleft;
+            _BottomRight = bottomright;
+            _TopRight = topright;
+            _BottomLeft = bottomleft;
+             base.P = CenterPoint();
+            Vector3d top = (Top.Vector(true));
+            Vector3d right = (Right.Vector(true));
+            base.N = Vector3d.CrossProduct(top, right);
+        }
+
 
         public BoundedPlane3d(Vector3d v,Point3d topleft,Point3d bottomright,Point3d topright,Point3d bottomleft) : base(v)
         {
@@ -48,10 +60,10 @@ namespace AliasGeometry
         }
 
 
-        public new bool IsPointOnPlane(Point3d P)
+        public new bool IsPointOnPlane(Point3d P, double tolerance = double.Epsilon)
         {
             bool ret = false;
-            if (base.IsPointOnPlane(P))
+            if (base.IsPointOnPlane(P, tolerance))
             {
                 Rectangle2d cartestianrect = CartesianRectange();
                 Point2d cartesianpoint = CartiesianPoint(P);
@@ -121,7 +133,7 @@ namespace AliasGeometry
         public Point2d CartiesianPoint(Point3d cartesianp)
         {
             Point2d pret = null;
-            if (base.IsPointOnPlane(cartesianp, 1e-10) )
+            if (base.IsPointOnPlane(cartesianp, 1e-8) )
             {
                 Vector3d t = new Vector3d(_TopLeft,_TopRight);
                 t.Normalise();
