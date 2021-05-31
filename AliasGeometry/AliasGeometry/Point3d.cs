@@ -100,6 +100,33 @@ namespace AliasGeometry
             _y = (float)(y);
             _z = (float)(z);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Point3d d &&
+                   _x == d._x &&
+                   _y == d._y &&
+                   _z == d._z;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1753160635;
+            hashCode = hashCode * -1521134295 + _x.GetHashCode();
+            hashCode = hashCode * -1521134295 + _y.GetHashCode();
+            hashCode = hashCode * -1521134295 + _z.GetHashCode();
+            return hashCode;
+        }
+
+        static public bool operator == (Point3d p,Point3d q)
+        {
+            return (p.X == q.X &&  p.Y == q.Y && p.Z == q.Z);
+        }
+
+        static public bool operator != (Point3d p,Point3d q)
+        {
+            return !(p == q);
+        }
     }
 
    

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundedPlaneTests.cs" />
+    <Compile Include="CubeTests.cs" />
     <Compile Include="EquationTest.cs" />
     <Compile Include="Line3dTest.cs" />
     <Compile Include="MatrixTests.cs" />

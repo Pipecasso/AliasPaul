@@ -443,7 +443,52 @@ namespace AliasGeometry
         {
             p1 = null;
             p2 = null;
-            return LineCubeIntersection.Unset;
+            BoundedPlane3d[] sixPlanes = SixPlanes();
+            int hitcount = 0;
+            LineCubeIntersection lineCubeIntersection = LineCubeIntersection.Unset;
+            foreach (BoundedPlane3d boundedPlane3 in sixPlanes)
+            {
+                Point3d p = new Point3d();
+                //this is a bit inefficiant as the IsPointOnPlane is also called durining intersection;
+                bool intersectsbase = boundedPlane3.Intersection(point, vector, ref p);
+
+                if (intersectsbase)
+                {
+                    if (boundedPlane3.IsPointOnPlane(p))
+                    {
+                        if (hitcount == 0)
+                        {
+                            p1 = p;
+                            hitcount++;
+                        }
+                        else
+                        {
+                            p2 = p;
+                            hitcount++;
+                        }
+                        if (hitcount == 2) break;
+                    }
+                }
+                else
+                {
+                    lineCubeIntersection = LineCubeIntersection.Surface;
+                    break;
+                }
+            }
+
+            if (lineCubeIntersection != LineCubeIntersection.Surface)
+            {
+                switch (hitcount)
+                {
+                    case 0: lineCubeIntersection = LineCubeIntersection.Miss; break;
+                    case 1: lineCubeIntersection = LineCubeIntersection.Touch; break;
+                    case 2: lineCubeIntersection = LineCubeIntersection.PassThrough; break;
+
+                }
+            }
+
+
+            return lineCubeIntersection;
         }
 
         public BoundedPlane3d[] SixPlanes()
