@@ -443,13 +443,14 @@ namespace AliasGeometry
         {
             p1 = null;
             p2 = null;
-            BoundedPlane3d[] sixPlanes = SixPlanes();
+            Dictionary<Face,BoundedPlane3d> sixPlanes = SixPlanes();
             int hitcount = 0;
             LineCubeIntersection lineCubeIntersection = LineCubeIntersection.Unset;
-            foreach (BoundedPlane3d boundedPlane3 in sixPlanes)
+            foreach (KeyValuePair<Face,BoundedPlane3d> kvp in sixPlanes)
             {
                 Point3d p = new Point3d();
                 //this is a bit inefficiant as the IsPointOnPlane is also called durining intersection;
+                BoundedPlane3d boundedPlane3 = kvp.Value;
                 bool intersectsbase = boundedPlane3.Intersection(point, vector, ref p);
 
                 if (intersectsbase)
@@ -491,17 +492,19 @@ namespace AliasGeometry
             return lineCubeIntersection;
         }
 
-        public BoundedPlane3d[] SixPlanes()
+        public Dictionary<Face, BoundedPlane3d> SixPlanes()
         {
-            BoundedPlane3d Front = new BoundedPlane3d(FrontTopLeft, FrontBottomRight, FrontTopRight, FrontBottomLeft);
-            BoundedPlane3d Back = new BoundedPlane3d(BackTopLeft, BackBottomRight, BackTopRight, BackBottomLeft);
-            BoundedPlane3d Top = new BoundedPlane3d(BackTopLeft, FrontTopRight, BackTopRight, FrontTopLeft);
-            BoundedPlane3d Bottom = new BoundedPlane3d(BackBottomLeft, FrontBottomRight, BackBottomRight, FrontBottomLeft);
-            BoundedPlane3d Left = new BoundedPlane3d(BackTopLeft, FrontBottomLeft, FrontTopLeft, BackBottomLeft);
-            BoundedPlane3d Right = new BoundedPlane3d(BackTopRight, FrontBottomRight, FrontTopRight, BackBottomRight);
-            BoundedPlane3d[] togo = new BoundedPlane3d[] { Front ,Back,Top,Bottom,Left,Right};
-            return togo;
+            Dictionary<Face, BoundedPlane3d> sixPlanes = new Dictionary<Face, BoundedPlane3d>();
+            sixPlanes.Add(Face.Front, new BoundedPlane3d(FrontTopLeft, FrontBottomRight, FrontTopRight, FrontBottomLeft));
+            sixPlanes.Add(Face.Back, new BoundedPlane3d(BackTopLeft, BackBottomRight, BackTopRight, BackBottomLeft));
+            sixPlanes.Add(Face.Top, new BoundedPlane3d(BackTopLeft, FrontTopRight, BackTopRight, FrontTopLeft));
+            sixPlanes.Add(Face.Bottom, new BoundedPlane3d(BackBottomLeft, FrontBottomRight, BackBottomRight, FrontBottomLeft));
+            sixPlanes.Add(Face.Left, new BoundedPlane3d(BackTopLeft, FrontBottomLeft, FrontTopLeft, BackBottomLeft));
+            sixPlanes.Add(Face.Right, new BoundedPlane3d(BackTopRight, FrontBottomRight, FrontTopRight, BackBottomRight));
+            return sixPlanes;
+
         }
+        
 
 
 

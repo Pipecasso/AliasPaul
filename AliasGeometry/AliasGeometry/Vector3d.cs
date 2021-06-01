@@ -180,6 +180,11 @@ namespace AliasGeometry
             return !(v1 == v2);
         }
 
+        public static bool Parallel(Vector3d v1,Vector3d v2,double tolerance = double.Epsilon)
+        {
+            double dotproduct = Math.Abs(Vector3d.Dot(v1, v2));
+            return Math.Abs(dotproduct - 1) <= double.Epsilon;
+        }
         
                
 
