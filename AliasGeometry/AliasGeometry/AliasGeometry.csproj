@@ -50,6 +50,7 @@
     <Compile Include="Equation3.cs" />
     <Compile Include="Line2d.cs" />
     <Compile Include="Line3d.cs" />
+    <Compile Include="LineCubeIntersection.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="Plane3d.cs" />
     <Compile Include="Point2d.cs" />

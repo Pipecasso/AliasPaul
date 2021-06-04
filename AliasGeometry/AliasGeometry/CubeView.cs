@@ -26,14 +26,7 @@ namespace AliasGeometry
         Back
     };
 
-    public enum LineCubeIntersection
-    {
-        Unset,
-        Miss,
-        Touch,
-        PassThrough,
-        Surface
-    };
+  
 
 
     public class Vertex 
@@ -439,57 +432,31 @@ namespace AliasGeometry
 
         public string Name { get; set; }
 
-        public LineCubeIntersection Intersection(Point3d point,Vector3d vector, out Point3d p1,out Point3d p2)
+        public LineCubeIntersection Intersection(Point3d point,Vector3d vector)
         {
-            p1 = null;
-            p2 = null;
+            LineCubeIntersection lci = new LineCubeIntersection(point);
             Dictionary<Face,BoundedPlane3d> sixPlanes = SixPlanes();
-            int hitcount = 0;
-            LineCubeIntersection lineCubeIntersection = LineCubeIntersection.Unset;
             foreach (KeyValuePair<Face,BoundedPlane3d> kvp in sixPlanes)
             {
                 Point3d p = new Point3d();
                 //this is a bit inefficiant as the IsPointOnPlane is also called durining intersection;
                 BoundedPlane3d boundedPlane3 = kvp.Value;
                 bool intersectsbase = boundedPlane3.Intersection(point, vector, ref p);
-
                 if (intersectsbase)
                 {
                     if (boundedPlane3.IsPointOnPlane(p))
                     {
-                        if (hitcount == 0)
-                        {
-                            p1 = p;
-                            hitcount++;
-                        }
-                        else
-                        {
-                            p2 = p;
-                            hitcount++;
-                        }
-                        if (hitcount == 2) break;
+                        lci.Add(kvp.Key, p);
                     }
                 }
                 else
                 {
-                    lineCubeIntersection = LineCubeIntersection.Surface;
-                    break;
+                    Plane3d plane3d = boundedPlane3;
+                  
                 }
             }
-
-            if (lineCubeIntersection != LineCubeIntersection.Surface)
-            {
-                switch (hitcount)
-                {
-                    case 0: lineCubeIntersection = LineCubeIntersection.Miss; break;
-                    case 1: lineCubeIntersection = LineCubeIntersection.Touch; break;
-                    case 2: lineCubeIntersection = LineCubeIntersection.PassThrough; break;
-
-                }
-            }
-
-
-            return lineCubeIntersection;
+            lci.Determine();
+            return lci;
         }
 
         public Dictionary<Face, BoundedPlane3d> SixPlanes()

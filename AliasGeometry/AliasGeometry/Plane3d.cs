@@ -70,6 +70,24 @@ namespace AliasGeometry
             return Math.Abs(dp) < tolerance;
         }
 
+        public Point3d NearestPoint(Point3d p)
+        {
+            Point3d pout;
+            if (IsPointOnPlane(p))
+            {
+                pout = p;
+            }
+            else
+            {
+                pout = new Point3d();
+                Intersection(P, _N, ref pout);
+            }
+            return pout;
+        }
+
+
+       
+
 
   
     }
