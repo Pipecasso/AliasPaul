@@ -35,7 +35,8 @@ namespace AliasGeometryFunctionalTests
             Assert.IsFalse(_plane.IsPointOnPlane(p));
             Point3d i = _plane.NearestPoint(p);
             Point3d ptest = new Point3d(-410.4020203, 439.5979797, 787);
-            Assert.IsTrue(i == ptest);
+            double error = Point3d.Distance(ptest, i);
+            Assert.IsTrue(Math.Abs(error) < 1e-6);
 
         }
 

@@ -86,10 +86,6 @@ namespace AliasGeometry
         { 
             if (_surfaceFace == Face.None)
             {
-                _intersection = Intersection.Surface;
-            }
-            else
-            {
                 //0 we are good as we are
                 //1,5, >6 Euclid says this is impossibe
                 if (_faceMap.Count() == 2)
@@ -103,14 +99,18 @@ namespace AliasGeometry
                         _intersection = Intersection.PassThrough;
                     }
                 }
-                else if (_faceMap.Count() ==3)
+                else if (_faceMap.Count() == 3)
                 {
                     _intersection = Intersection.Touch;
                 }
-                else if (_faceMap.Count() == 4 ||_faceMap.Count() == 6)
+                else if (_faceMap.Count() == 4 || _faceMap.Count() == 6)
                 {
                     _intersection = Intersection.PassThrough;
                 }
+            }
+            else
+            {
+                _intersection = Intersection.Surface;
             }
         }
 

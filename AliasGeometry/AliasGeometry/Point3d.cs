@@ -120,7 +120,20 @@ namespace AliasGeometry
 
         static public bool operator == (Point3d p,Point3d q)
         {
-            return (p.X == q.X &&  p.Y == q.Y && p.Z == q.Z);
+            bool bout;
+            if (p is null && q is null)
+            {
+                bout = true;
+            }
+            else if ( p is null || q is null)
+            {
+                bout = false;
+            }
+            else
+            {
+                bout = (p.X == q.X && p.Y == q.Y && p.Z == q.Z);
+            }
+            return bout;
         }
 
         static public bool operator != (Point3d p,Point3d q)
