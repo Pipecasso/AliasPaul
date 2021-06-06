@@ -45,6 +45,29 @@ namespace AliasGeometry
 			return togo;
         }
 
+        static public bool operator == (Line3d l, Line3d m)
+        {
+            bool ret;
+            if (l is null && m is null)
+            {
+                ret = true;
+            }
+            else if (l is null || m is null)
+            {
+                ret = false;
+            }
+            else
+            {
+				ret = ( l.P == m.P && l.Q == m.Q);
+			}
+			return ret;
+        }
+
+		static public bool operator != (Line3d l,Line3d m)
+        {
+			return !(l == m);
+        }
+
         static public bool Intersection(Line3d l1,Line3d l2,ref Point3d I,double tolerance = double.Epsilon)
         {
 			Point3d P = l1.P;
@@ -198,5 +221,19 @@ namespace AliasGeometry
 			return bReturn;
 		}
 
+        public override bool Equals(object obj)
+        {
+            return obj is Line3d d &&
+                   EqualityComparer<Point3d>.Default.Equals(_p, d._p) &&
+                   EqualityComparer<Point3d>.Default.Equals(_q, d._q);
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -1257508585;
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point3d>.Default.GetHashCode(_p);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Point3d>.Default.GetHashCode(_q);
+            return hashCode;
+        }
     }
 }

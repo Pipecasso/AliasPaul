@@ -21,21 +21,21 @@ namespace AliasGeometry
         private Intersection _intersection;
         private Dictionary<Face, Point3d> _faceMap;
         private Dictionary<Point3d, int> _pointMap;
-        private Face _surfaceFace;
+        private List<Face> _surfaceFaces;
         private Point3d _refpoint;
 
         public LineCubeIntersection(Point3d refpoint)
         {
             _faceMap = new Dictionary<Face, Point3d>();
             _pointMap = new Dictionary<Point3d, int>();
-            _surfaceFace = Face.None;
+            _surfaceFaces = new List<Face>();
             _intersection = Intersection.Unset;
             _refpoint = refpoint;
 
         }
 
         public Intersection intersection { get => _intersection; }
-        public Face Surface { get => _surfaceFace; set { _surfaceFace = value; } }
+        public List<Face> SurfaceFaces { get => _surfaceFaces; set { _surfaceFaces = value; } }
         public Dictionary<Face,Point3d> FaceMap { get => _faceMap; }
         public Dictionary<Point3d,int> PointMap { get => _pointMap; }
 
@@ -84,7 +84,7 @@ namespace AliasGeometry
 
         public void Determine()
         { 
-            if (_surfaceFace == Face.None)
+            if (_surfaceFaces.Count == 0)
             {
                 //0 we are good as we are
                 //1,5, >6 Euclid says this is impossibe

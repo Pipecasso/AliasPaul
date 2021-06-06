@@ -454,7 +454,7 @@ namespace AliasGeometry
                     Plane3d plane3d = boundedPlane3;
                     if (plane3d.IsPointOnPlane(point))
                     {
-                        lci.Surface = kvp.Key;
+                        lci.SurfaceFaces.Add(kvp.Key);
                     }
                   
                 }

@@ -98,7 +98,7 @@ namespace AliasGeometryFunctionalTests
             _fbl = new Vertex(Face.Front, Face.Bottom, Face.Left);
             _bbr = new Vertex(Face.Back, Face.Bottom, Face.Right);
             _btr = new Vertex(Face.Back, Face.Top, Face.Right);
-         }
+        }
 
 
         [TestMethod]
@@ -324,7 +324,7 @@ namespace AliasGeometryFunctionalTests
 
         void TestCubePlanes(CubeView cv)
         {
-            foreach (KeyValuePair<Face,BoundedPlane3d> kvp in cv.SixPlanes())
+            foreach (KeyValuePair<Face, BoundedPlane3d> kvp in cv.SixPlanes())
             {
                 BoundedPlane3d plane = kvp.Value;
                 Assert.IsTrue(plane.IsValid());
@@ -350,6 +350,33 @@ namespace AliasGeometryFunctionalTests
             Assert.IsTrue(Math.Abs(Vector3d.Dot(right.N, top.N)) <= double.Epsilon);
         }
 
+        void TestCubePlaneCenters(CubeView cv)
+        {
+            Dictionary<Face, BoundedPlane3d> sixPlanes = cv.SixPlanes();
+            BoundedPlane3d front = sixPlanes[Face.Front];
+            BoundedPlane3d back = sixPlanes[Face.Back];
+            BoundedPlane3d top = sixPlanes[Face.Top];
+            BoundedPlane3d bottom = sixPlanes[Face.Bottom];
+            BoundedPlane3d left = sixPlanes[Face.Left];
+            BoundedPlane3d right = sixPlanes[Face.Right];
+
+            Line3d frontback = new Line3d(front.P, back.P);
+            Line3d leftright = new Line3d(left.P, right.P);
+            Line3d bottomtop = new Line3d(bottom.P, top.P);
+
+            Assert.IsTrue(frontback.Length() == cv.FrontBackDistance());
+            Assert.IsTrue(leftright.Length() == cv.LeftRightDistance());
+            Assert.IsTrue(bottomtop.Length() == cv.TopBottomDistance());
+
+            double error1 = Math.Abs(Vector3d.Dot(frontback.Vector(true), leftright.Vector(true)));
+            double error2 = Math.Abs(Vector3d.Dot(frontback.Vector(true), bottomtop.Vector(true)));
+            double error3 = Math.Abs(Vector3d.Dot(bottomtop.Vector(true), leftright.Vector(true)));
+
+            Assert.IsTrue(error1 <= double.Epsilon);
+            Assert.IsTrue(error2 <= double.Epsilon);
+            Assert.IsTrue(error3 <= double.Epsilon);
+        }
+
 
         [TestMethod]
         public void CubePlanesValid()
@@ -369,9 +396,18 @@ namespace AliasGeometryFunctionalTests
             TestCubePlaneRelations(_CubeBottomRight);
         }
 
-        
         [TestMethod]
-        public void IntersectionTest1()
+        public void CubePlaneCenters()
+        {
+            TestCubePlaneCenters(_CubeTopLeft);
+            TestCubePlaneCenters(_CubeTopRight);
+            TestCubePlaneCenters(_CubeBottomLeft);
+            TestCubePlaneCenters(_CubeBottomRight);
+        }
+
+
+        [TestMethod]
+        public void IntersectionTestPassThroguh()
         {
             Point3d p1 = _CubeTopLeft.FrontTopLeft;
             Point3d p2 = _CubeTopLeft.FrontTopRight;
@@ -379,18 +415,43 @@ namespace AliasGeometryFunctionalTests
             Point3d p4 = _CubeTopLeft.BackBottomRight;
             Point3d m = Point3d.MidPoint(p1, p2);
             Point3d n = Point3d.MidPoint(p3, p4);
-            Vector3d v1 = Vector3d.Normalise(new Vector3d(m,_CubeTopLeft.Center));
+            Vector3d v1 = Vector3d.Normalise(new Vector3d(m, _CubeTopLeft.Center));
             double d = v1.Magnitude();
-            Point3d p = _CubeTopLeft.Center + v1*(d*3);
-      
+            Point3d p = _CubeTopLeft.Center + v1 * (d * 3);
+
 
             LineCubeIntersection le = _CubeTopLeft.Intersection(p, v1);
             Assert.IsTrue(le.intersection == LineCubeIntersection.Intersection.PassThrough);
             Assert.IsTrue(le.PointMap.Count == 2);
             Assert.IsTrue(le.FaceMap.Count == 4);
             Line3d interline = le.IntersectionLine();
-            Assert.IsTrue((interline.P == m && interline.Q == n) || (interline.P == n && interline.Q ==m));
-           
+            Assert.IsTrue((interline.P == m && interline.Q == n) || (interline.P == n && interline.Q == m));
+
+        }
+
+        [TestMethod]
+        public void IntersectionTestSurface1()
+        {
+            Point3d p1 = _CubeTopLeft.FrontTopLeft;
+            Point3d p2 = _CubeTopLeft.FrontTopRight;
+            Point3d p3 = _CubeTopLeft.FrontBottomLeft;
+            Point3d p4 = _CubeTopLeft.FrontBottomRight;
+            Point3d m = Point3d.MidPoint(p1, p2);
+            Point3d n = Point3d.MidPoint(p3, p4);
+            Vector3d updown = new Vector3d(p1, p3);
+            updown.Normalise();
+            Point3d n1 = n + updown * 467;
+            LineCubeIntersection le = _CubeBottomLeft.Intersection(n1, (updown  * -1.0));
+            Assert.IsTrue(le.intersection == LineCubeIntersection.Intersection.Surface);
+            Assert.IsTrue(le.PointMap.Count == 2);
+            Assert.IsTrue(le.FaceMap.Count == 2);
+            Assert.IsTrue(le.SurfaceFaces.Count == 1);
+            Assert.IsTrue(le.SurfaceFaces[0] == Face.Front);
+            Line3d line3d = le.IntersectionLine();
+            Line3d targetline = new Line3d(n, m);
+            Assert.IsTrue(line3d == targetline);
+
+
         }
     }
 }
