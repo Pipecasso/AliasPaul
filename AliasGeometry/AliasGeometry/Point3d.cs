@@ -18,7 +18,7 @@ namespace AliasGeometry
             _z = 0;
         }
 
- 
+
         public Point3d(double dx, double dy, double dz)
         {
             _x = dx;
@@ -65,9 +65,9 @@ namespace AliasGeometry
             }
         }
 
-        static public Vector3d operator - (Point3d p,Point3d q)
+        static public Vector3d operator -(Point3d p, Point3d q)
         {
-           Vector3d pout = new Vector3d(p.X-q.X,p.Y - q.Y,p.Z - q.Z);
+            Vector3d pout = new Vector3d(p.X - q.X, p.Y - q.Y, p.Z - q.Z);
             return pout;
         }
 
@@ -87,14 +87,14 @@ namespace AliasGeometry
         {
             Vector3d vW = p - q;
             return vW.Magnitude();
-		}
+        }
 
         static public Point3d MidPoint(Point3d p, Point3d q)
         {
             return new Point3d((p.X + q.X) / 2, (p.Y + q.Y) / 2, (p.Z + q.Z) / 2);
         }
 
-        public void Set(double x,double y,double z)
+        public void Set(double x, double y, double z)
         {
             _x = (float)(x);
             _y = (float)(y);
@@ -118,14 +118,14 @@ namespace AliasGeometry
             return hashCode;
         }
 
-        static public bool operator == (Point3d p,Point3d q)
+        static public bool operator ==(Point3d p, Point3d q)
         {
             bool bout;
             if (p is null && q is null)
             {
                 bout = true;
             }
-            else if ( p is null || q is null)
+            else if (p is null || q is null)
             {
                 bout = false;
             }
@@ -136,13 +136,32 @@ namespace AliasGeometry
             return bout;
         }
 
-        static public bool operator != (Point3d p,Point3d q)
+        static public bool NearlyEquals(Point3d p, Point3d q, double tolerance = double.Epsilon)
+        {
+            return Point3d.Distance(p, q) <= tolerance;
+        }
+
+        static public bool operator !=(Point3d p, Point3d q)
         {
             return !(p == q);
         }
-    }
 
-   
+        static public Point3d operator +(Point3d p, Point3d q)
+        {
+            return new Point3d(p.X + q.X, p.Y + q.Y, p.Z + q.Z);
+        }
+
+        static public Point3d operator *(Point3d p, double d)
+        {
+            return new Point3d(p.X * d, p.Y * d, p.Z * d);
+        }
+
+        static public Point3d operator /(Point3d p, double d)
+        {
+            return new Point3d(p.X / d, p.Y / d, p.Z / d);
+        }
+
+    }
 
 
 }

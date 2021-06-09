@@ -45,12 +45,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ALotOfPoints.cs" />
     <Compile Include="BoundedPlaneTests.cs" />
     <Compile Include="CubeTests.cs" />
     <Compile Include="EquationTest.cs" />
     <Compile Include="Line3dTest.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="PlaneTests.cs" />
+    <Compile Include="Point3dTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

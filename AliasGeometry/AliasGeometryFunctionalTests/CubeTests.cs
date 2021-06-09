@@ -36,55 +36,8 @@ namespace AliasGeometryFunctionalTests
 
         public CubeTests()
         {
-            _Points = new List<Point3d>();
-            _Points.Add(new Point3d(168, -380, 893));
-            _Points.Add(new Point3d(196, 226, 727));
-            _Points.Add(new Point3d(250, -999, -249));
-            _Points.Add(new Point3d(801, -660, 529));
-            _Points.Add(new Point3d(113, 9, -675));
-            _Points.Add(new Point3d(457, 545, 285));
-            _Points.Add(new Point3d(235, -965, -891));
-            _Points.Add(new Point3d(-860, 858, 351));
-            _Points.Add(new Point3d(876, -226, 65));
-            _Points.Add(new Point3d(-961, 44, 22));
-            _Points.Add(new Point3d(-485, -238, 33));
-            _Points.Add(new Point3d(-293, -137, -697));
-            _Points.Add(new Point3d(692, 328, 406));
-            _Points.Add(new Point3d(577, -591, -406));
-            _Points.Add(new Point3d(987, -1, 419));
-            _Points.Add(new Point3d(378, 658, -151));
-            _Points.Add(new Point3d(653, 779, 954));
-            _Points.Add(new Point3d(18, 5, -26));
-            _Points.Add(new Point3d(-259, -750, 105));
-            _Points.Add(new Point3d(850, -88, -987));
-            _Points.Add(new Point3d(-218, -671, -879));
-            _Points.Add(new Point3d(-623, -247, 22));
-            _Points.Add(new Point3d(114, -51, -800));
-            _Points.Add(new Point3d(621, 700, 566));
-            _Points.Add(new Point3d(-939, -30, 417));
-            _Points.Add(new Point3d(-81, 583, 725));
-            _Points.Add(new Point3d(-614, -308, 480));
-            _Points.Add(new Point3d(42, 326, 408));
-            _Points.Add(new Point3d(328, -485, -481));
-            _Points.Add(new Point3d(91, 223, -216));
-            _Points.Add(new Point3d(-882, -288, 113));
-            _Points.Add(new Point3d(-651, _lowy, -16));
-            _Points.Add(new Point3d(-443, -706, -990));
-            _Points.Add(new Point3d(-233, 357, 428));
-            _Points.Add(new Point3d(581, 728, -703));
-            _Points.Add(new Point3d(-999, -334, 775));
-            _Points.Add(new Point3d(534, 731, 570));
-            _Points.Add(new Point3d(50, -283, 452));
-            _Points.Add(new Point3d(-151, 838, 139));
-            _Points.Add(new Point3d(29, -909, -169));
-            _Points.Add(new Point3d(129, 473, -685));
-            _Points.Add(new Point3d(877, 80, 45));
-            _Points.Add(new Point3d(229, -270, 715));
-            _Points.Add(new Point3d(-272, 316, -861));
-            _Points.Add(new Point3d(-446, -932, 165));
-            _Points.Add(new Point3d(-463, 958, -407));
-            _Points.Add(new Point3d(695, 150, -989));
-
+            _Points = ALotOfPoints.GetSomePoints();
+           
             _CubeTopLeft = new CubeView(_Points, NorthArrow.TopLeft);
             _CubeTopRight = new CubeView(_Points, NorthArrow.TopRight);
             _CubeBottomLeft = new CubeView(_Points, NorthArrow.BottomLeft);
@@ -99,6 +52,7 @@ namespace AliasGeometryFunctionalTests
             _bbr = new Vertex(Face.Back, Face.Bottom, Face.Right);
             _btr = new Vertex(Face.Back, Face.Top, Face.Right);
         }
+
 
 
         [TestMethod]
@@ -430,6 +384,28 @@ namespace AliasGeometryFunctionalTests
         }
 
         [TestMethod]
+        public void IntersectionTestPassThroguh2()
+        {
+            Point3d p1 = _CubeTopLeft.FrontBottomLeft;
+            Point3d p2 = _CubeTopLeft.BackTopRight;
+
+            Vector3d v1 = new Vector3d(p1, p2);
+            double l = v1.Magnitude();
+            v1.Normalise();
+
+            Point3d p = p2 - v1 * (l * 3.7);
+
+            LineCubeIntersection le = _CubeTopLeft.Intersection(p, v1);
+            Assert.IsTrue(le.intersection == LineCubeIntersection.Intersection.PassThrough);
+            Assert.IsTrue(le.PointMap.Count == 2);
+            Assert.IsTrue(le.FaceMap.Count == 6);
+            Line3d interline = le.IntersectionLine();
+            Line3d linetarget = new Line3d(p1, p2);
+            Assert.IsTrue(linetarget == interline);
+
+        }
+
+        [TestMethod]
         public void IntersectionTestSurface1()
         {
             Point3d p1 = _CubeTopLeft.FrontTopLeft;
@@ -441,7 +417,7 @@ namespace AliasGeometryFunctionalTests
             Vector3d updown = new Vector3d(p1, p3);
             updown.Normalise();
             Point3d n1 = n + updown * 467;
-            LineCubeIntersection le = _CubeBottomLeft.Intersection(n1, (updown  * -1.0));
+            LineCubeIntersection le = _CubeTopLeft.Intersection(n1, (updown  * -1.0));
             Assert.IsTrue(le.intersection == LineCubeIntersection.Intersection.Surface);
             Assert.IsTrue(le.PointMap.Count == 2);
             Assert.IsTrue(le.FaceMap.Count == 2);

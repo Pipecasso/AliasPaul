@@ -444,7 +444,7 @@ namespace AliasGeometry
                 bool intersectsbase = boundedPlane3.Intersection(point, vector, ref p);
                 if (intersectsbase)
                 {
-                    if (boundedPlane3.IsPointOnPlane(p))
+                    if (boundedPlane3.IsPointOnPlane(p,1e-6))
                     {
                         lci.Add(kvp.Key, p);
                     }
