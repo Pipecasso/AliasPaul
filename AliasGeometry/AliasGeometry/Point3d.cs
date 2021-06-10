@@ -161,6 +161,16 @@ namespace AliasGeometry
             return new Point3d(p.X / d, p.Y / d, p.Z / d);
         }
 
+        static public Point3d Higher(Point3d p,Point3d q)
+        {
+            return new Point3d(p.X > q.X ? p.X : q.X, p.Y > q.Y ? p.Y : q.Y, p.Z > q.Z ? p.Z : q.Z);
+        }
+
+        static public Point3d Lower(Point3d p, Point3d q)
+        {
+            return new Point3d(p.X < q.X ? p.X : q.X, p.Y < q.Y ? p.Y : q.Y, p.Z < q.Z ? p.Z : q.Z);
+        }
+
     }
 
 

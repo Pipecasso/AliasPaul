@@ -133,33 +133,16 @@ namespace AliasGeometry
 
         public CubeView(List<Point3d> points,NorthArrow na = NorthArrow.TopLeft)
         {
-            double lowestX = double.MaxValue;
-            double lowestY = double.MaxValue;
-            double lowestZ = double.MaxValue;
-            double highestX = double.MinValue;
-            double highestY = double.MinValue;
-            double highestZ = double.MinValue;
-
-            foreach (var P in points)
-            {
-                if (P.X >= highestX) { highestX = P.X; }
-                if (P.Y >= highestY) { highestY = P.Y; }
-                if (P.Z >= highestZ) { highestZ = P.Z; }
-
-                if (P.X <= lowestX) { lowestX = P.X; }
-                if (P.Y <= lowestY) { lowestY = P.Y; }
-                if (P.Z <= lowestZ) { lowestZ = P.Z; }
-            }
-            InitialiseCube(highestX, lowestX,highestY,lowestY,highestZ,lowestZ,na);
+            Point3d high = points.Aggregate((acc, cur) => Point3d.Higher(acc, cur));
+            Point3d low = points.Aggregate((acc, cur) => Point3d.Lower(acc, cur));
+            InitialiseCube(high,low,na);
         }
 
-
-        private void InitialiseCube(double highx, double lowx, double highy, double lowy, double highz, double lowz, NorthArrow na)
+        void InitialiseCube(Point3d HighPoint, Point3d LowPoint, NorthArrow na)
         {
-
-            Action<Vertex,Point3d,Point3d> SetCrossPlane = (v,p,o) => 
+            Action<Vertex, Point3d, Point3d> SetCrossPlane = (v, p, o) =>
             {
-                _Vertices[v].Set(p.X, p.Y,p.Z);
+                _Vertices[v].Set(p.X, p.Y, p.Z);
                 Vertex Oppv = Vertex.Opposite(v);
                 _Vertices[Oppv].Set(o.X, o.Y, o.Z);
                 Vertex Upv = Vertex.OppositeUD(v);
@@ -168,8 +151,8 @@ namespace AliasGeometry
                 _Vertices[OppUpv].Set(o.X, o.Y, p.Z);
 
             };
-            
-            
+
+
             _Vertices = new Dictionary<Vertex, Point3d>(new VertexCompare());
             _ftl = new Vertex(Face.Front, Face.Top, Face.Left);
             _ftr = new Vertex(Face.Front, Face.Top, Face.Right);
@@ -191,41 +174,45 @@ namespace AliasGeometry
 
 
             Vertex Anchor = null;
-            Point3d AnchorPoint = new Point3d(lowx, lowy, lowz);
-            Point3d AnchorOppPoint = new Point3d(highx, highy, highz);
+            Point3d AnchorPoint = LowPoint;
+            Point3d AnchorOppPoint = HighPoint;
             Point3d AnchorLrPoint = null;
             Point3d AnchorOppLrPoint = null;
             switch (na)
             {
-                case NorthArrow.TopLeft: 
+                case NorthArrow.TopLeft:
                     Anchor = _fbr;
-                   
-                    AnchorLrPoint = new Point3d(lowx,highy,lowz);
-                    AnchorOppLrPoint = new Point3d(highx, lowy, highz);
+
+                    AnchorLrPoint = new Point3d(LowPoint.X, HighPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(HighPoint.X, LowPoint.Y, HighPoint.Z);
                     break;
                 case NorthArrow.TopRight:
                     Anchor = _fbl;
-                    
-                    AnchorLrPoint = new Point3d(highx, lowy, lowz);
-                    AnchorOppLrPoint = new Point3d(lowx, highy, highz);
+
+                    AnchorLrPoint = new Point3d(HighPoint.X, LowPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(LowPoint.X, HighPoint.Y, HighPoint.Z);
                     break;
                 case NorthArrow.BottomRight:
                     Anchor = _bbl;
-                    AnchorLrPoint = new Point3d(lowx, highy, lowz);
-                    AnchorOppLrPoint = new Point3d(highx, lowy, highz);
+                    AnchorLrPoint = new Point3d(LowPoint.X, HighPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(HighPoint.X, LowPoint.Y, HighPoint.Z);
                     break;
                 case NorthArrow.BottomLeft:
                     Anchor = _bbr;
-                    AnchorLrPoint = new Point3d(highx, lowy, lowz);
-                    AnchorOppLrPoint = new Point3d(lowx, highy, highz);
+                    AnchorLrPoint = new Point3d(HighPoint.X, LowPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(LowPoint.X, HighPoint.Y, HighPoint.Z);
                     break;
             }
             SetCrossPlane(Anchor, AnchorPoint, AnchorOppPoint);
             Vertex AnchorAdj = Vertex.OppositeLR(Anchor);
             SetCrossPlane(AnchorAdj, AnchorLrPoint, AnchorOppLrPoint); //it fucks up here.
 
-            _center = new Point3d((lowx + highx) / 2, (lowy + highy) / 2, (lowz + highz) / 2);
+            _center = Point3d.MidPoint(LowPoint, HighPoint);
         }
+    
+
+
+ 
 
         /*
         //FRONT = ABCD

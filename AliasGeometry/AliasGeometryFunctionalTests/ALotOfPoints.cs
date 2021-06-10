@@ -44,7 +44,7 @@ namespace AliasGeometryFunctionalTests
             Points.Add(new Point3d(328, -485, -481));
             Points.Add(new Point3d(91, 223, -216));
             Points.Add(new Point3d(-882, -288, 113));
-            Points.Add(new Point3d(-651, -990, -16));
+            Points.Add(new Point3d(-651, -1250, -16));
             Points.Add(new Point3d(-443, -706, -990));
             Points.Add(new Point3d(-233, 357, 428));
             Points.Add(new Point3d(581, 728, -703));

@@ -6,9 +6,21 @@ using System.Threading.Tasks;
 
 namespace AliasGeometry
 {
+    static class ListExtension
+    {
+        public static Point3d Average<T>(this IList<Point3d> list)
+        {
+            Point3d sum = list.Aggregate((acc, cur) => acc + cur);
+            double d = list.Count;
+            Point3d av = sum / d;
+            return av;
+        }
+    }
+
+    
     public class Point3dCluster : Dictionary<Point3d,List<Point3d>>
     {
-        Point3dCluster(double tolerance)
+       public Point3dCluster(double tolerance)
         {
             Tolerance = tolerance;
         }
@@ -39,27 +51,23 @@ namespace AliasGeometry
 
             if (pointslist == null)
             {
+                pointslist = new List<Point3d>();
                 pointslist.Add(p);
             }
 
-            Point3d paverage = AveragePoint(pointslist);
-            this.Remove(keypoint);
+            Point3d paverage = pointslist.Average<Point3d>();
+            if (this.ContainsKey(keypoint))
+            {
+                this.Remove(keypoint);
+            }
             base.Add(keypoint, pointslist);
         }
-
-        private static void AddPoint(Point3d p1,Point3d p2)
-        {
-            p1.X += p2.X;
-            p1.Y += p2.Y;
-            p1.Z += p2.Z;
-        }
-
-       
+        
         private Point3d AveragePoint(List<Point3d> points)
         {
             Point3d sum = points.Aggregate((acc, cur) => acc + cur);
             double count = Convert.ToDouble(points.Count);
-            Point3d average = points.Aggregate((acc, cur) => (acc + cur) / count);
+            Point3d average = sum / count;
             return average;
         }
 
