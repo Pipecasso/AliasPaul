@@ -25,7 +25,7 @@ namespace AliasGeometry
             Tolerance = tolerance;
         }
         public double Tolerance { get;}
-    
+
         public void Add(Point3d p)
         {
             Point3d keypoint = null;
@@ -37,10 +37,10 @@ namespace AliasGeometry
             }
             else
             {
-                foreach (KeyValuePair<Point3d,List<Point3d>> kvp in this)
+                foreach (KeyValuePair<Point3d, List<Point3d>> kvp in this)
                 {
                     Point3d representitive = kvp.Key;
-                    if (Point3d.NearlyEquals(p,representitive,Tolerance))
+                    if (Point3d.NearlyEquals(p, representitive, Tolerance))
                     {
                         pointslist = kvp.Value;
                         keypoint = kvp.Key;
@@ -53,14 +53,15 @@ namespace AliasGeometry
             {
                 pointslist = new List<Point3d>();
                 pointslist.Add(p);
+                this.Add(p, pointslist);
             }
-
-            Point3d paverage = pointslist.Average<Point3d>();
-            if (this.ContainsKey(keypoint))
+            else
             {
+                pointslist.Add(p);
+                Point3d paverage = pointslist.Average<Point3d>();
                 this.Remove(keypoint);
+                base.Add(paverage, pointslist);
             }
-            base.Add(keypoint, pointslist);
         }
         
         private Point3d AveragePoint(List<Point3d> points)

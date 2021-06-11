@@ -63,6 +63,11 @@ namespace AliasGeometry
 			return ret;
         }
 
+		static public double distance(Line3d l, Line3d m)
+        {
+			return Point3d.Distance(l.P, m.P) + Point3d.Distance(l.Q, m.Q);
+        }
+
 		static public bool operator != (Line3d l,Line3d m)
         {
 			return !(l == m);

@@ -80,6 +80,8 @@ namespace AliasGeometryFunctionalTests
             Point3d q1 = new Point3d(-675, -456, 44);
             Point3d q2 = new Point3d(-672, -456, 45);
             Point3d q3 = new Point3d(-674, -455, 45);
+            Point3d q4 = new Point3d(-675, -456, 44);
+
 
             Point3d r1 = new Point3d(-1786, 5453, 86);
             Point3d r2 = new Point3d(-1788, 5455, 88);
@@ -93,6 +95,7 @@ namespace AliasGeometryFunctionalTests
             Points.Add(q1);
             Points.Add(q2);
             Points.Add(q3);
+            Points.Add(q4);
 
             Points.Add(r1);
             Points.Add(r2);

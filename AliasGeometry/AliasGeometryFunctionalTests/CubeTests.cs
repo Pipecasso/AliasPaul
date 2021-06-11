@@ -397,11 +397,59 @@ namespace AliasGeometryFunctionalTests
 
             LineCubeIntersection le = _CubeTopLeft.Intersection(p, v1);
             Assert.IsTrue(le.intersection == LineCubeIntersection.Intersection.PassThrough);
-            Assert.IsTrue(le.PointMap.Count == 2);
+
+            Point3dCluster cluster = new Point3dCluster(1e-6);
+            foreach (Point3d pcluster in le.PointMap.Keys)
+            {
+                cluster.Add(pcluster);
+            }
+            
+            Assert.IsTrue(cluster.Count == 2);
             Assert.IsTrue(le.FaceMap.Count == 6);
             Line3d interline = le.IntersectionLine();
             Line3d linetarget = new Line3d(p1, p2);
-            Assert.IsTrue(linetarget == interline);
+            Assert.IsTrue(Line3d.distance(interline, linetarget) < 1e-6);
+
+        }
+
+        [TestMethod]
+        public void IntersectionTestPassThroguh3()
+        {
+            Point3d p1 = _CubeTopLeft.FrontTopLeft;
+            Point3d p2 = _CubeTopLeft.BackBottomLeft;
+
+
+            Point3d p3 = _CubeTopLeft.BackBottomRight;
+            Point3d p4 = _CubeTopLeft.FrontTopRight;
+
+            Vector3d vleft = new Vector3d(p1, p2);
+            Vector3d vright = new Vector3d(p3, p4);
+            
+            double leftlen = vleft.Magnitude();
+            double rightlen = vright.Magnitude();
+            vleft.Normalise();
+            vright.Normalise();
+
+            Point3d p5 = p1 + vleft * (leftlen / 7);
+            Point3d p6 = p3 + vright * (rightlen / 3);
+
+            Vector3d vline = new Vector3d(p5, p6);
+            double linelen = vline.Magnitude();
+            vline.Normalise();
+
+            Point3d p7 = p5 - vline * 17;
+
+            LineCubeIntersection le = _CubeTopLeft.Intersection(p7, vline);
+
+            Assert.IsTrue(le.intersection == LineCubeIntersection.Intersection.PassThrough);
+            Assert.IsTrue(le.PointMap.Count == 2);
+            Assert.IsTrue(le.FaceMap.Count == 2);
+            Assert.IsTrue(le.FaceMap.ContainsKey(Face.Left));
+            Assert.IsTrue(le.FaceMap.ContainsKey(Face.Right));
+
+            Line3d interline = le.IntersectionLine();
+            Line3d linetarget = new Line3d(p5, p6);
+            Assert.IsTrue(Line3d.distance(interline, linetarget) < 1e-6);
 
         }
 
@@ -426,6 +474,30 @@ namespace AliasGeometryFunctionalTests
             Line3d line3d = le.IntersectionLine();
             Line3d targetline = new Line3d(n, m);
             Assert.IsTrue(line3d == targetline);
+        }
+
+        [TestMethod]
+        public void IntersectionTestSurface2()
+        {
+            Point3d p1 = _CubeTopLeft.BackBottomLeft;
+            Point3d p2 = _CubeTopLeft.BackBottomRight;
+            Vector3d vline = new Vector3d(p1, p2);
+            double len = vline.Magnitude();
+            vline.Normalise();
+
+            Point3d p3 = p1 - vline * (len * 3.4543);
+
+         
+            LineCubeIntersection le = _CubeTopLeft.Intersection(p3, (vline * -1.0));
+            Assert.IsTrue(le.intersection == LineCubeIntersection.Intersection.Surface);
+            Assert.IsTrue(le.PointMap.Count == 2);
+            Assert.IsTrue(le.FaceMap.Count == 2);
+            Assert.IsTrue(le.SurfaceFaces.Count == 2);
+            Assert.IsTrue(le.SurfaceFaces.Contains(Face.Back));
+            Assert.IsTrue(le.SurfaceFaces.Contains(Face.Bottom));
+            Line3d line3d = le.IntersectionLine();
+            Line3d targetline = new Line3d(p1, p2);
+            Assert.IsTrue(Line3d.distance(line3d, targetline) < 1e-6);
 
 
         }
