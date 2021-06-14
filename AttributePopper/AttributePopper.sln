@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31112.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttributePopper", "AttributePopper\AttributePopper.csproj", "{164E589A-DE56-4A21-AAB6-060C2A05DAD4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{164E589A-DE56-4A21-AAB6-060C2A05DAD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{164E589A-DE56-4A21-AAB6-060C2A05DAD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{164E589A-DE56-4A21-AAB6-060C2A05DAD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{164E589A-DE56-4A21-AAB6-060C2A05DAD4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7FF83858-D56B-4D2C-BB7B-71E92C04C4D7}
+	EndGlobalSection
+EndGlobal
