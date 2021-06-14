@@ -13,19 +13,19 @@ namespace AttributePopper
 {
     class Program
     {
-
-       
-
+ 
         static void Main(string[] args)
         {
             string strManifest = args[0];
             string pathorpod = args[1];
+            string save = args.Length > 2 ? args[2] : string.Empty;
 
+            bool saveit = save == "y";
             string mandir = Path.GetDirectoryName(strManifest);
             IsogenAssemblyLoader ial = new IsogenAssemblyLoader(strManifest, mandir);
             string corecomps = Path.Combine(mandir, "Core Components");
             ial.AddStringPath(corecomps);
-
+            Random randy = new Random();
 
             FileAttributes attr = File.GetAttributes(pathorpod);
 
@@ -41,7 +41,7 @@ namespace AttributePopper
 
                     if (!File.Exists(pcfpath))
                     {
-                        PopAPod(pod, ial, mandir, pcfpath);
+                        PopAPod(randy,pod, ial, mandir, pcfpath,saveit);
                     }
                 }
             }
@@ -52,23 +52,22 @@ namespace AttributePopper
                 string pcfpath = Path.Combine(poddir, $"{fname}.pcf");
                 if (!File.Exists(pcfpath))
                 {
-                    PopAPod(pathorpod, ial, mandir, pcfpath);
+                    PopAPod(randy,pathorpod, ial, mandir, pcfpath,saveit);
                 }
             }
         }
 
-        static void PopAPod(string spod, IsogenAssemblyLoader ial, string bwfcfolder,string pcfpath)
+        static void PopAPod(Random rand,string spod, IsogenAssemblyLoader ial, string bwfcfolder,string pcfpath,bool save)
         {
-            Func<int, string> RandomNumberFunction = (max) =>
+       
+            Func<Random,int, string> RandomNumberFunction = (r,max) =>
             {
-                Random r = new Random();
                 int i = r.Next(0, max);
                 return i.ToString();
             };
 
-            Func<string> RandomDoctorFunction = () =>
+            Func<Random ,string> RandomDoctorFunction = (r) =>
             {
-                Random r = new Random();
                 int i = r.Next(0, 12);
                 string doc = string.Empty;
                 switch (i)
@@ -90,9 +89,8 @@ namespace AttributePopper
                 return doc;
             };
 
-            Func<string> RandomBeatleFunction = () =>
+            Func<Random,string> RandomBeatleFunction = (r) =>
             {
-                Random r = new Random();
                 int i = r.Next(0, 3);
                 string beatle = string.Empty;
                 switch (i)
@@ -105,7 +103,7 @@ namespace AttributePopper
                 return beatle;
             };
 
-            Func<string> RandomUsState = () =>
+            Func<Random,string> RandomUsState = (r) =>
             {
                 List<string> states = new List<string>();
                 states.Add("New York");
@@ -159,10 +157,30 @@ namespace AttributePopper
                 states.Add("Indiana");
                 states.Add("Missouri");
 
-
-                Random r = new Random();
                 return states[r.Next(49)];
             };
+
+            Func<Random, string> FounderMembers = (r) =>
+             {
+                 string go = string.Empty;
+                 int i = r.Next(0, 11);
+                 switch (i)
+                 {
+                     case 0: go = "Accrington Stangley"; break;
+                     case 1: go = "Aston Villa"; break;
+                     case 2: go = "Blackburn Rovers"; break;
+                     case 3: go = "Bolton Wanderers"; break;
+                     case 4: go = "Burnley"; break;
+                     case 5: go = "Derby County"; break;
+                     case 6: go = "Everton"; break;
+                     case 7: go = "Notts County"; break;
+                     case 8: go = "Preston North End"; break;
+                     case 9: go = "Stoke City"; break;
+                     case 10: go = "West Bromwich Albion"; break;
+                     case 11: go = "Wolverhampton Wanderers"; break;
+                 }
+                 return go;
+             };
             
             using (IsogenAssemblyLoaderCookie monster = new IsogenAssemblyLoaderCookie(ial))
             {
@@ -170,23 +188,25 @@ namespace AttributePopper
                 pod.Handshake = HandshakeTools.GetPODHandshake(bwfcfolder);
                 pod.Load(spod);
 
+                Random r = new Random();
+
                 Console.WriteLine(spod);
                 for (int i = 0; i < pod.Pipelines.Count; i++)
                 {
                     Pipeline pline = pod.Pipelines.Item(i);
-                    SetAttributes(string.Empty, pline.Attributes, RandomBeatleFunction, RandomNumberFunction, 250, 43);
+                    SetAttributes(rand,string.Empty, pline.Attributes, RandomBeatleFunction, RandomNumberFunction, 250, 43);
                     for (int ii = 0; ii < pline.Components.Count; ii++)
                     {
                         Component component = pline.Components.Item(ii);
                         if (component.Material.Group == "Welds")
                         {
                             //Attribute 37 is UState
-                            SetAttributes("WELD-", component.Attributes, RandomUsState, RandomNumberFunction, 100, 37);
+                            SetAttributes(rand,"WELD-", component.Attributes, RandomUsState, RandomNumberFunction, 100, 37);
                         } 
                         else
                         {
-                            //attribute 61 is Doctor Who
-                            SetAttributes("COMPONENT-", component.Attributes, RandomDoctorFunction, RandomNumberFunction, 1000, 71);
+                            //attribute 71 is Doctor Who, attribute 17 is football
+                            SetAttributes(rand,"COMPONENT-", component.Attributes, RandomDoctorFunction,FounderMembers, RandomNumberFunction, 1000, 71,17);
                         }
 
                         for (int inf = 0;inf < component.InformationElements.Count;inf ++)
@@ -194,10 +214,30 @@ namespace AttributePopper
                             InformationElement ie = component.InformationElements.Item(inf);
                             if (ie.Type == "Thickness-Measurement-Location")
                             {
-                                SetAttributes("INFORMATION-", ie.Attributes, RandomBeatleFunction, RandomNumberFunction, 500, 23);
+                                SetAttributes(rand,"INFORMATION-", ie.Attributes, RandomBeatleFunction, RandomNumberFunction, 500, 23);
                             }
                         }           
                     }
+                }
+
+
+                if (save)
+                {
+                    string dir = Path.GetDirectoryName(spod);
+                    string filename = Path.GetFileName(spod);
+                    string newpodpath = Path.Combine(dir, "POP", filename);
+                    string newdir = Path.GetDirectoryName(newpodpath);
+                    
+                    if (Directory.Exists(newdir) == false)
+                    {
+                        Directory.CreateDirectory(newdir);
+                    }
+
+                    if (File.Exists(newpodpath) == false)
+                    {
+                        pod.Save(newpodpath);
+                    }
+                  
                 }
 
                 AliasImportExport.ImportExport importExport = new ImportExport();
@@ -210,7 +250,7 @@ namespace AttributePopper
             }
         }
 
-        static void SetAttributes(string attkey, AliasPOD.Attributes attributes, Func<string> attributefunc,Func<int,string> attfunction2,int max,int ioddoneout)
+        static void SetAttributes(Random randy,string attkey, AliasPOD.Attributes attributes, Func<Random,string> attributefunc,Func<Random,int,string> attfunction2,int max,int ioddoneout)
         {
             for (int i = 1; i <= 100; i++)
             {
@@ -220,17 +260,45 @@ namespace AttributePopper
                 if (attribute.IsValueValid()) continue;
                 if (i==ioddoneout)
                 {
-                    attribute.Value = attributefunc();
+                    attribute.Value = attributefunc(randy);
+                }
+                else if (i==ioddoneout)
+                {
+                    attribute.Value = attributefunc(randy);
                 }
                 else
                 {
-                    attribute.Value = attfunction2(max);
+                    attribute.Value = attfunction2(randy,max);
                 }
             }
 
         }
 
-      
+        static void SetAttributes(Random randy, string attkey, AliasPOD.Attributes attributes, Func<Random, string> attributefunc, Func<Random, string> attributefunc2, Func<Random, int, string> attributefunc3, int max, int ioddoneout1, int ioddoneout2)
+        {
+            for (int i = 1; i <= 100; i++)
+            {
+                string AttributeName = $"{attkey}ATTRIBUTE{i}";
+                AliasPOD.Attribute attribute = attributes.Item(AttributeName);
+                if (attribute == null) break;
+                if (attribute.IsValueValid()) continue;
+                if (i == ioddoneout1)
+                {
+                    attribute.Value = attributefunc(randy);
+                }
+                else if (i==ioddoneout2)
+                {
+                    attribute.Value = attributefunc2(randy);
+                }
+                else
+                {
+                    attribute.Value = attributefunc3(randy, max);
+                }
+            }
+
+        }
+
+
 
     }
 }
