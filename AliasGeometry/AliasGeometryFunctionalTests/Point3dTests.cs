@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AliasGeometry;
+using AliasCubePoints;
 
 
 namespace AliasGeometryFunctionalTests

@@ -41,6 +41,8 @@ namespace AliasGeometry
             return (new Vector2d(one.Item1 - two.Item1, one.Item2 - two.Item2));
         }
 
+       
+
     
      
     };
@@ -99,6 +101,67 @@ namespace AliasGeometry
                 return end.dY - m * end.dX;
             }
         }
+        /*
+        public static bool Intersection(Line2d l1,Line2d l2,ref double dx,ref double dy)
+        {
+            bool ret;
+            if (Math.Abs(l1.m()) == Math.Abs(l2.m()))
+            {
+                ret = false;
+            }
+            else
+            {
+                ret = true;
+                dx = (l2.c() - l1.c()) / (l1.m() - l2.m());
+                dy = l1.m() * dx + l1.c();
+            }
+            return ret;
+        }
+       
+        public static bool Intersection(Line2d l1,Line2d l2,out Point2d i)
+        {
+            double dx = 0;
+            double dy = 0;
+            bool ret = Intersection(l1, l2, ref dx, ref dy);
+            if (ret)
+            {
+                i = new Point2d(dx, dy);
+            }
+            else
+            {
+                i = null;
+            }
+            return ret;
+        }*/
+
+        public double DistanceFromExtendedLine(Point2d p)
+        {
+            double grad = m();
+            double m1 = grad == 0 ? double.PositiveInfinity : -1 / grad;
+            double c1 = double.IsInfinity(m1) ? double.PositiveInfinity : p.Y - m1 * p.X;
+            double dx = 0;
+            double dy = 0;
+            Point2d intersection;
+
+
+            if (double.IsInfinity(m1))
+            {
+                intersection = new Point2d(p.X, start.Y);
+            }
+            else if (double.IsInfinity(grad))
+            {
+                intersection = new Point2d(start.X, p.Y);
+            }
+            else
+            {
+                double intercept = c();
+                dx = (c1 - intercept) / (grad - m1);
+                dy = grad * dx + intercept;
+                intersection = new Point2d(dx, dy);
+            }
+            return Point2d.Distance(p, intersection);
+        }
+
 
         #region Geometry
 

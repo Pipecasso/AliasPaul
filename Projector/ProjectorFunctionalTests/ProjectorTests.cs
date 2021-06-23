@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AliasGeometry;
 using Projector;
+using AliasCubePoints;
 
 namespace ProjectorFunctionalTests
 {
@@ -26,6 +27,62 @@ namespace ProjectorFunctionalTests
             Assert.IsTrue(Math.Abs(camera.N.X - -23.4604321) < 1e-6);
             Assert.IsTrue(Math.Abs(camera.N.Y - -5.96283) < 1e-6);
             Assert.IsTrue(camera.N.Z == 122);
+        }
+
+        [TestMethod]
+        public void ConstructorTest2()
+        {
+            List<Point3d> pointList = ALotOfPoints.GetSomePoints();
+            CubeView cube = new CubeView(pointList);
+
+            Vector3d vNormal = new Vector3d(cube.BackBottomLeft, cube.FrontTopRight);
+            vNormal.Normalise();
+            const int width = 400;
+            const int height = 250;
+
+            Projector.Camera camera = new Camera(vNormal, cube, 7,4,width,height);
+
+            Point2d topleft = new Point2d(-width / 2, height / 2);
+            Point2d bottomright = new Point2d(width / 2, -height / 2);
+            Rectangle2d rtangle = new Rectangle2d(topleft, bottomright);
+            List<double> distances = new List<double>();
+
+
+
+
+            Dictionary<Point3d, Point2d> BadMap = new Dictionary<Point3d, Point2d>();
+            List<Point2d> projectedPoints = new List<Point2d>();
+            foreach (Point3d p in pointList)
+            {
+                Point2d projpoint = camera.ProjectPoint(p);
+                if (rtangle.IsPointInside(projpoint) == false)
+                {
+                    BadMap.Add(p, projpoint);
+                }
+            }
+
+          
+            
+            
+            
+            
+            
+            
+            
+            foreach (Point2d p in projectedPoints)
+            {
+                if (!rtangle.IsPointInside(p))
+                {
+                    int wtf = 0;
+                }
+             //   Assert.IsTrue(rtangle.IsPointInside(p));
+                distances.Add(rtangle.PointDistance(p));
+            }
+
+            double nearesttoborder = distances.Min();
+            Assert.IsTrue(Math.Abs(nearesttoborder) < 1);
+            
+            
         }
 
         [TestMethod]

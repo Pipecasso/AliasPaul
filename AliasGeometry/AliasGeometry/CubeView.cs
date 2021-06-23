@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 
 namespace AliasGeometry
@@ -27,6 +28,7 @@ namespace AliasGeometry
     };
 
   
+
 
 
     public class Vertex 
@@ -92,6 +94,7 @@ namespace AliasGeometry
 
     public class VertexCompare : IEqualityComparer<Vertex>
     { 
+        
         public bool Equals(Vertex l,Vertex r)
         {
             return (l.Frontback == r.Frontback && l.Leftright == r.Leftright && l.Updown == r.Updown);
@@ -109,9 +112,47 @@ namespace AliasGeometry
     
     }
 
+    public class VertexEnum : IEnumerator
+    {
+        private Vertex _v;
+        private int _position;
+
+        private Func<Vertex, Vertex>[] paths; 
+
+        public VertexEnum()
+        {
+            Reset();
+            paths = new Func<Vertex, Vertex>[]{ Vertex.OppositeLR, Vertex.OppositeUD, Vertex.OppositeLR, Vertex.OppositeFB, Vertex.OppositeUD, Vertex.OppositeLR, Vertex.OppositeUD };
+        }
+
+        public bool MoveNext()
+        {
+            bool ret;
+            if (_position == 6)
+            {
+                ret = false;
+            }
+            else
+            {
+                _v = paths[_position](_v);
+                _position++;
+                ret = true;
+            }
+            return ret;
+        }
+
+        public object Current { get => _v; }
+
+        public void Reset()
+        {
+            _v = new Vertex(Face.Front, Face.Top, Face.Left);
+            _position = 0;
+        }
+    }
 
 
-    public class CubeView
+
+    public class CubeView : IEnumerable
     {
         private Dictionary<Vertex, Point3d> _Vertices;
         private Point3d _center;
@@ -211,7 +252,10 @@ namespace AliasGeometry
         }
     
 
-
+        public IEnumerator GetEnumerator()
+        {
+            return new VertexEnum();
+        }
  
 
         /*

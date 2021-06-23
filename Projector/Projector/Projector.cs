@@ -29,9 +29,52 @@ namespace Projector
             _N = CameraPoint + Normal * _distance;
         }
 
-        public Camera(Vector3d normal,CubeView cube)
+        public Camera(Vector3d normal,CubeView cube,double mult,double div,int screenwidth,int screenheight)
         {
+            Point3d cubecentre = cube.Center;
+            LineCubeIntersection lci = cube.Intersection(cubecentre, normal);
+            Line3d intersectline = lci.IntersectionLine();
+            double length = intersectline.Length();
 
+            CameraPoint = cubecentre - normal * (mult * length);
+
+            //now project all cubevertices 
+            _distance = length / div;
+            Normal = normal;
+            ChooseOrthogonals();
+            _N = CameraPoint + Normal * _distance;
+
+            Dictionary<Point2d,Point3d> VertexMap = new Dictionary<Point2d, Point3d>();
+
+            foreach (Vertex v in cube)
+            {
+                Point3d vpoint = cube[v];
+                Point2d vpointproj = ProjectPoint(vpoint);
+                VertexMap.Add(vpointproj, vpoint);
+            }
+
+
+            //2-4 points will make a boundary;
+            Point2d top = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Maxy(acc, cur));
+            Point2d bottom = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Miny(acc, cur));
+            Point2d left = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Minx(acc, cur));
+            Point2d right = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Maxx(acc, cur));
+
+
+         
+
+            /*Point2d a = new Point2d(low.X, high.Y);
+            Point2d d = new Point2d(high.X, low.Y);
+
+            Rectangle2d screen = new Rectangle2d(a, d);
+
+            double widthmultipler = screenwidth / screen.Width;
+            double heightmultipler = screenheight / screen.Height;
+            double actualmult = widthmultipler > heightmultipler ? widthmultipler : heightmultipler;
+
+            _distance *= actualmult;*/
+
+   
         }
 
         public Vector3d V1 { get => _V1; set { _V1 = value; } }

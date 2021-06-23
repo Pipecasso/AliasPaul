@@ -139,7 +139,15 @@ namespace AliasGeometry
             }
         }
 
-
+        public double PointDistance(Point2d p)
+        {
+            List<double> distances = new List<double>();
+            distances.Add(Top.DistanceFromExtendedLine(p));
+            distances.Add(Bottom.DistanceFromExtendedLine(p));
+            distances.Add(Left.DistanceFromExtendedLine(p));
+            distances.Add(Right.DistanceFromExtendedLine(p));
+            return distances.Min();
+        }
 
 
 

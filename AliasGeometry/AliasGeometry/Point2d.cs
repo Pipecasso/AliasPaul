@@ -97,6 +97,60 @@ namespace AliasGeometry
             return new Point2d((p.dX + q.dX) / 2, (p.dY + q.dY) / 2);
         }
 
-        
+        public static Point2d Max(Point2d p,Point2d q)
+        {
+            return new Point2d(p.X > q.X ? p.X : q.X, p.Y > q.Y ? p.Y : q.Y);
+        }
+
+        public static Point2d Min(Point2d p, Point2d q)
+        {
+            return new Point2d(p.X < q.X ? p.X : q.X, p.Y < q.Y ? p.Y : q.Y);
+        }
+
+        public static Point2d Maxx(Point2d p, Point2d q)
+        {
+            return p.X > q.X ? p : q;
+        }
+
+        public static Point2d Minx(Point2d p, Point2d q)
+        {
+            return p.X < q.X ? p : q;
+        }
+
+        public static Point2d Maxy(Point2d p, Point2d q)
+        {
+            return p.Y > q.Y ? p : q;
+        }
+
+        public static Point2d Miny(Point2d p, Point2d q)
+        {
+            return p.Y < q.Y ? p : q;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Point2d d &&
+                   _x == d._x &&
+                   _y == d._y;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 979593255;
+            hashCode = hashCode * -1521134295 + _x.GetHashCode();
+            hashCode = hashCode * -1521134295 + _y.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator == (Point2d p,Point2d q)
+        {
+            return p.X == q.X && p.Y == q.Y;
+        }
+
+        public static bool operator != (Point2d p,Point2d q)
+        {
+            return !(p == q);
+        }
+
     }
 }

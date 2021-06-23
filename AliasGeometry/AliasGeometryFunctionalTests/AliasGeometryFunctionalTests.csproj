@@ -49,11 +49,13 @@
     <Compile Include="BoundedPlaneTests.cs" />
     <Compile Include="CubeTests.cs" />
     <Compile Include="EquationTest.cs" />
+    <Compile Include="Line2dTests.cs" />
     <Compile Include="Line3dTest.cs" />
     <Compile Include="MatrixTests.cs" />
     <Compile Include="PlaneTests.cs" />
     <Compile Include="Point3dTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rect2dTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

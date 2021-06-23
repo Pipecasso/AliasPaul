@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AliasGeometry;
+using AliasCubePoints;
 
 namespace AliasGeometryFunctionalTests
 {
@@ -500,6 +502,24 @@ namespace AliasGeometryFunctionalTests
             Assert.IsTrue(Line3d.distance(line3d, targetline) < 1e-6);
 
 
+        }
+
+        [TestMethod]
+
+        public void Enumerator()
+        {
+            HashSet<Point3d> PointHash = new HashSet<Point3d>();
+            foreach (Vertex v in _CubeBottomLeft)
+            {
+                Point3d p = _CubeBottomLeft[v];
+                Assert.IsFalse(PointHash.Contains(p));
+                PointHash.Add(p);
+            }
+
+            Assert.IsTrue(PointHash.Count == 8);
+        
+        
+        
         }
     }
 }
