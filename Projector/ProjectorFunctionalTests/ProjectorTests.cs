@@ -98,6 +98,30 @@ namespace ProjectorFunctionalTests
             Assert.IsTrue(projected_point.Y == -2);
         }
 
+        [TestMethod]
+        public void DistanceCalculation()
+        {
+            const double camdist = 6000;
+            Vector3d vNormal = new Vector3d(0, 1, 1);
+            vNormal.Normalise();
+            Point3d CubeCenter = new Point3d(-6, -146, -18);
+            Point3d CameraPoint = CubeCenter - vNormal * camdist;
+            double disttest = Point3d.Distance(CubeCenter, CameraPoint);
+            //Assert.AreEqual(camdist, disttest);
+
+            Projector.Camera camera = new Camera(CameraPoint, 200, vNormal);
+            Point3d ptest = new Point3d(653, 779, 954);
+            
+        
+            int height = 100;
+
+            double dDist = camera.CalculateDistanceRequiredForPoint(ptest, true, height);
+            Projector.Camera testcam = new Camera(CameraPoint, dDist, vNormal);
+            Point2d phope = testcam.ProjectPoint(ptest);
+            Assert.IsTrue(phope.Y == height);
+
+        }
+
 
 
 

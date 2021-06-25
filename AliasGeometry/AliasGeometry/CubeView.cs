@@ -128,9 +128,15 @@ namespace AliasGeometry
         public bool MoveNext()
         {
             bool ret;
-            if (_position == 6)
+            if (_position == 7)
             {
                 ret = false;
+            }
+            else if (_position == -1)
+            {
+                _v = new Vertex(Face.Front, Face.Top, Face.Left);
+                _position++;
+                ret = true;
             }
             else
             {
@@ -145,8 +151,7 @@ namespace AliasGeometry
 
         public void Reset()
         {
-            _v = new Vertex(Face.Front, Face.Top, Face.Left);
-            _position = 0;
+            _position = -1;
         }
     }
 

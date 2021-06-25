@@ -60,6 +60,7 @@ namespace Projector
             Point2d left = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Minx(acc, cur));
             Point2d right = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Maxx(acc, cur));
 
+            double dheight = CalculateDistanceRequiredForPoint(VertexMap[top], true, screenheight);
 
          
 
@@ -75,6 +76,66 @@ namespace Projector
             _distance *= actualmult;*/
 
    
+        }
+
+        public double CalculateDistanceRequiredForPoint(Point3d p3, bool vertical,double screenlen)
+        {
+
+            Vector3d PointToCamera = new Vector3d(CameraPoint, p3);
+            double PCLength = PointToCamera.Magnitude();
+            PointToCamera.Normalise();
+
+            Vector3d cartesianVector;
+            Vector3d otherVector;
+
+            if (vertical)
+            {
+                cartesianVector = _V2;
+                otherVector = _V1;
+            }
+            else
+            {
+                cartesianVector = _V1;
+                otherVector = _V2;
+            }
+
+            //consider POINT X the right angle formed by P3 camera point, (as hypotenuse, and the cartesian vector)
+            //P3 X is the cartesian vector.
+            ///                                       P3
+            ////                                       ^     
+            ////                                       
+            ////     Camera Point ------------------  X
+
+            double PC_CartDP = Vector3d.Dot(PointToCamera, cartesianVector);
+            double PX = PCLength * PC_CartDP;
+            double angle = Math.Acos(PC_CartDP);
+            Point3d X = p3 - cartesianVector * PX;
+            Vector3d OX = new Vector3d(CameraPoint, X);
+            double OXLen = OX.Magnitude();
+            OX.Normalise();
+            double check = Vector3d.Dot(OX, cartesianVector);
+            //assert check ==0;
+
+            //Consider POINT P2. Its the 3d Point where P3 projects onto the required plane
+            //POINT X2 where OX projects onto the required plane
+            double ox2len = screenlen * Math.Tan(angle);
+            double OXNormalDP = Vector3d.Dot(OX, Normal);
+            double len = ox2len * OXNormalDP;
+
+            Point3d N2 = CameraPoint + Normal * len;
+
+            Plane3d PlaneWeWant = new Plane3d(Normal, N2);
+            Point3d X2 = CameraPoint + OX * ox2len; ;
+            Point3d X2Check = PlaneWeWant.NearestPoint(X2);
+
+            double dist = Point3d.Distance(X2, X2Check);
+            //asser ipop = true;
+
+
+
+
+
+            return len;
         }
 
         public Vector3d V1 { get => _V1; set { _V1 = value; } }
@@ -98,13 +159,19 @@ namespace Projector
 
         }
 
-        public Point2d ProjectPoint(Point3d p)
+        public Point3d ProjectPoint3d(Point3d p)
         {
-            double maxintasdouble = Convert.ToDouble(int.MaxValue);
             Vector3d camtopoint = Vector3d.Normalise(p - CameraPoint);
             double theta2 = Vector3d.Dot(camtopoint, Normal); //the acos angle between normal and pointline
             double planedistance = (_distance / theta2);  //the distance from planepoint and camera;
             Point3d P1 = CameraPoint + camtopoint * planedistance; //intersection of the cameraline and the plane
+            return P1;
+        }
+
+        public Point2d Convert3dTo2d(Point3d P1)
+        {
+            Point2d pout;
+            double maxintasdouble = Convert.ToDouble(int.MaxValue);
             Vector3d NP1 = P1 - _N;
             double hypdist = NP1.Magnitude();
 
@@ -122,12 +189,21 @@ namespace Projector
                 int x = (Math.Abs(dx) > maxintasdouble) ? x = Math.Sign(dx) * Int32.MaxValue : Convert.ToInt32(dx);
                 int y = (Math.Abs(dy) > maxintasdouble) ? x = Math.Sign(dy) * Int32.MaxValue : Convert.ToInt32(dy);
 
-                return new Point2d(x, y);
+                pout=  new Point2d(x, y);
             }
             else
             {
-                return new Point2d(0, 0);
+                pout = new Point2d(0, 0);
             }
+            return pout;
+        }
+
+        public Point2d ProjectPoint(Point3d p)
+        {
+         
+            Point3d P1 = ProjectPoint3d(p);
+            Point2d p2 = Convert3dTo2d(P1);
+            return p2;
         }
 
         public Point3d N { get => _N; set { _N = value; } }
