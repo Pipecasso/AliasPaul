@@ -86,17 +86,14 @@ namespace Projector
             PointToCamera.Normalise();
 
             Vector3d cartesianVector;
-            Vector3d otherVector;
 
             if (vertical)
             {
-                cartesianVector = _V2;
-                otherVector = _V1;
+                cartesianVector = _V1;
             }
             else
             {
-                cartesianVector = _V1;
-                otherVector = _V2;
+                cartesianVector = _V2;
             }
 
             //consider POINT X the right angle formed by P3 camera point, (as hypotenuse, and the cartesian vector)
