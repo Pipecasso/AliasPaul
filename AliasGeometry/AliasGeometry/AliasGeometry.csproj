@@ -41,17 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoundedPlane.cs" />
     <Compile Include="Circle3d.cs" />
     <Compile Include="Cone2d.cs" />
     <Compile Include="Cone3d.cs" />
     <Compile Include="CubeView.cs" />
     <Compile Include="Ellipse2d.cs" />
+    <Compile Include="Equation3.cs" />
     <Compile Include="Line2d.cs" />
     <Compile Include="Line3d.cs" />
+    <Compile Include="LineCubeIntersection.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="Plane3d.cs" />
     <Compile Include="Point2d.cs" />
     <Compile Include="Point3d.cs" />
+    <Compile Include="PointCluster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quadrilateral2d.cs" />
     <Compile Include="Vector3d.cs" />

@@ -35,6 +35,23 @@ namespace AliasGeometry
 
         public double Determinant
         { get => a * d - b * c; }
+
+        public Matrix22 Inverse()
+        {
+            Matrix22 togo = null;
+            double determinant = Determinant;
+            if (determinant != 0)
+            {
+                togo = new Matrix22(d / determinant, -b / determinant, -c / determinant, a / determinant);
+            }
+            return togo;
+        }
+
+        static public Vector2d operator *(Matrix22 m,Vector2d v)
+        {
+            return new Vector2d(m.a * v.Item1 + m.b * v.Item2, m.c * v.Item1 + m.d * v.Item2);
+
+        }
     }
 
     public class Matrix33
@@ -53,15 +70,28 @@ namespace AliasGeometry
             }
         }
             
-        public Matrix33(Vector3d v1,Vector3d v2,Vector3d v3)
+        public Matrix33(Vector3d v1,Vector3d v2,Vector3d v3,bool bRow)
         {
             _Values = new double[3, 3];
             Vector3d[] vectors = new Vector3d[] { v1, v2, v3 };
-            for (int i=0;i<3;i++)
+
+            if (bRow)
             {
-                _Values[0, i] = vectors[i].X;
-                _Values[1, i] = vectors[i].Y;
-                _Values[2, i] = vectors[i].Z;
+                for (int i = 0; i < 3; i++)
+                {
+                    _Values[0, i] = vectors[i].X;
+                    _Values[1, i] = vectors[i].Y;
+                    _Values[2, i] = vectors[i].Z;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    _Values[i, 0] = vectors[i].X;
+                    _Values[i, 1] = vectors[i].Y;
+                    _Values[i, 2] = vectors[i].Z;
+                }
             }
         }
       
@@ -240,8 +270,10 @@ namespace AliasGeometry
             return mout;
         }
 
+        //Use Equation3 instead, it uses Cramer's rule which is faster
         static public bool SolveSystemOfEquations(Matrix33 m,Vector3d v,out double x,out double y,out double z)
         { 
+            
             if (m.Determinant == 0)
             {
                 x = 0;
@@ -260,8 +292,16 @@ namespace AliasGeometry
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            return obj is Matrix33 matrix &&
+                   EqualityComparer<double[,]>.Default.Equals(_Values, matrix._Values);
+        }
 
-
+        public override int GetHashCode()
+        {
+            return 229151924 + EqualityComparer<double[,]>.Default.GetHashCode(_Values);
+        }
     }
 
 }
