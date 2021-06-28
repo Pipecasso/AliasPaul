@@ -50,32 +50,17 @@ namespace ProjectorFunctionalTests
 
 
 
-            Dictionary<Point3d, Point2d> BadMap = new Dictionary<Point3d, Point2d>();
+            
             List<Point2d> projectedPoints = new List<Point2d>();
             foreach (Point3d p in pointList)
             {
                 Point2d projpoint = camera.ProjectPoint(p);
-                if (rtangle.IsPointInside(projpoint) == false)
-                {
-                    BadMap.Add(p, projpoint);
-                }
+                projectedPoints.Add(projpoint);
             }
 
-          
-            
-            
-            
-            
-            
-            
-            
             foreach (Point2d p in projectedPoints)
             {
-                if (!rtangle.IsPointInside(p))
-                {
-                    int wtf = 0;
-                }
-             //   Assert.IsTrue(rtangle.IsPointInside(p));
+                Assert.IsTrue(rtangle.IsPointInside(p));
                 distances.Add(rtangle.PointDistance(p));
             }
 

@@ -50,7 +50,10 @@ namespace Projector
             {
                 Point3d vpoint = cube[v];
                 Point2d vpointproj = ProjectPoint(vpoint);
-                VertexMap.Add(vpointproj, vpoint);
+                if (!VertexMap.ContainsKey(vpointproj))
+                {
+                    VertexMap.Add(vpointproj, vpoint);
+                }
             }
 
 
@@ -60,22 +63,13 @@ namespace Projector
             Point2d left = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Minx(acc, cur));
             Point2d right = VertexMap.Keys.Aggregate((acc, cur) => Point2d.Maxx(acc, cur));
 
-            double dheight = CalculateDistanceRequiredForPoint(VertexMap[top], true, screenheight);
+            List<double> Distances = new List<double>();
+            Distances.Add(CalculateDistanceRequiredForPoint(VertexMap[top], true, screenheight/2));
+            Distances.Add(CalculateDistanceRequiredForPoint(VertexMap[bottom], true, screenheight/2));
+            Distances.Add(CalculateDistanceRequiredForPoint(VertexMap[left], false, screenwidth/2));
+            Distances.Add(CalculateDistanceRequiredForPoint(VertexMap[right], false, screenwidth/2));
+            _distance = Distances.Min();
 
-         
-
-            /*Point2d a = new Point2d(low.X, high.Y);
-            Point2d d = new Point2d(high.X, low.Y);
-
-            Rectangle2d screen = new Rectangle2d(a, d);
-
-            double widthmultipler = screenwidth / screen.Width;
-            double heightmultipler = screenheight / screen.Height;
-            double actualmult = widthmultipler > heightmultipler ? widthmultipler : heightmultipler;
-
-            _distance *= actualmult;*/
-
-   
         }
 
         public double CalculateDistanceRequiredForPoint(Point3d p3, bool vertical,double screenlen)
