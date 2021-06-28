@@ -126,7 +126,7 @@ namespace ProjectorFunctionalTests
         [TestMethod]
         public void DistanceCalculationHorizontal()
         {
-            const double camdist = 10000;
+            const double camdist = 5000;
             Vector3d vNormal = new Vector3d(0, 1, 1);
             vNormal.Normalise();
             Point3d CubeCenter = new Point3d(-6, -146, -18);
@@ -141,7 +141,7 @@ namespace ProjectorFunctionalTests
             double dDist = camera.CalculateDistanceRequiredForPoint(ptest, false, width);
             Projector.Camera testcam = new Camera(CameraPoint, dDist, vNormal);
             Point2d phope = testcam.ProjectPoint(ptest);
-            Assert.AreEqual(phope.X, width);
+            Assert.AreEqual(-width, phope.X);
 
         }
 

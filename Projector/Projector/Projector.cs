@@ -106,6 +106,11 @@ namespace Projector
             double PC_CartDP = Vector3d.Dot(PointToCamera, cartesianVector);
             double PX = PCLength * PC_CartDP;
             double angle = Math.Acos(PC_CartDP);
+            if (angle > Math.PI /2)
+            {
+                angle = Math.PI - angle;
+            }
+            
             Point3d X = p3 - cartesianVector * PX;
             Vector3d OX = new Vector3d(CameraPoint, X);
             double OXLen = OX.Magnitude();
