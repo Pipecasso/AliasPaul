@@ -45,8 +45,7 @@ namespace AliasGeometry
             Z = v.Z;
         }
 
-      
-
+     
         public double Magnitude()
         {
             return Math.Sqrt(X * X + Y * Y + Z * Z);
@@ -55,15 +54,27 @@ namespace AliasGeometry
         public void Normalise()
         {
             double m = Magnitude();
-            X /= m;
-            Y /= m;
-            Z /= m;
+            if (m > 0)
+            { 
+                X /= m;
+                Y /= m;
+                Z /= m;
+            }
         }
 
         public static Vector3d Normalise(Vector3d v)
         {
+            Vector3d vout;
             double m = v.Magnitude();
-            return new Vector3d(v.X / m, v.Y / m, v.Z / m);
+            if (m==0)
+            {
+                vout = new Vector3d(0, 0, 0);
+            }
+            else
+            {
+                vout = new Vector3d(v.X / m, v.Y / m, v.Z / m);
+            }
+            return vout;
 
         }
 
@@ -141,6 +152,41 @@ namespace AliasGeometry
             d += Math.Abs(Dot(vtest, new Vector3d(0, 0, 1)));
             return (Math.Abs(d - 1) < 1e-7);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Vector3d d &&
+                   X == d.X &&
+                   Y == d.Y &&
+                   Z == d.Z;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -307843816;
+            hashCode = hashCode * -1521134295 + X.GetHashCode();
+            hashCode = hashCode * -1521134295 + Y.GetHashCode();
+            hashCode = hashCode * -1521134295 + Z.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator == (Vector3d v1,Vector3d v2)
+        {
+            return v1.X == v2.X && v1.Y == v2.Y && v1.Z == v2.Z;
+        }
+
+        public static bool operator !=(Vector3d v1, Vector3d v2)
+        {
+            return !(v1 == v2);
+        }
+
+        public static bool Parallel(Vector3d v1,Vector3d v2,double tolerance = double.Epsilon)
+        {
+            double dotproduct = Math.Abs(Vector3d.Dot(v1, v2));
+            return Math.Abs(dotproduct - 1) <= double.Epsilon;
+        }
+        
+               
 
 
 

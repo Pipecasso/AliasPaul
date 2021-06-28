@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections;
 
 
 namespace AliasGeometry
@@ -25,6 +26,10 @@ namespace AliasGeometry
         Front,
         Back
     };
+
+  
+
+
 
     public class Vertex 
     {
@@ -89,6 +94,7 @@ namespace AliasGeometry
 
     public class VertexCompare : IEqualityComparer<Vertex>
     { 
+        
         public bool Equals(Vertex l,Vertex r)
         {
             return (l.Frontback == r.Frontback && l.Leftright == r.Leftright && l.Updown == r.Updown);
@@ -106,9 +112,52 @@ namespace AliasGeometry
     
     }
 
+    public class VertexEnum : IEnumerator
+    {
+        private Vertex _v;
+        private int _position;
+
+        private Func<Vertex, Vertex>[] paths; 
+
+        public VertexEnum()
+        {
+            Reset();
+            paths = new Func<Vertex, Vertex>[]{ Vertex.OppositeLR, Vertex.OppositeUD, Vertex.OppositeLR, Vertex.OppositeFB, Vertex.OppositeUD, Vertex.OppositeLR, Vertex.OppositeUD };
+        }
+
+        public bool MoveNext()
+        {
+            bool ret;
+            if (_position == 7)
+            {
+                ret = false;
+            }
+            else if (_position == -1)
+            {
+                _v = new Vertex(Face.Front, Face.Top, Face.Left);
+                _position++;
+                ret = true;
+            }
+            else
+            {
+                _v = paths[_position](_v);
+                _position++;
+                ret = true;
+            }
+            return ret;
+        }
+
+        public object Current { get => _v; }
+
+        public void Reset()
+        {
+            _position = -1;
+        }
+    }
 
 
-    public class CubeView
+
+    public class CubeView : IEnumerable
     {
         private Dictionary<Vertex, Point3d> _Vertices;
         private Point3d _center;
@@ -130,33 +179,16 @@ namespace AliasGeometry
 
         public CubeView(List<Point3d> points,NorthArrow na = NorthArrow.TopLeft)
         {
-            double lowestX = double.MaxValue;
-            double lowestY = double.MaxValue;
-            double lowestZ = double.MaxValue;
-            double highestX = double.MinValue;
-            double highestY = double.MinValue;
-            double highestZ = double.MinValue;
-
-            foreach (var P in points)
-            {
-                if (P.X >= highestX) { highestX = P.X; }
-                if (P.Y >= highestY) { highestY = P.Y; }
-                if (P.Z >= highestZ) { highestZ = P.Z; }
-
-                if (P.X <= lowestX) { lowestX = P.X; }
-                if (P.Y <= lowestY) { lowestY = P.Y; }
-                if (P.Z <= lowestZ) { lowestZ = P.Z; }
-            }
-            InitialiseCube(highestX, lowestX,highestY,lowestY,highestZ,lowestZ,na);
+            Point3d high = points.Aggregate((acc, cur) => Point3d.Higher(acc, cur));
+            Point3d low = points.Aggregate((acc, cur) => Point3d.Lower(acc, cur));
+            InitialiseCube(high,low,na);
         }
 
-
-        private void InitialiseCube(double highx, double lowx, double highy, double lowy, double highz, double lowz, NorthArrow na)
+        void InitialiseCube(Point3d HighPoint, Point3d LowPoint, NorthArrow na)
         {
-
-            Action<Vertex,Point3d,Point3d> SetCrossPlane = (v,p,o) => 
+            Action<Vertex, Point3d, Point3d> SetCrossPlane = (v, p, o) =>
             {
-                _Vertices[v].Set(p.X, p.Y,p.Z);
+                _Vertices[v].Set(p.X, p.Y, p.Z);
                 Vertex Oppv = Vertex.Opposite(v);
                 _Vertices[Oppv].Set(o.X, o.Y, o.Z);
                 Vertex Upv = Vertex.OppositeUD(v);
@@ -165,8 +197,8 @@ namespace AliasGeometry
                 _Vertices[OppUpv].Set(o.X, o.Y, p.Z);
 
             };
-            
-            
+
+
             _Vertices = new Dictionary<Vertex, Point3d>(new VertexCompare());
             _ftl = new Vertex(Face.Front, Face.Top, Face.Left);
             _ftr = new Vertex(Face.Front, Face.Top, Face.Right);
@@ -188,41 +220,48 @@ namespace AliasGeometry
 
 
             Vertex Anchor = null;
-            Point3d AnchorPoint = new Point3d(lowx, lowy, lowz);
-            Point3d AnchorOppPoint = new Point3d(highx, highy, highz);
+            Point3d AnchorPoint = LowPoint;
+            Point3d AnchorOppPoint = HighPoint;
             Point3d AnchorLrPoint = null;
             Point3d AnchorOppLrPoint = null;
             switch (na)
             {
-                case NorthArrow.TopLeft: 
+                case NorthArrow.TopLeft:
                     Anchor = _fbr;
-                   
-                    AnchorLrPoint = new Point3d(lowx,highy,lowz);
-                    AnchorOppLrPoint = new Point3d(highx, lowy, highz);
+
+                    AnchorLrPoint = new Point3d(LowPoint.X, HighPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(HighPoint.X, LowPoint.Y, HighPoint.Z);
                     break;
                 case NorthArrow.TopRight:
                     Anchor = _fbl;
-                    
-                    AnchorLrPoint = new Point3d(highx, lowy, lowz);
-                    AnchorOppLrPoint = new Point3d(lowx, highy, highz);
+
+                    AnchorLrPoint = new Point3d(HighPoint.X, LowPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(LowPoint.X, HighPoint.Y, HighPoint.Z);
                     break;
                 case NorthArrow.BottomRight:
                     Anchor = _bbl;
-                    AnchorLrPoint = new Point3d(lowx, highy, lowz);
-                    AnchorOppLrPoint = new Point3d(highx, lowy, highz);
+                    AnchorLrPoint = new Point3d(LowPoint.X, HighPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(HighPoint.X, LowPoint.Y, HighPoint.Z);
                     break;
                 case NorthArrow.BottomLeft:
                     Anchor = _bbr;
-                    AnchorLrPoint = new Point3d(highx, lowy, lowz);
-                    AnchorOppLrPoint = new Point3d(lowx, highy, highz);
+                    AnchorLrPoint = new Point3d(HighPoint.X, LowPoint.Y, LowPoint.Z);
+                    AnchorOppLrPoint = new Point3d(LowPoint.X, HighPoint.Y, HighPoint.Z);
                     break;
             }
             SetCrossPlane(Anchor, AnchorPoint, AnchorOppPoint);
             Vertex AnchorAdj = Vertex.OppositeLR(Anchor);
             SetCrossPlane(AnchorAdj, AnchorLrPoint, AnchorOppLrPoint); //it fucks up here.
 
-            _center = new Point3d((lowx + highx) / 2, (lowy + highy) / 2, (lowz + highz) / 2);
+            _center = Point3d.MidPoint(LowPoint, HighPoint);
         }
+    
+
+        public IEnumerator GetEnumerator()
+        {
+            return new VertexEnum();
+        }
+ 
 
         /*
         //FRONT = ABCD
@@ -428,6 +467,51 @@ namespace AliasGeometry
 
 
         public string Name { get; set; }
+
+        public LineCubeIntersection Intersection(Point3d point,Vector3d vector)
+        {
+            LineCubeIntersection lci = new LineCubeIntersection(point);
+            Dictionary<Face,BoundedPlane3d> sixPlanes = SixPlanes();
+            foreach (KeyValuePair<Face,BoundedPlane3d> kvp in sixPlanes)
+            {
+                Point3d p = new Point3d();
+                //this is a bit inefficiant as the IsPointOnPlane is also called durining intersection;
+                BoundedPlane3d boundedPlane3 = kvp.Value;
+                bool intersectsbase = boundedPlane3.Intersection(point, vector, ref p);
+                if (intersectsbase)
+                {
+                    if (boundedPlane3.IsPointOnPlane(p,1e-6))
+                    {
+                        lci.Add(kvp.Key, p);
+                    }
+                }
+                else
+                {
+                    Plane3d plane3d = boundedPlane3;
+                    if (plane3d.IsPointOnPlane(point))
+                    {
+                        lci.SurfaceFaces.Add(kvp.Key);
+                    }
+                  
+                }
+            }
+            lci.Determine();
+            return lci;
+        }
+
+        public Dictionary<Face, BoundedPlane3d> SixPlanes()
+        {
+            Dictionary<Face, BoundedPlane3d> sixPlanes = new Dictionary<Face, BoundedPlane3d>();
+            sixPlanes.Add(Face.Front, new BoundedPlane3d(FrontTopLeft, FrontBottomRight, FrontTopRight, FrontBottomLeft));
+            sixPlanes.Add(Face.Back, new BoundedPlane3d(BackTopLeft, BackBottomRight, BackTopRight, BackBottomLeft));
+            sixPlanes.Add(Face.Top, new BoundedPlane3d(BackTopLeft, FrontTopRight, BackTopRight, FrontTopLeft));
+            sixPlanes.Add(Face.Bottom, new BoundedPlane3d(BackBottomLeft, FrontBottomRight, BackBottomRight, FrontBottomLeft));
+            sixPlanes.Add(Face.Left, new BoundedPlane3d(BackTopLeft, FrontBottomLeft, FrontTopLeft, BackBottomLeft));
+            sixPlanes.Add(Face.Right, new BoundedPlane3d(BackTopRight, FrontBottomRight, FrontTopRight, BackBottomRight));
+            return sixPlanes;
+
+        }
+        
 
 
 

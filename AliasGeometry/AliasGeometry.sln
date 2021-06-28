@@ -10,6 +10,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AliasGeometryUnitTests", "A
 		{64686F43-C96F-4618-90D4-E5BD1BD1D600} = {64686F43-C96F-4618-90D4-E5BD1BD1D600}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AliasGeometryFunctionalTests", "AliasGeometryFunctionalTests\AliasGeometryFunctionalTests.csproj", "{C2F429A9-8CC7-422C-8A44-C2F796070537}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +26,10 @@ Global
 		{3A4B3938-F152-40A9-A991-3331B9104516}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A4B3938-F152-40A9-A991-3331B9104516}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A4B3938-F152-40A9-A991-3331B9104516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2F429A9-8CC7-422C-8A44-C2F796070537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2F429A9-8CC7-422C-8A44-C2F796070537}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2F429A9-8CC7-422C-8A44-C2F796070537}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2F429A9-8CC7-422C-8A44-C2F796070537}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
