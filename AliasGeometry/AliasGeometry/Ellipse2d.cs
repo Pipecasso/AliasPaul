@@ -8,23 +8,21 @@ namespace AliasGeometry
 {
     public class Ellipse2d
     {
-        private Point2d _ptCentre;
-        double _rad1;
-        double _rad2;
-        private Point2d[] _PointByPoint;
+        protected Point2d _ptCentre;
+        protected double _rad1;
+        protected double _rad2;
+       
 
         public Ellipse2d(Point2d ptcenter, double rad1, double rad2)
         {
             _ptCentre = ptcenter;
             _rad1 = rad1;
             _rad2 = rad2;
-            _PointByPoint = new Point2d[360];
         }
 
         public Ellipse2d(Point2d ptcenter)
         {
             _ptCentre = ptcenter;
-            _PointByPoint = new Point2d[360];
             _rad1 = 0;
             _rad2 = 0;
         }
@@ -53,18 +51,7 @@ namespace AliasGeometry
             }
         }
 
-        public Point2d this[int i]
-        {
-            get
-            {
-                return _PointByPoint[i];
-            }
-
-            set
-            {
-                _PointByPoint[i] = value;
-            }
-        }
+    
 
 
         public Point2d[] RectPoints()
@@ -78,28 +65,7 @@ namespace AliasGeometry
             return edges;
         }
         
-        public void DerriveRadii()
-        {
-            _rad1 = double.MinValue;
-            _rad2 = double.MaxValue;
-
-            //play it safe do all the points
-            for (int i=0;i<_PointByPoint.Length;i++)
-            {
-                Point2d p = _PointByPoint[i];
-                double distance = Point2d.Distance(_ptCentre, p);
-                if (distance > _rad1)
-                {
-                    _rad1 = distance;
-                }
-
-                if (distance < _rad2)
-                {
-                    _rad2 = distance;
-                }
-            }
-
-        }
+       
 
     }
 }

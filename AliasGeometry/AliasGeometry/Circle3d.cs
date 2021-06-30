@@ -15,7 +15,7 @@ namespace AliasGeometry
         private Vector3d _Normal;
 
 
-        private Point3d[] _PointByPoint;     //this might comein handy!!
+     
 
 
 
@@ -26,24 +26,15 @@ namespace AliasGeometry
             _up = vup;
             _across = vacross;
             _Normal = vnormal;
-            WorkPolar();
-        }
-
-        private void WorkPolar()
-        {
-            _PointByPoint = new Point3d[360];
-            for (int i = 0; i < 360; i++)
-            {
-                double irad = (i / 180.0) * Math.PI;
-                _PointByPoint[i] = Polar(irad);
-            }
 
         }
+
+   
 
         public Point3d Polar(double theta)
         {
 
-            int Quadrant = 0;
+           /* int Quadrant = 0;
             if (theta >= 0 && theta < Math.PI / 2)
             {
                 Quadrant = 1;
@@ -59,7 +50,7 @@ namespace AliasGeometry
             else
             {
                 Quadrant = 4;
-            }
+            }*/
 
             double updistance = _radius * Math.Cos(theta);
             double acrossdistance = _radius * Math.Sin(theta);
@@ -85,14 +76,7 @@ namespace AliasGeometry
             }
         }
 
-        public Point3d this[int i]
-        {
-            get
-            {
-                return _PointByPoint[i];
-            }
-        }
-
+      
         public Vector3d Normal
         {
             get

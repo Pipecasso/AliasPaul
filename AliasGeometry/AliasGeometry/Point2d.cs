@@ -97,6 +97,17 @@ namespace AliasGeometry
             return new Point2d((p.dX + q.dX) / 2, (p.dY + q.dY) / 2);
         }
 
+        public static Point2d CartesianTopLeft(Point2d p,Point2d q)
+        {
+            return new Point2d(p.X < q.X ? p.X : q.X, p.Y > q.Y ? p.Y : q.Y);
+        }
+
+        public static Point2d CartesianBottomRight(Point2d p, Point2d q)
+        {
+            return new Point2d(p.X < q.X ? p.X : q.X, p.Y > q.Y ? p.Y : q.Y);
+        }
+
+
         public static Point2d Max(Point2d p,Point2d q)
         {
             return new Point2d(p.X > q.X ? p.X : q.X, p.Y > q.Y ? p.Y : q.Y);

@@ -202,6 +202,109 @@ namespace Projector
             return p2;
         }
 
+        private Cone2d ProjectCone(Cone3d conical)
+        {
+            /*Point2d pc1 = ProjectPoint(conical.circleStart.Center);
+            Point2d pc2 = ProjectPoint(conical.circleStart.Polar(0));
+            Point2d pc3 = ProjectPoint(conical.circleStart.Polar((float)Math.PI/2));
+
+            double rad1 = Point2d.Distance(pc1, pc2);
+            double rad2 = Point2d.Distance(pc1, pc3);
+
+            Ellipse2d e1 = new Ellipse2d(pc1, rad2, rad1);
+
+            pc1 = ProjectPoint(conical.circleEnd.Center);
+            pc2 = ProjectPoint(conical.circleEnd.Polar(0));
+            pc3 = ProjectPoint(conical.circleEnd.Polar((float)Math.PI / 2));
+
+             rad1 = Point2d.Distance(pc1, pc2);
+             rad2 = Point2d.Distance(pc1, pc3);
+
+            Ellipse2d e2 = new Ellipse2d(pc1, rad2, rad1);
+
+            Cone2d coneit = new Cone2d(e1, e2);
+            return coneit;*/
+
+            Circle3dPointByPoint start = conical.circleStart;
+            Ellipse2dPointByPoint e1 = ProjectCircle(start);
+            e1.DerriveRadii();
+            Circle3dPointByPoint end = conical.circleEnd;
+            Ellipse2dPointByPoint e2 = ProjectCircle(end);
+            e2.DerriveRadii();
+            Cone2d coneit = new Cone2d(e1, e2);
+            return coneit;
+        }
+
+
+
+        private Ellipse2dPointByPoint ProjectCircle(Circle3dPointByPoint start)
+        {
+
+            Point3d pCenter = start.Center;
+            Point2d pc1 = ProjectPoint(pCenter);
+            Ellipse2dPointByPoint e = new Ellipse2dPointByPoint(pc1);
+            for (int i = 0; i < 360; i++)
+            {
+                Point3d cpoint = start[i];
+                Point2d epoint = ProjectPoint(cpoint);
+                e[i] = epoint;
+            }
+            return e;
+
+        }
+        private Line2d ProjectLine(Line3d line)
+        {
+            Point2d p2d1 = ProjectPoint(line.P);
+            Point2d p2d2 = ProjectPoint(line.Q);
+
+            return new Line2d(p2d1, p2d2);
+        }
+        /*
+        Cone3d MakeCorrectedCone(AliasPOD3D.Cone c, ProjectablePod pp, string uid)
+        {
+            double dx, dy, dz;
+            c.GetStart(out dx, out dy, out dz);
+            Point3d ptStart = new Point3d(dx, dy, dz);
+            System.Diagnostics.Debug.WriteLine("Circle Start {0} {1} {2}", dx, dy, dz);
+            c.GetEnd(out dx, out dy, out dz);
+            Point3d ptEnd = new Point3d(dx, dy, dz);
+            System.Diagnostics.Debug.WriteLine("Circle End {0} {1} {2}", dx, dy, dz);
+            Point3d ptMid = Point3d.MidPoint(ptStart, ptEnd);
+            System.Diagnostics.Debug.WriteLine("Circle Mid {0} {1} {2}", ptMid.X, ptMid.Y, ptMid.Z);
+            double conelength = Point3d.Distance(ptStart, ptEnd);
+            Vector3d vConeLine = null;
+            Vector3d vExistingConeLine = new Vector3d(ptStart, ptEnd);
+            vExistingConeLine.Normalise();
+
+            bool FoundConeDir = false;
+            if (pp.UidMap.ContainsKey(uid))
+            {
+                AliasPOD.Component cpent = pp.UidMap[uid];
+                if (cpent.Material.Configuration == AliasPOD.eConfigurationType.eCTInline)
+                {
+                    AliasPOD.ComponentLeg cl = cpent.Legs.Item(0);
+                    if (cl.IsDirectionValid() == true)
+                    {
+                        cl.GetDirection(out dx, out dy, out dz);
+                        vConeLine = new Vector3d(dx, dy, dz);
+                        FoundConeDir = true;
+                    }
+                }
+            }
+            if (!FoundConeDir)
+            {
+                vConeLine = vExistingConeLine;
+            }
+
+            double check = Vector3d.Dot(vConeLine, vExistingConeLine);
+
+            System.Diagnostics.Debug.WriteLine("New Cone Line {0},{1},{2}", vConeLine.X, vConeLine.Y, vConeLine.Z);
+            Cone3d conetogo = new Cone3d(ptMid, conelength, vConeLine, c.StartDiameter, c.EndDiameter);
+            System.Diagnostics.Debug.WriteLine("Circle Start New {0} {1} {2}", conetogo.circleStart.Center.X, conetogo.circleStart.Center.Y, conetogo.circleStart.Center.Z);
+            System.Diagnostics.Debug.WriteLine("Circle Start End {0} {1} {2}", conetogo.circleEnd.Center.X, conetogo.circleEnd.Center.Y, conetogo.circleEnd.Center.Z);
+            return conetogo;
+        }*/
+
         public Point3d N { get => _N; set { _N = value; } }
 
         public double distance { get => _distance; set { _distance = value; } }

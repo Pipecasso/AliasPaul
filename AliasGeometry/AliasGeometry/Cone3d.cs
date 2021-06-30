@@ -12,8 +12,8 @@ namespace AliasGeometry
 
     public class Cone3d
     {
-        private Circle3d _circleStart;
-        private Circle3d _circleEnd;
+        private Circle3dPointByPoint _circleStart;
+        private Circle3dPointByPoint _circleEnd;
 
 
 
@@ -23,8 +23,8 @@ namespace AliasGeometry
             Point3d top = mid + centerline * (length / 2);
             Point3d bottom = mid - centerline * (length / 2);
             UpAndAcross(centerline, out vup, out vacross);
-            _circleStart = new Circle3d(top, r1, centerline,vup,vacross);
-            _circleEnd = new Circle3d(bottom, r2, centerline,vup,vacross);
+            _circleStart = new Circle3dPointByPoint(top, r1, centerline,vup,vacross);
+            _circleEnd = new Circle3dPointByPoint(bottom, r2, centerline,vup,vacross);
         }
 
         private void UpAndAcross(Vector3d vNCenterLine,out Vector3d vup,out Vector3d vacross)
@@ -45,7 +45,7 @@ namespace AliasGeometry
 
         }
 
-        public Circle3d circleStart
+        public Circle3dPointByPoint circleStart
         {
             get
             {
@@ -53,7 +53,7 @@ namespace AliasGeometry
             }
         }
 
-        public Circle3d circleEnd
+        public Circle3dPointByPoint circleEnd
         {
             get
             {

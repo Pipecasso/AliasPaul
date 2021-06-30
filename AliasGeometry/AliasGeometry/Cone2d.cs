@@ -8,16 +8,16 @@ namespace AliasGeometry
 {
     public class Cone2d
     {
-        private Ellipse2d _start;
-        private Ellipse2d _end;
+        private Ellipse2dPointByPoint _start;
+        private Ellipse2dPointByPoint _end;
 
-        public Cone2d(Ellipse2d s,Ellipse2d e)
+        public Cone2d(Ellipse2dPointByPoint s, Ellipse2dPointByPoint e)
         {
             _start = s;
             _end = e;
         }
 
-        public Ellipse2d start
+        public Ellipse2dPointByPoint start
         {
             get
             {
@@ -25,7 +25,7 @@ namespace AliasGeometry
             }
         }
 
-        public Ellipse2d end
+        public Ellipse2dPointByPoint end
         {
             get
             {

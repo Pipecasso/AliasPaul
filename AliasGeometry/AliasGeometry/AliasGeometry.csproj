@@ -43,10 +43,12 @@
   <ItemGroup>
     <Compile Include="BoundedPlane.cs" />
     <Compile Include="Circle3d.cs" />
+    <Compile Include="Circle3dPointByPoint.cs" />
     <Compile Include="Cone2d.cs" />
     <Compile Include="Cone3d.cs" />
     <Compile Include="CubeView.cs" />
     <Compile Include="Ellipse2d.cs" />
+    <Compile Include="Ellipse2dPointByPoint.cs" />
     <Compile Include="Equation3.cs" />
     <Compile Include="Line2d.cs" />
     <Compile Include="Line3d.cs" />
