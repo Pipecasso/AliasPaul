@@ -17,6 +17,9 @@ namespace Projector
             _Lines = new List<Line3d>();
             _Cones = new List<Cone3d>();
         }
+
+        public List<Line3d> Lines { get => _Lines; }
+        public List<Cone3d> Cones { get => _Cones; }
     
     }
 }

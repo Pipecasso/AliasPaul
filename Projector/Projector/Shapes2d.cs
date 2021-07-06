@@ -7,15 +7,14 @@ using AliasGeometry;
 
 namespace Projector
 {
-    class Shapes2d
+    public class Shapes2d
     {
         private List<Line2d> _Lines;
         private List<Cone2d> _Cones;
         private List<TextLabel2d> _TextLabels;
 
 
-        private Point2d _topleft;
-        private Point2d _bottomright;
+    
         //currently these are for diagnostic purposes only
         private Dictionary<Line3d, Line2d> _LineMap;
         private Dictionary<Cone3d, Cone2d> _ConeMap;
@@ -46,15 +45,12 @@ namespace Projector
 
         public void AddCone(Cone2d c, Cone3d c3)
         {
-            CheckBounds(c.start);
-            CheckBounds(c.end);
             _Cones.Add(c);
             _ConeMap.Add(c3, c);
         }
 
         public void AddTextLabel(TextLabel2d t)
         {
-            Point2d.CheckBounds(t.Location, ref _left, ref _right, ref _bottom, ref _top);
             _TextLabels.Add(t);
         }
 
@@ -110,11 +106,11 @@ namespace Projector
 
         public List<TextLabel2d> Text { get { return _TextLabels; } }
 
-        public bool DoesPointClash(Point2d point)
+      /*  public bool DoesPointClash(Point2d point)
         {
             return point.X >= _left && point.X <= _right &&
                 point.Y >= _bottom && point.Y <= _top;
-        }
+        }*/
 
         internal Dictionary<Line3d, Line2d> LineMap
         {

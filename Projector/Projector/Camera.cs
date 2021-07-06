@@ -309,5 +309,23 @@ namespace Projector
 
         public double distance { get => _distance; set { _distance = value; } }
 
+        public Shapes2d ProjectMyShapes(Shapes3d shapes)
+        {
+            Shapes2d ShapesOut = new Shapes2d();
+            foreach (Line3d l3 in shapes.Lines)
+            {
+                Line2d l2 = ProjectLine(l3);
+                ShapesOut.AddLine(l2,l3);
+            }
+
+            foreach (Cone3d c3 in shapes.Cones)
+            {
+                Cone2d c2 = ProjectCone(c3);
+                ShapesOut.AddCone(c2, c3);
+            }
+
+            return ShapesOut;
+        }
+
     }
 }
