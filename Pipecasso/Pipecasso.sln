@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodToPoints", "..\PodToPoin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Projector", "..\Projector\Projector\Projector.csproj", "{640C4BD9-3BBE-4914-8AFE-B7DF9AD6DAE2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Painter", "Painter\Painter.csproj", "{AAD93528-87BD-4B49-999A-BD40C6A0EDF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{640C4BD9-3BBE-4914-8AFE-B7DF9AD6DAE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{640C4BD9-3BBE-4914-8AFE-B7DF9AD6DAE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{640C4BD9-3BBE-4914-8AFE-B7DF9AD6DAE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAD93528-87BD-4B49-999A-BD40C6A0EDF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAD93528-87BD-4B49-999A-BD40C6A0EDF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAD93528-87BD-4B49-999A-BD40C6A0EDF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAD93528-87BD-4B49-999A-BD40C6A0EDF8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
