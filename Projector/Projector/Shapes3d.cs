@@ -20,6 +20,29 @@ namespace Projector
 
         public List<Line3d> Lines { get => _Lines; }
         public List<Cone3d> Cones { get => _Cones; }
+
+        public List<Point3d> Points()
+        {
+            Action<List<Point3d>, Circle3dPointByPoint> myaction = (PointsToAdd, circle) =>
+             {
+              
+             };
+            
+            List<Point3d> pointList = new List<Point3d>();
+
+            foreach (Line3d line3d in _Lines)
+            {
+                pointList.Add(line3d.P);
+                pointList.Add(line3d.Q);
+            }
+
+            foreach(Cone3d cone3d in _Cones)
+            {
+               
+            }
+
+            return pointList;
+        }
     
     }
 }
