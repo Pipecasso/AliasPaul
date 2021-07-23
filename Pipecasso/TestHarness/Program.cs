@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ManagedPodLoader;
 using PodToPoints;
 using Projector;
+using AliasGeometry;
 
 namespace TestHarness
 {
@@ -19,7 +20,8 @@ namespace TestHarness
 
             PODTransformer podTransformer = new PODTransformer(manifest, podpath);
             Dictionary<dynamic, Shapes3d> podshapes = podTransformer.Shapes3;
-            Camera camera = new Camera()
+            CubeView cb = podTransformer.GetCube();
+
 
         
         }

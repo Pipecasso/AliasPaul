@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity name="Core Components" version="7.0.0.0" type="win32" processorArchitecture="x86"/>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity name="Application Components" version="7.0.0.0" type="win32" processorArchitecture="x86"/>
+    </dependentAssembly>
+  </dependency> 
+</assembly>

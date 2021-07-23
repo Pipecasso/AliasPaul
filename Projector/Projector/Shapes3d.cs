@@ -23,10 +23,13 @@ namespace Projector
 
         public List<Point3d> Points()
         {
-            Action<List<Point3d>, Circle3dPointByPoint> myaction = (PointsToAdd, circle) =>
-             {
-              
-             };
+            Action<List<Point3d>, Circle3dPointByPoint> mycircleaction = (PointsToAdd, circle) =>
+            {
+                for (int i=0;i<circle.TotalPoints;i++)
+                {
+                    PointsToAdd.Add(circle[i]);
+                }
+            };
             
             List<Point3d> pointList = new List<Point3d>();
 
@@ -38,7 +41,8 @@ namespace Projector
 
             foreach(Cone3d cone3d in _Cones)
             {
-               
+                mycircleaction(pointList, cone3d.circleStart);
+                mycircleaction(pointList, cone3d.circleEnd);
             }
 
             return pointList;

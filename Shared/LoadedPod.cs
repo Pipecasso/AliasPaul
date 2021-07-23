@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,12 +10,12 @@ using PodHandshake;
 
 namespace ManagedPodLoader
 {
-    public class LoadedPod
+    internal class LoadedPod
     {
         private POD _pod;
         private IsogenAssemblyLoader _ial;
 
-        public LoadedPod(string manifest, string pod_path)
+        internal LoadedPod(string manifest, string pod_path)
         {
             string manifestroot = Path.GetDirectoryName(manifest);
             _ial = new IsogenAssemblyLoader(manifest, manifestroot);
@@ -35,8 +35,8 @@ namespace ManagedPodLoader
             _pod.Load(pod_path);
         }
     
-        public POD pod { get => _pod; }
-        public IsogenAssemblyLoader isogenAssemblyLoader { get => _ial; }
+        internal POD pod { get => _pod; }
+        internal IsogenAssemblyLoader isogenAssemblyLoader { get => _ial; }
 
     }
 }

@@ -9,18 +9,21 @@ namespace AliasGeometry
     public class Circle3dPointByPoint : Circle3d
     {
         private Point3d[] _PointByPoint;
+        public int TotalPoints { get; private set; }
 
-        public Circle3dPointByPoint(Point3d Center, double radius, Vector3d vnormal, Vector3d vup, Vector3d vacross) : base(Center,radius,vnormal,vup,vacross)
+        public Circle3dPointByPoint(Point3d Center, double radius, Vector3d vnormal, Vector3d vup, Vector3d vacross,int totalPoints = 360) : base(Center,radius,vnormal,vup,vacross)
         {
+            TotalPoints = totalPoints;
             WorkPolar();
         }
 
         private void WorkPolar()
         {
-            _PointByPoint = new Point3d[360];
-            for (int i = 0; i < 360; i++)
+            _PointByPoint = new Point3d[TotalPoints];
+            for (int i = 0; i < TotalPoints; i++)
             {
-                double irad = (i / 180.0) * Math.PI;
+                double deg = (i / TotalPoints) * 360; 
+                double irad = (deg / 180.0) * Math.PI;
                 _PointByPoint[i] = Polar(irad);
             }
         }
