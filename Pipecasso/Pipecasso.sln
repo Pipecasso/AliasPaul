@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectorFunctionalTests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PodToPointsTests", "PodToPointsTests\PodToPointsTests.csproj", "{767EC7D0-3CCC-4089-8687-5315D75FAA2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AliasGeometry", "..\AliasGeometry\AliasGeometry\AliasGeometry.csproj", "{64686F43-C96F-4618-90D4-E5BD1BD1D600}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{767EC7D0-3CCC-4089-8687-5315D75FAA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{767EC7D0-3CCC-4089-8687-5315D75FAA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{767EC7D0-3CCC-4089-8687-5315D75FAA2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64686F43-C96F-4618-90D4-E5BD1BD1D600}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64686F43-C96F-4618-90D4-E5BD1BD1D600}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64686F43-C96F-4618-90D4-E5BD1BD1D600}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64686F43-C96F-4618-90D4-E5BD1BD1D600}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

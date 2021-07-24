@@ -184,16 +184,21 @@ namespace PodToPoints
 
         public CubeView GetCube()
         {
-            List<Point3d> cubePoints = new List<Point3d>();
-            foreach (KeyValuePair<dynamic,Shapes3d> kvshapes in _Shapes)
-           {
-                Shapes3d shapes = kvshapes.Value;
-                cubePoints.AddRange(shapes.Points());
-           }
-            CubeView cv = new CubeView(cubePoints);
+            CubeView cv = new CubeView(GetPoints());
             return cv;
         }
 
+        public List<Point3d> GetPoints()
+        {
+            List<Point3d> cubePoints = new List<Point3d>();
+            foreach (KeyValuePair<dynamic, Shapes3d> kvshapes in _Shapes)
+            {
+                Shapes3d shapes = kvshapes.Value;
+                cubePoints.AddRange(shapes.Points());
+            }
+            return cubePoints;
+
+        }
 
 
     }

@@ -34,19 +34,19 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AliasGeometry">
-      <HintPath>..\..\..\PipecassoGit3\bin\Debug\AliasGeometry.dll</HintPath>
+      <HintPath>..\..\bin\Debug\Paul Components\AliasGeometry.dll</HintPath>
     </Reference>
     <Reference Include="IsogenAssemblyLoader">
-      <HintPath>..\..\bin\IsogenAssemblyLoader.dll</HintPath>
+      <HintPath>..\..\bin\Debug\IsogenAssemblyLoader.dll</HintPath>
     </Reference>
     <Reference Include="PodToPoints">
-      <HintPath>..\..\bin\Debug\PodToPoints.dll</HintPath>
+      <HintPath>..\..\bin\Debug\Paul Components\PodToPoints.dll</HintPath>
     </Reference>
     <Reference Include="Projector">
-      <HintPath>..\..\bin\Projector.dll</HintPath>
+      <HintPath>..\..\bin\Debug\Paul Components\Projector.dll</HintPath>
     </Reference>
     <Reference Include="Shared.Interop.POD">
-      <HintPath>..\..\bin\Shared.Interop.POD.dll</HintPath>
+      <HintPath>..\..\bin\Debug\Shared.Interop.POD.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
