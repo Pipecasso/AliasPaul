@@ -16,7 +16,7 @@ namespace Painter
             _PaintThis = paintthis;
         }
 
-        public void PaintIt(Canvas canvas,Dictionary<dynamic,Func<dynamic,Tuple<Pen,Brush> >> tools,Dictionary<dynamic,Action<dynamic,Tuple<Pen,Brush>,Shapes2d>> instructions)
+        public void PaintIt(Canvas canvas,Dictionary<dynamic,Func<dynamic,Tuple<Pen,Brush> >> tools,Dictionary<dynamic,Action<dynamic,Tuple<Pen,Brush>,Shapes2d,Canvas>> instructions)
         {
             foreach (KeyValuePair<dynamic,Shapes2d> kvp in _PaintThis)
             {
@@ -26,8 +26,8 @@ namespace Painter
                 if (tools.ContainsKey(key) && instructions.ContainsKey(key))
                 {
                     Tuple<Pen, Brush> tool = tools[key];
-                    Action<dynamic, Tuple<Pen, Brush>, Shapes2d> instruction = instructions[key];
-                    instruction(key, tool, shapes);
+                    Action<dynamic, Tuple<Pen, Brush>, Shapes2d,Canvas> instruction = instructions[key];
+                    instruction(key, tool, shapes,canvas);
                 }
             }
         }

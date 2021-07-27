@@ -17,7 +17,7 @@ namespace PodHandshake
 
         
 
-        public static string GetPODHandshake(string bwfcFolder)
+        internal static string GetPODHandshake(string bwfcFolder)
         {
             const int MAX_PATH = 1025;
 

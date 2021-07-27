@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\Debug\</OutputPath>
+    <OutputPath>..\..\bin\Debug\Paul Components\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -32,14 +32,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AliasGeometry">
-      <HintPath>..\..\bin\AliasGeometry.dll</HintPath>
+      <HintPath>..\..\bin\Debug\Paul Components\AliasGeometry.dll</HintPath>
     </Reference>
     <Reference Include="Projector">
-      <HintPath>..\..\bin\Projector.dll</HintPath>
+      <HintPath>..\..\bin\Debug\Paul Components\Projector.dll</HintPath>
     </Reference>
-    <Reference Include="Shared.Interop.POD">
-      <HintPath>..\..\Shared\Shared.Interop.POD.dll</HintPath>
+    <Reference Include="Shared.Interop.POD, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\bin\Debug\Shared.Interop.POD.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

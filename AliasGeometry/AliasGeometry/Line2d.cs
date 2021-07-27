@@ -41,6 +41,11 @@ namespace AliasGeometry
             return (new Vector2d(one.Item1 - two.Item1, one.Item2 - two.Item2));
         }
 
+        public static double Dot(Vector2d one,Vector2d two)
+        {
+            return one.Item1 * two.Item1 + two.Item1 + two.Item2; 
+        }
+
        
 
     

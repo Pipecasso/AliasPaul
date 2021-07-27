@@ -8,6 +8,9 @@ using PodToPoints;
 using Projector;
 using AliasGeometry;
 using System.IO;
+using PODPainter;
+using System.Drawing;
+using Intergraph.PersonalISOGEN;
 
 namespace TestHarness
 {
@@ -18,18 +21,35 @@ namespace TestHarness
             string manifest = args[0];
             string podpath = args[1];
 
+            Bitmap canvas = new Bitmap(1000, 400);
 
-            PODTransformer podTransformer = new PODTransformer(manifest, podpath);
-            Dictionary<dynamic, Shapes3d> podshapes = podTransformer.Shapes3;
-            List<Point3d> myPoints = podTransformer.GetPoints();
 
-            using (StreamWriter sw = new StreamWriter("cubepoints.txt"))
+            PODTransformer podTransformer = null;
+            LoadedPod lp = new LoadedPod(manifest, podpath);
+            IsogenAssemblyLoader ial = lp.isogenAssemblyLoader;
+
+            using (IsogenAssemblyLoaderCookie monster = new IsogenAssemblyLoaderCookie(ial))
             {
-                foreach (Point3d p in myPoints)
-                {
-                    string spoint = $"{p.X} | {p.Y} | {p.Z}";
-                    sw.WriteLine(spoint);
-                }
+                podTransformer = new PODTransformer(lp.pod);
+            }
+            Dictionary<dynamic, Shapes3d> podshapes = podTransformer.Shapes3;
+            Dictionary<dynamic, Shapes2d> projectedshapes = new Dictionary<dynamic, Shapes2d>();
+            CubeView cubeView = podTransformer.GetCube();
+            Point3d center = cubeView.Center;
+            Point3d frl = cubeView.FrontTopLeft;
+            Vector3d normal = new Vector3d(frl, center);
+            normal.Normalise();
+            Camera camera = new Camera(normal, cubeView, 5, 2, canvas.Width, canvas.Height);
+            foreach (KeyValuePair<dynamic, Shapes3d> kvp in podshapes)
+            {
+                Shapes2d shapes2d = camera.ProjectMyShapes(kvp.Value);
+                projectedshapes.Add(kvp.Key, shapes2d);
+            }
+
+            using (IsogenAssemblyLoaderCookie monster = new IsogenAssemblyLoaderCookie(ial))
+            {
+                PODCanvas podCanvas = new PODCanvas(canvas);
+                PODArtist picasso = new PODArtist(lp.pod, podCanvas, projectedshapes);
             }
         }
     }

@@ -13,6 +13,7 @@ namespace AliasGeometry
         private int _tick;
         private Ellipse2dPointByPoint _ellipse;
         private Point2d _point;
+       
 
         public EllipseEnumerator(Ellipse2dPointByPoint e)
         {
@@ -52,6 +53,7 @@ namespace AliasGeometry
     {
         private Point2d[] _PointByPoint;
         private int _PointCount;
+        private double _angletohorizontal;
 
 
         public Ellipse2dPointByPoint(Point2d ptcenter, double rad1, double rad2,int pointcount = 360) : base(ptcenter, rad1, rad2)
@@ -85,6 +87,7 @@ namespace AliasGeometry
         {
             _rad1 = double.MinValue;
             _rad2 = double.MaxValue;
+            Point2d rad1farpoint = null;
 
             //play it safe do all the points
             for (int i = 0; i < _PointByPoint.Length; i++)
@@ -94,6 +97,7 @@ namespace AliasGeometry
                 if (distance > _rad1)
                 {
                     _rad1 = distance;
+                    rad1farpoint = p;
                 }
 
                 if (distance < _rad2)
@@ -102,11 +106,24 @@ namespace AliasGeometry
                 }
             }
 
+           
+            Vector2d v1 = new Vector2d(_ptCentre, rad1farpoint);
+            Vector2d vhorizontal = new Vector2d(1, 0);
+            _angletohorizontal = Math.Acos(Vector2d.Dot(v1,vhorizontal));
+            
         }
 
         public IEnumerator GetEnumerator()
         {
             return new EllipseEnumerator(this);
+        }
+
+        public double AngleToHorizontal
+        {
+            get
+            {
+                return _angletohorizontal;
+            }
         }
 
 

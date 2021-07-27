@@ -5,7 +5,7 @@ namespace PodHandshake
 	/// <summary>
 	/// Summary description for HandshakeStrings.
 	/// </summary>
-	public class HandshakeStrings
+	internal class HandshakeStrings
 	{
 		public static string DevId = "AliasDev";
 		//POD expires on 28/10/2023
