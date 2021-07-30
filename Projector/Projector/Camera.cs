@@ -243,7 +243,7 @@ namespace Projector
             Point3d pCenter = start.Center;
             Point2d pc1 = ProjectPoint(pCenter);
             Ellipse2dPointByPoint e = new Ellipse2dPointByPoint(pc1);
-            for (int i = 0; i < 360; i++)
+            for (int i = 0; i < e.PointCount; i++)
             {
                 Point3d cpoint = start[i];
                 Point2d epoint = ProjectPoint(cpoint);

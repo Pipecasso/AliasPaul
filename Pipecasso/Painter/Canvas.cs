@@ -22,21 +22,21 @@ namespace Painter
 
         #region Transform
      
-        Point PointToPoint(Point2d p)
+        public Point PointToPoint(Point2d p)
         {
             int ix = _canvas.Width / 2 + p.X;
             int iy = _canvas.Height / 2 - p.Y;
             return new Point(ix,iy);
         }
 
-        Tuple<Point,Point> LineToLine(Line2d l)
+        public Tuple<Point,Point> LineToLine(Line2d l)
         {
             Point p1 = PointToPoint(l.start);
             Point p2 = PointToPoint(l.end);
             return new Tuple<Point, Point>(p1, p2);
         }
 
-        List<Point> EllipsebyPointToEllipseByPoint(Ellipse2dPointByPoint e)
+        public List<Point> EllipsebyPointToEllipseByPoint(Ellipse2dPointByPoint e)
         {
             List<Point> EllipseToGo = new List<Point>();
             foreach (Point2d p in e)
@@ -46,7 +46,7 @@ namespace Painter
             return EllipseToGo;
         }
 
-        Rectangle EllipseToRectange(Ellipse2d e)
+        public Rectangle EllipseToRectange(Ellipse2d e)
         {
             Point2d[] RectPoints = e.RectPoints();
             Point p1 = PointToPoint(RectPoints[0]);

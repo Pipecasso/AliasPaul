@@ -39,6 +39,10 @@
     <Reference Include="IsogenAssemblyLoader">
       <HintPath>..\..\bin\Debug\IsogenAssemblyLoader.dll</HintPath>
     </Reference>
+    <Reference Include="Painter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Debug\Paul Components\Painter.dll</HintPath>
+    </Reference>
     <Reference Include="PODPainter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\Debug\Paul Components\PODPainter.dll</HintPath>

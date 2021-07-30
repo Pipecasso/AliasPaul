@@ -65,6 +65,7 @@ namespace AliasGeometry
 
         public Ellipse2dPointByPoint(Point2d ptcenter, int pointcount = 360) : base(ptcenter)
         {
+            _PointCount = pointcount = pointcount;
             _PointByPoint = new Point2d[_PointCount];
         }
 
@@ -108,9 +109,10 @@ namespace AliasGeometry
 
            
             Vector2d v1 = new Vector2d(_ptCentre, rad1farpoint);
+            Vector2d v1n = Vector2d.Normalise(v1);
             Vector2d vhorizontal = new Vector2d(1, 0);
-            _angletohorizontal = Math.Acos(Vector2d.Dot(v1,vhorizontal));
-            
+            _angletohorizontal = Math.Acos(Vector2d.Dot(v1n, vhorizontal));
+        
         }
 
         public IEnumerator GetEnumerator()
