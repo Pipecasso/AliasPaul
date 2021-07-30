@@ -1,5 +1,6 @@
 // tstring.h - Wrappers for STL string/stream functionality to use tchars
 
+#include "Header.h"
 #include <tchar.h>
 #include <string>
 #include <ios>

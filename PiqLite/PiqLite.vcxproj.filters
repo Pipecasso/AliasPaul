@@ -18,27 +18,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PiqLiter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PiqDrawer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tstring.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tstringconversion.cpp">
+    <ClCompile Include="PiqLite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandOptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Header.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PiqLiter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\tstring.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PiqDrawer.h">
@@ -53,9 +47,6 @@
     <ClInclude Include="Include\PISOGEN.H">
       <Filter>Header Files\Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\Shared\tstringconversion.h">
-      <Filter>Header Files\Include</Filter>
-    </ClInclude>
     <ClInclude Include="..\Shared\AliasHandshakeStrings.h">
       <Filter>Header Files\Include</Filter>
     </ClInclude>
@@ -67,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="..\Shared\Handshaker.h">
       <Filter>Header Files\Include</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tstring.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
