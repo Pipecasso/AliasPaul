@@ -40,7 +40,7 @@
       <HintPath>..\..\..\..\AliasApps\Shared\IsogenAssemblyLoader.dll</HintPath>
     </Reference>
     <Reference Include="Shared.Interop.POD">
-      <HintPath>..\..\..\..\AliasApps\Shared\Shared.Interop.POD.dll</HintPath>
+      <HintPath>..\..\..\bin\Debug\Shared.Interop.POD.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />

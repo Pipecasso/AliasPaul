@@ -1,0 +1,21 @@
+﻿<Window x:Class="ProjecterSetup.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjecterSetup"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="5*" />
+            </Grid.ColumnDefinitions>
+            <Button Click="LoadPod_Click"  Grid.Column="0">Load</Button>
+            <Button Grid.Column="1">Go</Button>
+            <TextBlock x:Name="loaded_pod" Grid.Column="2"></TextBlock>
+        </Grid>
+    </Grid>
+</Window>
