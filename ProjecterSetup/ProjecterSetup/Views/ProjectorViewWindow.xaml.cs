@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ProjecterSetup.Views
 {
     /// <summary>
-    /// Interaction logic for ProjectorView.xaml
+    /// Interaction logic for ProjectorViewWindow.xaml
     /// </summary>
-    public partial class ProjectorView : UserControl
+    public partial class ProjectorViewWindow : Window
     {
-        public ProjectorView()
+        public ProjectorViewWindow()
         {
             InitializeComponent();
         }

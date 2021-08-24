@@ -1,0 +1,50 @@
+﻿<Window x:Class="ProjecterSetup.Views.ProjectorViewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProjecterSetup.Views"
+        xmlns:ViewModels="clr-namespace:ProjecterSetup.ViewModels"
+        mc:Ignorable="d"
+        Title="ProjectorViewWindow" Height="450" Width="800"
+        >
+    <Window.DataContext>
+        <ViewModels:ProjectorViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0" Grid.Row="0">Cube</Label>
+        <Label Grid.Column="1" Grid.Row="0">Centre</Label>
+        <Label Grid.Column="1" Grid.Row="1">UpDown</Label>
+        <Label Grid.Column="1" Grid.Row="2">LeftRight</Label>
+        <Label Grid.Column="1" Grid.Row="3">FrontBack</Label>
+        <TextBlock Name="Centre" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding GetCentre}"></TextBlock>
+        <TextBlock Name="UpDown" Grid.Column="2" Grid.Row="1" Text="{Binding updown}"></TextBlock>
+        <TextBlock Name="LeftRight" Grid.Column="2" Grid.Row="2" Text="{Binding leftright}"></TextBlock>
+        <TextBlock Name="FrontBack" Grid.Column="2" Grid.Row="3" Text="{Binding frontback}"></TextBlock>
+    </Grid>
+
+</Window>

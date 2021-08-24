@@ -41,6 +41,9 @@
     <Reference Include="IsogenAssemblyLoader">
       <HintPath>..\..\bin\Debug\IsogenAssemblyLoader.dll</HintPath>
     </Reference>
+    <Reference Include="PodToPoints">
+      <HintPath>..\..\bin\Debug\Paul Components\PodToPoints.dll</HintPath>
+    </Reference>
     <Reference Include="Projector">
       <HintPath>..\..\bin\Debug\Paul Components\Projector.dll</HintPath>
     </Reference>
@@ -68,13 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="HandshakeStrings.cs" />
-    <Compile Include="HandshakeTools.cs" />
-    <Compile Include="LoadedPod.cs" />
-    <Compile Include="PODHandshaker.cs" />
-    <Compile Include="Scramble.cs" />
-    <Compile Include="Views\ProjectorView.xaml.cs">
-      <DependentUpon>ProjectorView.xaml</DependentUpon>
+    <Compile Include="Models\ProjectorModel.cs" />
+    <Compile Include="ViewModels\ProjectorViewModel.cs" />
+    <Compile Include="Views\ProjectorViewWindow.xaml.cs">
+      <DependentUpon>ProjectorViewWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -88,7 +88,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ProjectorView.xaml">
+    <Page Include="Views\ProjectorViewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -119,9 +119,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
