@@ -71,7 +71,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\ValueConverters\CubeToCentre.cs" />
     <Compile Include="Models\ProjectorModel.cs" />
+    <Compile Include="ViewModels\ValueConverters\CubeToFB.cs" />
+    <Compile Include="ViewModels\ValueConverters\CubeToLR.cs" />
+    <Compile Include="ViewModels\ValueConverters\CubeToUD.cs" />
     <Compile Include="ViewModels\ProjectorViewModel.cs" />
     <Compile Include="Views\ProjectorViewWindow.xaml.cs">
       <DependentUpon>ProjectorViewWindow.xaml</DependentUpon>

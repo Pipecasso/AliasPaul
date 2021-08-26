@@ -49,9 +49,10 @@ namespace ProjecterSetup
                 ProjectorViewWindow projectorViewWindow = new ProjectorViewWindow();
                 ProjectorViewModel projectorViewModel = (ProjectorViewModel)projectorViewWindow.DataContext;
                 ProjectorModel projectorModel = projectorViewModel.projectorModel;
-
-                projectorModel.Cube = pODTransformer.GetCube();
+                projectorViewModel.ModelCube = pODTransformer.GetCube();
                 projectorViewWindow.Show();
+             
+           
 
 
 

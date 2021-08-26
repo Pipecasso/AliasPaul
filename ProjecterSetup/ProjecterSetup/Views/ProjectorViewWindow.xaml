@@ -5,12 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProjecterSetup.Views"
         xmlns:ViewModels="clr-namespace:ProjecterSetup.ViewModels"
+        xmlns:Converters="clr-namespace:ProjecterSetup.ViewModels.ValueConverters"
         mc:Ignorable="d"
         Title="ProjectorViewWindow" Height="450" Width="800"
         >
+    <Window.Resources>
+        <Converters:CubeToCentre x:Key="cube2center"/>
+        <Converters:CubeToUD x:Key="cube2ud"/>
+        <Converters:CubeToFB x:Key="cube2fb"/>
+        <Converters:CubeToLR x:Key="cube2lr"/>
+    </Window.Resources>
+
     <Window.DataContext>
         <ViewModels:ProjectorViewModel/>
     </Window.DataContext>
+   
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -41,10 +50,10 @@
         <Label Grid.Column="1" Grid.Row="1">UpDown</Label>
         <Label Grid.Column="1" Grid.Row="2">LeftRight</Label>
         <Label Grid.Column="1" Grid.Row="3">FrontBack</Label>
-        <TextBlock Name="Centre" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding GetCentre}"></TextBlock>
-        <TextBlock Name="UpDown" Grid.Column="2" Grid.Row="1" Text="{Binding updown}"></TextBlock>
-        <TextBlock Name="LeftRight" Grid.Column="2" Grid.Row="2" Text="{Binding leftright}"></TextBlock>
-        <TextBlock Name="FrontBack" Grid.Column="2" Grid.Row="3" Text="{Binding frontback}"></TextBlock>
+        <TextBlock Name="Centre" Grid.Column="2" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding ModelCube,Converter={StaticResource cube2center}}"  ></TextBlock>
+        <TextBlock Name="UpDown" Grid.Column="2" Grid.Row="1" Text="{Binding ModelCube,Converter={StaticResource cube2ud}}"></TextBlock>
+        <TextBlock Name="FrontBack" Grid.Column="2" Grid.Row="3" Text="{Binding ModelCube,Converter={StaticResource cube2fb}}"></TextBlock>
+        <TextBlock Name="LeftRight" Grid.Column="2" Grid.Row="2" Text="{Binding ModelCube,Converter={StaticResource cube2lr}}"></TextBlock>
     </Grid>
 
 </Window>
