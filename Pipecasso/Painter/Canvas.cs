@@ -57,6 +57,11 @@ namespace Painter
             return RectToGo;
         }
 
+        public void ConeToCone(Cone2d cones)
+        {
+
+        }
+
         
        
 

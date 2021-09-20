@@ -10,7 +10,7 @@ namespace Painter
 {
     public class Artist
     {
-        private Dictionary<dynamic, Shapes2d> _PaintThis;
+        protected Dictionary<dynamic, Shapes2d> _PaintThis;
         public Artist(Dictionary<dynamic,Shapes2d> paintthis)
         {
             _PaintThis = paintthis;

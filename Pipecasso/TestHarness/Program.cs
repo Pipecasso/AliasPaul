@@ -99,7 +99,8 @@ namespace TestHarness
                 
                 PODCanvas podCanvas = new PODCanvas(canvas);
                 PODArtist picasso = new PODArtist(lp.pod, podCanvas, projectedshapes);
-               
+                picasso.DrawIt(pencilcase);
+                picasso.SaveIt("Pipecasso2021.bmp");
             }
         }
     }

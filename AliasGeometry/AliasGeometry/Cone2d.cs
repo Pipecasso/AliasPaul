@@ -33,6 +33,11 @@ namespace AliasGeometry
             }
         }
 
+        public bool Single()
+        {
+            return _start.Center == _end.Center;
+        }
+
 
     }
 }
