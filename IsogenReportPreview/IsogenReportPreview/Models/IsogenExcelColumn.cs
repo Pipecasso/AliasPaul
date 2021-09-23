@@ -9,17 +9,37 @@ namespace IsogenReportPreview.Models
 {
     public class IsogenExcelColumn
     {
-        CellValue[] _Cells;
+        List<string> _Cells;
 
-        string name { get; set; }
-        int cellcount { get; }
+        public  string name { get; set; }
+       
 
-        public IsogenExcelColumn(string column_name, int count)
+        public IsogenExcelColumn(string colname)
         {
-            name = column_name;
-            cellcount = count;
-            _Cells = new CellValue[count];
+          
+            _Cells = new List<string>();
+            name = colname;
         }
-    
+        
+        public string this[int i]
+        {
+            get
+            {
+                return _Cells[i];
+            }
+        }
+
+        public void AddString(string s)
+        {
+            _Cells.Add(s);
+        }
+
+        public int CellCount
+        {
+            get
+            {
+                return _Cells.Count;
+            }
+        }
     }
 }
