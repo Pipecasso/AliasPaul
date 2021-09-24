@@ -1,6 +1,7 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,19 @@ namespace IsogenReportPreview.Models
             get
             {
                 return _Cells.Count;
+            }
+        }
+
+        public ObservableCollection<string> GridData
+        {
+            get
+            {
+                ObservableCollection<string> stringcollection = new ObservableCollection<string>();
+                for (int index = 0; index < CellCount; index++)
+                {
+                    stringcollection.Add(this[index]);
+                }
+                return stringcollection;
             }
         }
     }
