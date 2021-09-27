@@ -6,12 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
+using System.Dynamic;
 
 namespace IsogenReportPreview.ViewModels
 {
     public class IsogenExcelReportViewModel : BindableBase
     {
         private IsogenExcelReport _isogenExcelReport;
+        private ObservableCollection<IsogenExcelColumn> _gridViewColumns;
+        private ObservableCollection<ExpandoObject> _gridViewRows;
 
         public IsogenExcelReportViewModel()
         {
@@ -21,40 +24,62 @@ namespace IsogenReportPreview.ViewModels
         public void SetPath(string path)
         {
             _isogenExcelReport.ParseSpreadsheet(path);
-        }
-
-        internal IEnumerable<string> GetColumns()
-        {
-            List<string> columnnames = new List<string>();
-            for (int i=0;i<_isogenExcelReport.ColumnCount;i++)
+            _gridViewColumns = new ObservableCollection<IsogenExcelColumn>();
+            for (int i = 0; i < _isogenExcelReport.ColumnCount; i++)
             {
-                columnnames.Add(_isogenExcelReport[i].name);
+                _gridViewColumns.Add(_isogenExcelReport[i]);
             }
-            return columnnames;
+            _gridViewRows = new ObservableCollection<ExpandoObject>();
+
+            for (int i=0;i<_isogenExcelReport.RownCount;i++)
+            {
+                for (int j=0;j<_isogenExcelReport.ColumnCount;j++)
+                {
+                    var item = new ExpandoObject() as IDictionary<string, object>;
+                    item.Add(_isogenExcelReport[j].name,_isogenExcelReport[j,i]);
+                    _gridViewRows.Add((ExpandoObject)item);
+                }
+            }
         }
 
-        public ObservableCollection<IsogenExcelColumn> GetColumns2
+        public IEnumerable<string> GetColumnHeaders()
+        {
+            List<string> headerout = new List<string>();
+            for (int i = 0; i < _isogenExcelReport.ColumnCount; i++)
+            {
+                headerout.Add(_isogenExcelReport[i].name);
+            }
+            return headerout;
+
+        }
+      
+
+        public ObservableCollection<ExpandoObject> GridViewColumns2
         {
             get
             {
-                ObservableCollection<IsogenExcelColumn> columnnames = new ObservableCollection<IsogenExcelColumn>();
+                ObservableCollection<ExpandoObject> togo = new ObservableCollection<ExpandoObject>();
                 for (int i = 0; i < _isogenExcelReport.ColumnCount; i++)
                 {
-                    columnnames.Add(_isogenExcelReport[i]);
+                    ExpandoObject eo = _isogenExcelReport[i].BindMe;
+                    togo.Add(eo);
                 }
-                return columnnames;
+                return togo;
+            }
+
+        }
+
+        public ObservableCollection<IsogenExcelColumn> GridViewColumns { get => _gridViewColumns; }
+        
+        public ObservableCollection<ExpandoObject> GridViewRowCollection { get => _gridViewRows; }
+
+        public ObservableCollection<ExpandoObject> DataCollection
+        {
+            get
+            {
+                return this.GridViewRowCollection;
             }
         }
 
-        public ObservableCollection<string> GridData(int i)
-        {
-            ObservableCollection<string> stringcollection = new ObservableCollection<string>();
-            IsogenExcelColumn isogenExcelColumn = _isogenExcelReport[i];
-            for (int index = 0;index < isogenExcelColumn.CellCount;index++)
-            {
-                stringcollection.Add(isogenExcelColumn[index]);
-            }
-            return stringcollection;
-        }
     }
 }

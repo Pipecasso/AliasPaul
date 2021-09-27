@@ -306,17 +306,11 @@
   <ItemGroup>
     <Compile Include="Models\IsogenExcelColumn.cs" />
     <Compile Include="Models\IsogenExcelReport.cs" />
-    <Compile Include="ReportPreviewGrid.xaml.cs">
-      <DependentUpon>ReportPreviewGrid.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Models\IsogenExcelRow.cs" />
     <Compile Include="ViewModels\IsogenExcelReportViewModel.cs" />
     <Compile Include="View\IsogenReportPreviewView.xaml.cs">
       <DependentUpon>IsogenReportPreviewView.xaml</DependentUpon>
     </Compile>
-    <Page Include="ReportPreviewGrid.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\IsogenReportPreviewView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

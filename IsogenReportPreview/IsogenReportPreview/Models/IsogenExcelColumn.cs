@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,13 +12,13 @@ namespace IsogenReportPreview.Models
     public class IsogenExcelColumn
     {
         List<string> _Cells;
-
         public  string name { get; set; }
+
+        
        
 
         public IsogenExcelColumn(string colname)
-        {
-          
+        { 
             _Cells = new List<string>();
             name = colname;
         }
@@ -35,7 +36,7 @@ namespace IsogenReportPreview.Models
             _Cells.Add(s);
         }
 
-        public int CellCount
+        internal int CellCount
         {
             get
             {
@@ -43,16 +44,19 @@ namespace IsogenReportPreview.Models
             }
         }
 
-        public ObservableCollection<string> GridData
+        public ExpandoObject BindMe 
         {
             get
             {
-                ObservableCollection<string> stringcollection = new ObservableCollection<string>();
-                for (int index = 0; index < CellCount; index++)
+                var item = new ExpandoObject() as IDictionary<string, object>;
+                int tick = 0;
+                foreach (string s in _Cells)
                 {
-                    stringcollection.Add(this[index]);
+                    string key = $"item{tick}";
+                    item.Add(key, s);
+                    tick++;
                 }
-                return stringcollection;
+                return (ExpandoObject)item;
             }
         }
     }

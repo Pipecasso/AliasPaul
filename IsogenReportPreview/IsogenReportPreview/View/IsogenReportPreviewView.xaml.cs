@@ -33,12 +33,12 @@ namespace IsogenReportPreview.View
             int tick = 0;
             if (isogenExcelReportViewModel != null)
             {
-                foreach (string s in isogenExcelReportViewModel.GetColumns())
+                foreach (string s in isogenExcelReportViewModel.GetColumnHeaders())
                 {
                     DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
              
                     dataGridTextColumn.Header = s;
-                    Binding binding = new Binding("GridData");
+                    Binding binding = new Binding("BindMe");
                    
                     dataGridTextColumn.Binding = binding;
                     preview_grid.Columns.Add(dataGridTextColumn);
