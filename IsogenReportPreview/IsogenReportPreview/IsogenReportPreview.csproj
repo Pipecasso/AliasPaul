@@ -304,6 +304,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\ColumnValueConverter.cs" />
     <Compile Include="Models\IsogenExcelColumn.cs" />
     <Compile Include="Models\IsogenExcelReport.cs" />
     <Compile Include="Models\IsogenExcelRow.cs" />

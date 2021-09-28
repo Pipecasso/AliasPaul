@@ -44,7 +44,7 @@ namespace IsogenReportPreview.Models
             }
         }
 
-        public ExpandoObject BindMe 
+        public ExpandoObject BindMe
         {
             get
             {
@@ -59,5 +59,7 @@ namespace IsogenReportPreview.Models
                 return (ExpandoObject)item;
             }
         }
+
+       
     }
 }

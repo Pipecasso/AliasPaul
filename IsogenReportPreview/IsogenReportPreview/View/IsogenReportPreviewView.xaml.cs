@@ -1,4 +1,5 @@
-﻿using IsogenReportPreview.ViewModels;
+﻿using IsogenReportPreview.Converters;
+using IsogenReportPreview.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,9 +39,11 @@ namespace IsogenReportPreview.View
                     DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
              
                     dataGridTextColumn.Header = s;
-                    Binding binding = new Binding("BindMe");
-                   
-                    dataGridTextColumn.Binding = binding;
+                    Binding bind = new Binding("BindMe");
+                    bind.Converter = new ColumnValueConverter();
+                    bind.ConverterParameter = s;
+                    
+                     dataGridTextColumn.Binding = bind;
                     preview_grid.Columns.Add(dataGridTextColumn);
                     tick++;
                 }
