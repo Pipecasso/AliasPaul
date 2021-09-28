@@ -82,7 +82,7 @@ namespace IsogenReportPreview.Models
             }
         }
 
-        public int RownCount
+        public int RowCount
         {
             get
             {
@@ -109,6 +109,23 @@ namespace IsogenReportPreview.Models
             {
                 return (this[i])[j];
             }
+
+        }
+
+        public IEnumerable<IsogenExcelRow> GetRows()
+        {
+            List<IsogenExcelRow> rows = new List<IsogenExcelRow>();
+            for (int j=0;j < RowCount;j++)
+            {
+                IsogenExcelRow isogenExcelRow = new IsogenExcelRow();
+                for (int i = 0; i < ColumnCount; i++)
+                {
+                    IsogenExcelColumn isogenExcelColumn = this[i];
+                    isogenExcelRow.AddString(this[i, j]);
+                }
+                rows.Add(isogenExcelRow);
+            }
+            return rows;
 
         }
     }
