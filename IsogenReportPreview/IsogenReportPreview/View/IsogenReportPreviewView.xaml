@@ -6,10 +6,11 @@
              xmlns:local="clr-namespace:IsogenReportPreview.View"
              mc:Ignorable="d" 
              xmlns:viewmodels="clr-namespace:IsogenReportPreview.ViewModels"
-             d:DataContext="{d:DesignInstance Type=viewmodels:IsogenExcelReportViewModel}"
-             d:DesignHeight="450" d:DesignWidth="100">
-    <Grid>
-        <DataGrid x:Name="preview_grid" AutoGenerateColumns="false" ItemsSource="{Binding GridViewColumns}" >
-        </DataGrid> 
+             d:DataContext="{d:DesignInstance Type=viewmodels:IsogenReportPreviewViewModel}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="PreviewGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
     </Grid>
 </UserControl>

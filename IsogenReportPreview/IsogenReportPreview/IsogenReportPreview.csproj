@@ -307,14 +307,21 @@
     <Compile Include="Converters\ColumnValueConverter.cs" />
     <Compile Include="Models\IsogenExcelColumn.cs" />
     <Compile Include="Models\IsogenExcelReport.cs" />
-    <Compile Include="Models\IsogenExcelRow.cs" />
     <Compile Include="ViewModels\IsogenReportPreviewColumnViewModel.cs" />
+    <Compile Include="ViewModels\IsogenReportPreviewViewModel.cs" />
     <Compile Include="View\IsogenReportPreviewColumnView.xaml.cs">
       <DependentUpon>IsogenReportPreviewColumnView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\IsogenReportPreviewView.xaml.cs">
+      <DependentUpon>IsogenReportPreviewView.xaml</DependentUpon>
     </Compile>
     <Page Include="View\IsogenReportPreviewColumnView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\IsogenReportPreviewView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

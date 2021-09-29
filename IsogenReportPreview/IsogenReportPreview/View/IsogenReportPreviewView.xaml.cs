@@ -1,19 +1,6 @@
-﻿using IsogenReportPreview.Converters;
+﻿
 using IsogenReportPreview.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace IsogenReportPreview.View
 {
@@ -29,25 +16,26 @@ namespace IsogenReportPreview.View
 
         public void SetPath(string path)
         {
-            IsogenExcelReportViewModel isogenExcelReportViewModel = (IsogenExcelReportViewModel)this.DataContext;
-            isogenExcelReportViewModel.SetPath(path);
-            int tick = 0;
-            if (isogenExcelReportViewModel != null)
+            IsogenReportPreviewViewModel isogenReportPreviewViewModel = new IsogenReportPreviewViewModel();
+            this.DataContext = isogenReportPreviewViewModel;
+            isogenReportPreviewViewModel.SetPath(path);
+            for (int i=0;i<isogenReportPreviewViewModel.ColumnCount;i++)
             {
-                foreach (string s in isogenExcelReportViewModel.GetColumnHeaders())
-                {
-                    DataGridTextColumn dataGridTextColumn = new DataGridTextColumn();
-             
-                    dataGridTextColumn.Header = s;
-                    Binding bind = new Binding("BindMe");
-                    bind.Converter = new ColumnValueConverter();
-                    bind.ConverterParameter = s;
-                    
-                     dataGridTextColumn.Binding = bind;
-                    preview_grid.Columns.Add(dataGridTextColumn);
-                    tick++;
-                }
-            
+                ColumnDefinition columnDefinition = new ColumnDefinition();
+                PreviewGrid.ColumnDefinitions.Add(columnDefinition);
+            }
+
+            for (int i=0;i<isogenReportPreviewViewModel.ColumnCount;i++)
+            {
+                IsogenReportPreviewColumnView isogenReportPreviewColumnView = new IsogenReportPreviewColumnView();
+                isogenReportPreviewColumnView.rowcount = isogenReportPreviewViewModel.RowCount;
+                Grid.SetRow(isogenReportPreviewColumnView, 0);
+                Grid.SetColumn(isogenReportPreviewColumnView, i);
+                PreviewGrid.Children.Add(isogenReportPreviewColumnView);
+
+                IsogenReportPreviewColumnViewModel isogenReportPreviewColumnViewModel = new IsogenReportPreviewColumnViewModel();
+                isogenReportPreviewColumnView.DataContext = isogenReportPreviewColumnViewModel;
+                isogenReportPreviewViewModel.AssignColumn(i, isogenReportPreviewColumnViewModel);
             }
         }
     }
