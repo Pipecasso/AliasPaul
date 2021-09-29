@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <irp:IsogenReportPreviewView Name="preview2"></irp:IsogenReportPreviewView>
+        <irp:IsogenReportPreviewColumnView Name="preview2">
+        </irp:IsogenReportPreviewColumnView>
     </Grid>
 </Window>

@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using IsogenReportPreview.ViewModels;
-
+using IsogenReportPreview.Models;
 namespace PreviewConsole
 {
     /// <summary>
@@ -25,9 +25,17 @@ namespace PreviewConsole
         {
             InitializeComponent();
             string path = @"D:\AliasPaul\IsogenReportPreview\IsogenReportingPreviewTests\bin\Debug\SpoolInformationFileImperial.xlsx";
-            IsogenExcelReportViewModel vm = new IsogenExcelReportViewModel();
-            preview2.DataContext = vm;
-            preview2.SetPath(path);
+
+            IsogenExcelReport isogenExcelModel = new IsogenExcelReport();
+            isogenExcelModel.ParseSpreadsheet(path);
+            IsogenExcelColumn colin = isogenExcelModel[0];
+            preview2.rowcount = colin.CellCount;
+
+            IsogenReportPreviewColumnViewModel isogenReportPreviewColumnViewModel = new IsogenReportPreviewColumnViewModel();
+            preview2.DataContext = isogenReportPreviewColumnViewModel;
+            isogenReportPreviewColumnViewModel.IsogenExcelColumn = colin;
+
+
         }
     }
 }

@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="IsogenReportPreview.View.IsogenReportPreviewColumnView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:IsogenReportPreview.View"
+             xmlns:viewmodels="clr-namespace:IsogenReportPreview.ViewModels"
+             d:DataContext="{d:DesignInstance Type=viewmodels:IsogenReportPreviewColumnViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="500">
+    <StackPanel x:Name="StackMe">
+        <TextBlock x:Name="Header" Background="SlateGray" Foreground="White" Text="{Binding HeaderName}"></TextBlock>
+        <Grid Name="ValueGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+    </StackPanel>
+</UserControl>

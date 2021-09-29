@@ -20,7 +20,7 @@ namespace IsogenReportingPreviewTests
             excelReport.ParseSpreadsheet(path);
 
             Assert.AreEqual(8, excelReport.ColumnCount);
-            Assert.AreEqual(7, excelReport.RownCount);
+            Assert.AreEqual(7, excelReport.RowCount);
             Assert.AreEqual("PIPELINE-REFERENCE", excelReport[0].name);
             Assert.AreEqual("SPOOL-ID", excelReport[1].name);
             Assert.AreEqual("CENTRELINE-LENGTH", excelReport[4].name);

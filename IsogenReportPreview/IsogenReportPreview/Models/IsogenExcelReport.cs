@@ -112,7 +112,7 @@ namespace IsogenReportPreview.Models
 
         }
 
-        public IEnumerable<IsogenExcelRow> GetRows()
+        /*public IEnumerable<IsogenExcelRow> GetRows()
         {
             List<IsogenExcelRow> rows = new List<IsogenExcelRow>();
             for (int j=0;j < RowCount;j++)
@@ -127,6 +127,6 @@ namespace IsogenReportPreview.Models
             }
             return rows;
 
-        }
+        }*/
     }
 }
