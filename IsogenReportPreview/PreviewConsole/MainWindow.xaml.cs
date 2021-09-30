@@ -26,15 +26,18 @@ namespace PreviewConsole
             InitializeComponent();
             string path = @"D:\AliasPaul\IsogenReportPreview\IsogenReportingPreviewTests\bin\Debug\SpoolInformationFileImperial.xlsx";
 
-            IsogenExcelReport isogenExcelModel = new IsogenExcelReport();
-            isogenExcelModel.ParseSpreadsheet(path);
-            IsogenExcelColumn colin = isogenExcelModel[0];
-            preview2.rowcount = colin.CellCount;
 
-            IsogenReportPreviewColumnViewModel isogenReportPreviewColumnViewModel = new IsogenReportPreviewColumnViewModel();
-            preview2.DataContext = isogenReportPreviewColumnViewModel;
-            isogenReportPreviewColumnViewModel.IsogenExcelColumn = colin;
+            /* isogenExcelModel.ParseSpreadsheet(path);
+             IsogenExcelColumn colin = isogenExcelModel[0];
+             preview2.rowcount = colin.CellCount;
 
+             IsogenReportPreviewColumnViewModel isogenReportPreviewColumnViewModel = new IsogenReportPreviewColumnViewModel();
+             preview2.DataContext = isogenReportPreviewColumnViewModel;
+             isogenReportPreviewColumnViewModel.IsogenExcelColumn = colin;*/
+
+            preview2.SetPath(path);
+          
+            
 
         }
     }
