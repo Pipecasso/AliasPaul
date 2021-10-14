@@ -48,11 +48,16 @@ namespace TestHarness
             Point3d frl = cubeView.FrontTopLeft;
             Vector3d normal = new Vector3d(frl, center);
             normal.Normalise();
+            //podTransformer.SaveToXls("p:\\here.xlsx");
+            //podTransformer.LoadFromXls("here.xlsx");
+
             Camera camera = new Camera(normal, cubeView, 5, 2, canvas.Width, canvas.Height);
             foreach (KeyValuePair<dynamic, Shapes3d> kvp in podshapes)
             {
                 Shapes2d shapes2d = camera.ProjectMyShapes(kvp.Value);
                 projectedshapes.Add(kvp.Key, shapes2d);
+                
+                
                 foreach (Cone2d cone in shapes2d.Cones)
                 {
                     Ellipse2dPointByPoint e = cone.start;
@@ -61,7 +66,7 @@ namespace TestHarness
                 }
             }
 
-            Pen shaun1 = new Pen(Color.AliceBlue, 4);
+            /*Pen shaun1 = new Pen(Color.AliceBlue, 4);
             Pen shaun2 = new Pen(Color.OliveDrab, 3);
             Pen shaun3 = new Pen(Color.Lime, 5);
             Pen shaun4 = new Pen(Color.White, 3);
@@ -101,7 +106,7 @@ namespace TestHarness
                 PODArtist picasso = new PODArtist(lp.pod, podCanvas, projectedshapes);
                 picasso.DrawIt(pencilcase);
                 picasso.SaveIt("Pipecasso2021.bmp");
-            }
+            }*/
         }
     }
 }

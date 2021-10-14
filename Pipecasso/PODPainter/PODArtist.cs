@@ -42,7 +42,7 @@ namespace PODPainter
 
                 foreach (Cone2d cone in shapestodraw.Cones)
                 {
-                    _
+                    
                 }
             }
         }

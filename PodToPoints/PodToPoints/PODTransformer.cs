@@ -9,7 +9,9 @@ using AliasPOD;
 using AliasPOD3D;
 using Projector;
 using AliasGeometry;
-
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace PodToPoints
 {
@@ -66,13 +68,186 @@ namespace PodToPoints
                         if (!info.Attributes.IsItem("SEQUENCE-NUMBER") || !info.Attributes.IsItem("IDENTIFIER")) continue;
                         int sequenceNumber = info.Attributes.Item("SEQUENCE-NUMBER").Value;
                         string identifier = info.Attributes.Item("IDENTIFIER").Value;
-                        _spoolIdsBySequence.Add(Tuple.Create(pipeline, sequenceNumber), identifier);
+                        _spoolIdsBySequence.Add(System.Tuple.Create(pipeline, sequenceNumber), identifier);
                     }
                 }
             }
         }
 
-    
+        public void LoadFromXls(string filepath)
+        {
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filepath,false))
+            {
+                WorkbookPart workbookPart = spreadsheetDocument.WorkbookPart;
+                IEnumerable<Worksheet> worksheets = workbookPart.WorksheetParts.Select(x => x.Worksheet);
+                IEnumerable<SheetData> sheetDataAll = worksheets.SelectMany(x => x.Elements<SheetData>());
+                SheetData sheetData = sheetDataAll.Where(x => x.InnerXml != null && x.InnerXml != string.Empty).First();
+                SharedStringTablePart stringTable = workbookPart.GetPartsOfType<SharedStringTablePart>().FirstOrDefault();
+            }
+        }
+
+        public void SaveToXls(string filepath)
+        {
+            Dictionary<Line3d, string> Lines = new Dictionary<Line3d, string>();
+            foreach (KeyValuePair<dynamic, Shapes3d> kvp in _Shapes)
+            {
+                Shapes3d shapes = kvp.Value;
+                string uci = kvp.Key.ExternalUCI;
+                foreach (Line3d line in shapes.Lines)
+                {
+                    if (!Lines.ContainsKey(line)) { Lines.Add(line, uci); }
+                }
+            }
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook))
+            {
+                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                workbookpart.Workbook = new Workbook();
+
+                // Add a WorksheetPart to the WorkbookPart.
+                WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+                worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                // Add Sheets to the Workbook.
+                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.
+                    AppendChild<Sheets>(new Sheets());
+
+                // Append a new worksheet and associate it with the workbook.
+                Sheet line_sheet = new Sheet()
+                {
+                    Id = spreadsheetDocument.WorkbookPart.
+                    GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = "Lines"
+                };
+                sheets.Append(line_sheet);
+
+                SharedStringTablePart shareStringPart;
+                if (workbookpart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
+                {
+                    shareStringPart = workbookpart.GetPartsOfType<SharedStringTablePart>().First();
+                }
+                else
+                {
+                    shareStringPart = workbookpart.AddNewPart<SharedStringTablePart>();
+                }
+
+                uint row = 1;
+                foreach (KeyValuePair<Line3d, string> kvp in Lines)
+                {
+                    Line3d l = kvp.Key;
+
+
+                    InsertIntoCell("A", row, shareStringPart, worksheetPart, l.P.X);
+                    InsertIntoCell("B", row, shareStringPart, worksheetPart, l.P.Y);
+                    InsertIntoCell("C", row, shareStringPart, worksheetPart, l.P.Z);
+
+                    InsertIntoCell("E", row, shareStringPart, worksheetPart, l.Q.X);
+                    InsertIntoCell("F", row, shareStringPart, worksheetPart, l.Q.Y);
+                    InsertIntoCell("G", row, shareStringPart, worksheetPart, l.Q.Z);
+                    InsertIntoCell("I", row, shareStringPart, worksheetPart, kvp.Value);
+
+                    row++;
+
+                }
+                spreadsheetDocument.Save();
+            }
+         
+         
+            
+
+        }
+
+        private static void InsertIntoCell(string col,uint row, SharedStringTablePart sharedStringTablePart, WorksheetPart worksheetPart,double val)
+        {
+            string text = val.ToString();
+            Cell cell = InsertCellInWorksheet(col, row, worksheetPart);
+            cell.CellValue = new CellValue(text);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+        }
+
+        private static void InsertIntoCell(string col,uint row, SharedStringTablePart sharedStringTablePart, WorksheetPart worksheetPart, string val,CellValues cellValues = CellValues.SharedString)
+        {
+            int index = InsertSharedStringItem(val, sharedStringTablePart);
+            Cell cell = InsertCellInWorksheet(col, row, worksheetPart);
+            cell.CellValue = new CellValue(index.ToString());
+            cell.DataType = new EnumValue<CellValues>(cellValues);
+        }
+
+        private static int InsertSharedStringItem(string text, SharedStringTablePart shareStringPart)
+        {
+            // If the part does not contain a SharedStringTable, create one.
+            if (shareStringPart.SharedStringTable == null)
+            {
+                shareStringPart.SharedStringTable = new SharedStringTable();
+            }
+
+            int i = 0;
+
+            // Iterate through all the items in the SharedStringTable. If the text already exists, return its index.
+            foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
+            {
+                if (item.InnerText == text)
+                {
+                    return i;
+                }
+
+                i++;
+            }
+
+            // The text does not exist in the part. Create the SharedStringItem and return its index.
+            shareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
+            shareStringPart.SharedStringTable.Save();
+
+            return i;
+        }
+
+        private static Cell InsertCellInWorksheet(string columnName, uint rowIndex, WorksheetPart worksheetPart)
+        {
+            Worksheet worksheet = worksheetPart.Worksheet;
+            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+            string cellReference = columnName + rowIndex;
+
+            // If the worksheet does not contain a row with the specified row index, insert one.
+            Row row;
+            if (sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).Count() != 0)
+            {
+                row = sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).First();
+            }
+            else
+            {
+                row = new Row() { RowIndex = rowIndex };
+                sheetData.Append(row);
+            }
+
+            // If there is not a cell with the specified column name, insert one.  
+            if (row.Elements<Cell>().Where(c => c.CellReference.Value == columnName + rowIndex).Count() > 0)
+            {
+                return row.Elements<Cell>().Where(c => c.CellReference.Value == cellReference).First();
+            }
+            else
+            {
+                // Cells must be in sequential order according to CellReference. Determine where to insert the new cell.
+                Cell refCell = null;
+                foreach (Cell cell in row.Elements<Cell>())
+                {
+                    if (cell.CellReference.Value.Length == cellReference.Length)
+                    {
+                        if (string.Compare(cell.CellReference.Value, cellReference, true) > 0)
+                        {
+                            refCell = cell;
+                            break;
+                        }
+                    }
+                }
+
+                Cell newCell = new Cell() { CellReference = cellReference };
+                row.InsertBefore(newCell, refCell);
+
+                worksheet.Save();
+                return newCell;
+            }
+        }
+
 
         public Dictionary<dynamic,Shapes3d> Shapes3 { get => _Shapes; }
 
