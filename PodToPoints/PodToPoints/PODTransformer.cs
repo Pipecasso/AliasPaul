@@ -121,35 +121,6 @@ namespace PodToPoints
                 };
                 sheets.Append(line_sheet);
 
-                SharedStringTablePart shareStringPart;
-                if (workbookpart.GetPartsOfType<SharedStringTablePart>().Count() > 0)
-                {
-                    shareStringPart = workbookpart.GetPartsOfType<SharedStringTablePart>().First();
-                }
-                else
-                {
-                    shareStringPart = workbookpart.AddNewPart<SharedStringTablePart>();
-                }
-
-                uint row = 1;
-                foreach (KeyValuePair<Line3d, string> kvp in Lines)
-                {
-                    Line3d l = kvp.Key;
-
-
-                    InsertIntoCell("A", row, shareStringPart, worksheetPart, l.P.X);
-                    InsertIntoCell("B", row, shareStringPart, worksheetPart, l.P.Y);
-                    InsertIntoCell("C", row, shareStringPart, worksheetPart, l.P.Z);
-
-                    InsertIntoCell("E", row, shareStringPart, worksheetPart, l.Q.X);
-                    InsertIntoCell("F", row, shareStringPart, worksheetPart, l.Q.Y);
-                    InsertIntoCell("G", row, shareStringPart, worksheetPart, l.Q.Z);
-                    InsertIntoCell("I", row, shareStringPart, worksheetPart, kvp.Value);
-
-                    row++;
-
-                }
-                spreadsheetDocument.Save();
             }
          
          
@@ -157,96 +128,7 @@ namespace PodToPoints
 
         }
 
-        private static void InsertIntoCell(string col,uint row, SharedStringTablePart sharedStringTablePart, WorksheetPart worksheetPart,double val)
-        {
-            string text = val.ToString();
-            Cell cell = InsertCellInWorksheet(col, row, worksheetPart);
-            cell.CellValue = new CellValue(text);
-            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
-        }
-
-        private static void InsertIntoCell(string col,uint row, SharedStringTablePart sharedStringTablePart, WorksheetPart worksheetPart, string val,CellValues cellValues = CellValues.SharedString)
-        {
-            int index = InsertSharedStringItem(val, sharedStringTablePart);
-            Cell cell = InsertCellInWorksheet(col, row, worksheetPart);
-            cell.CellValue = new CellValue(index.ToString());
-            cell.DataType = new EnumValue<CellValues>(cellValues);
-        }
-
-        private static int InsertSharedStringItem(string text, SharedStringTablePart shareStringPart)
-        {
-            // If the part does not contain a SharedStringTable, create one.
-            if (shareStringPart.SharedStringTable == null)
-            {
-                shareStringPart.SharedStringTable = new SharedStringTable();
-            }
-
-            int i = 0;
-
-            // Iterate through all the items in the SharedStringTable. If the text already exists, return its index.
-            foreach (SharedStringItem item in shareStringPart.SharedStringTable.Elements<SharedStringItem>())
-            {
-                if (item.InnerText == text)
-                {
-                    return i;
-                }
-
-                i++;
-            }
-
-            // The text does not exist in the part. Create the SharedStringItem and return its index.
-            shareStringPart.SharedStringTable.AppendChild(new SharedStringItem(new DocumentFormat.OpenXml.Spreadsheet.Text(text)));
-            shareStringPart.SharedStringTable.Save();
-
-            return i;
-        }
-
-        private static Cell InsertCellInWorksheet(string columnName, uint rowIndex, WorksheetPart worksheetPart)
-        {
-            Worksheet worksheet = worksheetPart.Worksheet;
-            SheetData sheetData = worksheet.GetFirstChild<SheetData>();
-            string cellReference = columnName + rowIndex;
-
-            // If the worksheet does not contain a row with the specified row index, insert one.
-            Row row;
-            if (sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).Count() != 0)
-            {
-                row = sheetData.Elements<Row>().Where(r => r.RowIndex == rowIndex).First();
-            }
-            else
-            {
-                row = new Row() { RowIndex = rowIndex };
-                sheetData.Append(row);
-            }
-
-            // If there is not a cell with the specified column name, insert one.  
-            if (row.Elements<Cell>().Where(c => c.CellReference.Value == columnName + rowIndex).Count() > 0)
-            {
-                return row.Elements<Cell>().Where(c => c.CellReference.Value == cellReference).First();
-            }
-            else
-            {
-                // Cells must be in sequential order according to CellReference. Determine where to insert the new cell.
-                Cell refCell = null;
-                foreach (Cell cell in row.Elements<Cell>())
-                {
-                    if (cell.CellReference.Value.Length == cellReference.Length)
-                    {
-                        if (string.Compare(cell.CellReference.Value, cellReference, true) > 0)
-                        {
-                            refCell = cell;
-                            break;
-                        }
-                    }
-                }
-
-                Cell newCell = new Cell() { CellReference = cellReference };
-                row.InsertBefore(newCell, refCell);
-
-                worksheet.Save();
-                return newCell;
-            }
-        }
+      
 
 
         public Dictionary<dynamic,Shapes3d> Shapes3 { get => _Shapes; }

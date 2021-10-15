@@ -142,7 +142,7 @@ namespace Projector
             //now pick to 3d vectors to represent the axis on the plane
             Vector3d vertical = new Vector3d(0, 0, 1);
             double fabsDot = Math.Abs(Vector3d.Dot(Normal, vertical));
-            if (Math.Abs(fabsDot) < double.Epsilon)
+            if ((Math.Abs(fabsDot)-1) < double.Epsilon)
             {
                 _V1 = new Vector3d(0, 1, 0);
                 _V2 = new Vector3d(1, 0, 0);

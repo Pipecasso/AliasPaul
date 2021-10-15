@@ -25,14 +25,14 @@ namespace TestHarness
         
         };
         
+        
+
         static void Main(string[] args)
         {
             string manifest = args[0];
             string podpath = args[1];
 
-            Bitmap canvas = new Bitmap(1000, 400);
-
-
+      
             PODTransformer podTransformer = null;
             LoadedPod lp = new LoadedPod(manifest, podpath);
             IsogenAssemblyLoader ial = lp.isogenAssemblyLoader;
@@ -42,71 +42,47 @@ namespace TestHarness
                 podTransformer = new PODTransformer(lp.pod);
             }
             Dictionary<dynamic, Shapes3d> podshapes = podTransformer.Shapes3;
-            Dictionary<dynamic, Shapes2d> projectedshapes = new Dictionary<dynamic, Shapes2d>();
             CubeView cubeView = podTransformer.GetCube();
-            Point3d center = cubeView.Center;
-            Point3d frl = cubeView.FrontTopLeft;
-            Vector3d normal = new Vector3d(frl, center);
-            normal.Normalise();
-            //podTransformer.SaveToXls("p:\\here.xlsx");
-            //podTransformer.LoadFromXls("here.xlsx");
+        
 
-            Camera camera = new Camera(normal, cubeView, 5, 2, canvas.Width, canvas.Height);
-            foreach (KeyValuePair<dynamic, Shapes3d> kvp in podshapes)
+            Dictionary<string, Vector3d> Normals = new Dictionary<string, Vector3d>();
+            Normals.Add("down",new Vector3d(0, 0, -1));
+            Normals.Add("up", new Vector3d(0, 0,  1));
+            Normals.Add("east",new Vector3d(1, 0, 0));
+            Normals.Add("west",new Vector3d(-1, 0, 0));
+            Normals.Add("south",new Vector3d(0, -1, 0));
+            Normals.Add("north",new Vector3d(0, 1, 0));
+
+            Vector3d vDir = new Vector3d(cubeView.FrontTopLeft, cubeView.Center);
+            vDir.Normalise();
+            Normals.Add("ftl", vDir);
+            vDir *= -1;
+            Normals.Add("bbr", vDir);
+
+            vDir = new Vector3d(cubeView.FrontTopRight, cubeView.Center);
+            vDir.Normalise();
+            Normals.Add("ftr", vDir);
+            vDir *= -1;
+            Normals.Add("bbl", vDir);
+
+            vDir = new Vector3d(cubeView.FrontBottomLeft, cubeView.Center);
+            vDir.Normalise();
+            Normals.Add("fbl", vDir);
+            vDir *= -1;
+            Normals.Add("btr", vDir);
+
+            vDir = new Vector3d(cubeView.FrontBottomRight, cubeView.Center);
+            vDir.Normalise();
+            Normals.Add("fbr", vDir);
+            vDir *= -1;
+            Normals.Add("btl", vDir);
+
+            Pablo picasso = new Pablo(manifest, podpath, podshapes, cubeView, 1000, 400);
+
+            foreach (KeyValuePair<string,Vector3d> kvp in Normals)
             {
-                Shapes2d shapes2d = camera.ProjectMyShapes(kvp.Value);
-                projectedshapes.Add(kvp.Key, shapes2d);
-                
-                
-                foreach (Cone2d cone in shapes2d.Cones)
-                {
-                    Ellipse2dPointByPoint e = cone.start;
-                    double angle = e.AngleToHorizontal;
-                    double degangle = angle * 180 / Math.PI;
-                }
-            }
-
-            /*Pen shaun1 = new Pen(Color.AliceBlue, 4);
-            Pen shaun2 = new Pen(Color.OliveDrab, 3);
-            Pen shaun3 = new Pen(Color.Lime, 5);
-            Pen shaun4 = new Pen(Color.White, 3);
-
-            using (IsogenAssemblyLoaderCookie monster = new IsogenAssemblyLoaderCookie(ial))
-            {
-                Dictionary<dynamic, Tuple<Pen, Brush>> pencilcase = new Dictionary<dynamic, Tuple<Pen, Brush>>();
-                foreach (Pipeline pline in lp.pod.Pipelines)
-                {
-                    foreach (Component c in pline.Components)
-                    {
-                        if (c.Material.Group == "Valves")
-                        {
-                            pencilcase.Add(c, new Tuple<Pen, Brush>(shaun1, null));
-                        }
-                        else if (c.Material.Group == "Flanges")
-                        {
-                            pencilcase.Add(c, new Tuple<Pen, Brush>(shaun2, null));
-                        }
-                        else if (c.Material.Group == "Welds" || c.Material.Group == "Bolts")
-                        {
-                            pencilcase.Add(c, new Tuple<Pen, Brush>(shaun3, null));
-                        }
-                        else
-                        {
-                            pencilcase.Add(c, new Tuple<Pen, Brush>(shaun4,null));
-                        }
-                    }
-                }
-
-
-                
-                
-                
-                
-                PODCanvas podCanvas = new PODCanvas(canvas);
-                PODArtist picasso = new PODArtist(lp.pod, podCanvas, projectedshapes);
-                picasso.DrawIt(pencilcase);
-                picasso.SaveIt("Pipecasso2021.bmp");
-            }*/
+                picasso.Project(kvp.Value, kvp.Key);
+            }   
         }
     }
 }

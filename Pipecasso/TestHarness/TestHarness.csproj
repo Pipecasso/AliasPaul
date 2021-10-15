@@ -84,6 +84,7 @@
     <Compile Include="HandshakeStrings.cs" />
     <Compile Include="HandshakeTools.cs" />
     <Compile Include="LoadedPod.cs" />
+    <Compile Include="Pablo.cs" />
     <Compile Include="PODHandshaker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
