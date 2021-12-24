@@ -9,14 +9,6 @@ namespace AutoSrpintReview
 {
     public class BacklogItem
     {
-        private class PaulAction<BacklogItem, T>
-        { 
-            Action<BacklogItem,T>
-        
-        }
-
-
-
         private List<string> _tags;
         
         public enum state {unset,approved,commited,nnew,done };
@@ -34,9 +26,11 @@ namespace AutoSrpintReview
         private Action<BacklogItem, string> ActionTags = (x, y) =>
          {
              List<string> tagList = new List<string>();
-
-
-             t
+             string[] tags = y.Split(';');
+             foreach (string tag in tags)
+             {
+                 x._tags.Add(tag);
+             }
          };
 
        
@@ -47,29 +41,40 @@ namespace AutoSrpintReview
             switch (sstate)
             {
                 case "Approved":statetogo = state.approved; break; 
-                case "Commited":statetogo = state.commited;break;
+                case "Committed":statetogo = state.commited;break;
                 case "Done": statetogo = state.done;break;
                 case "New":statetogo = state.nnew;break;
             }
             return statetogo;
         }
 
-        public BacklogItem(IEnumerable<Cell> cells,Dictionary<string,string> column_indices,uint rowindex)
+        public BacklogItem(IEnumerable<Cell> cells,Dictionary<string,string> column_indices,uint rowindex,string[] sharedstrings)
         {
             _tags = new List<string>();
 
-            DoTheThing("ID", cells, column_indices, rowindex, ActionID);
-            DoTheThing("Title", cells, column_indices, rowindex, ActionTitle);
-            DoTheThing("State", cells, column_indices, rowindex, ActionState);
-            DoTheThing("Points", cells, column_indices, rowindex, ActionPoints);
+            DoTheThing("ID", cells, column_indices, rowindex, ActionID,sharedstrings);
+            DoTheThing("Title", cells, column_indices, rowindex, ActionTitle,sharedstrings);
+            DoTheThing("State", cells, column_indices, rowindex, ActionState,sharedstrings);
+            DoTheThing("Effort", cells, column_indices, rowindex, ActionPoints,sharedstrings);
+            DoTheThing("Tags", cells, column_indices, rowindex, ActionTags,sharedstrings);
 
         }
 
-        private void DoTheThing(string columnname, IEnumerable<Cell> cells, Dictionary<string, string> column_indices,uint rowindex,Action<BacklogItem,string> action)
+        private void DoTheThing(string columnname, IEnumerable<Cell> cells, Dictionary<string, string> column_indices,uint rowindex,Action<BacklogItem,string> action, string[] sharedstrings)
         {
             string celref = column_indices[columnname] + rowindex.ToString();
             Cell cell = cells.Where(x => x.CellReference == celref).FirstOrDefault();
-            action(this, celref);
+            string actionstring = string.Empty;
+            if (cell.DataType != null && cell.DataType == CellValues.SharedString)
+            {
+                int index = Convert.ToInt32(cell.CellValue.Text);
+                actionstring = sharedstrings[index];
+            }
+            else
+            {
+                actionstring = cell.CellValue.Text;
+            }
+            action(this, actionstring);
         }
 
     

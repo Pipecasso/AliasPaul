@@ -21,11 +21,28 @@ namespace AutoSrpintReview
         static void Main(string[] args)
         {
             string document = args[0];
+            string powerpath = args[1];
+            string templatepath = args[2];
+            BacklogItems backlogItems = new BacklogItems();
+
             using (SpreadsheetDocument sr_doc = SpreadsheetDocument.Open(document,false))
             {
                 Workbook workbook = sr_doc.WorkbookPart.Workbook;
-                SheetData sheetData = workbook.Descendants<SheetData>().First();
-                BacklogItems backlogItems = new BacklogItems();
+                Worksheet worksheet = null;
+                SharedStringTablePart sharedStringTablePart = workbook.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
+                string[] sharedStrings = sharedStringTablePart.SharedStringTable.Elements<SharedStringItem>().Select(x => x.InnerText).ToArray();
+
+                Sheet sheet = workbook.Descendants<Sheet>().FirstOrDefault();
+                if (sheet != null)
+                {
+                    string relationshipId = sheet.Id.Value;
+                    WorksheetPart worksheetPart = (WorksheetPart)sr_doc.WorkbookPart.GetPartById(relationshipId);
+                    worksheet = worksheetPart.Worksheet;
+                }
+
+                SheetData sheetData = worksheet.GetFirstChild<SheetData>();
+                IEnumerable<Row> rows = sheetData.Elements<Row>();
+               
                 Dictionary<string, string> columnIndexMap = new Dictionary<string, string>();
                 foreach(Row row in  sheetData.Elements<Row>())
                 {
@@ -37,18 +54,28 @@ namespace AutoSrpintReview
                             {
                                 foreach (Cell cell in row.Descendants<Cell>())
                                 {
-                                    columnIndexMap.Add(cell.CellValue.Text, CellIndex(cell, rowindex));
+                                    int sharedindex = Convert.ToInt32(cell.CellValue.Text);
+                                    columnIndexMap.Add(sharedStrings[sharedindex], CellIndex(cell, rowindex));
                                 }
                             }
                             break;
                         default:
-                            BacklogItem backlogItem = new BacklogItem(row.Descendants<Cell>());
+                            BacklogItem backlogItem = new BacklogItem(row.Descendants<Cell>(),columnIndexMap,rowindex,sharedStrings);
                             backlogItems.Add(backlogItem);
                             break;
                     }
                 }
             }
-            
+
+            using (PowerPoint powerPoint = new PowerPoint(backlogItems, templatepath))
+            {
+                powerPoint.MakeIt();
+
+
+            }
+
+          
+
         }
     }
 }

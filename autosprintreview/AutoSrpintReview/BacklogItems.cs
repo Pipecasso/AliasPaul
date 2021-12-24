@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AutoSrpintReview
 {
-    class BacklogItems : List<BacklogItem>
+    public class BacklogItems : List<BacklogItem>
     {
         public string Name { get; set; }
         
