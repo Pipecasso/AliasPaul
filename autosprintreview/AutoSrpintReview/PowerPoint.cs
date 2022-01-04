@@ -21,6 +21,7 @@ namespace AutoSrpintReview
         private BacklogItems _backlogItems;
         private PresentationPart _presentationPart;
         private PresentationDocument _presentationDocument;
+        private enum makeitstatus { neutral, open };
 
         public string TeamName { get; set; }
         public string Descriptions { get; set; }
@@ -44,8 +45,14 @@ namespace AutoSrpintReview
             _presentationDocument.Dispose();
         }
 
+        private string subit(string toreplace)
+        {
+            return "sausage";
+        }
+
         public void MakeIt()
         {
+            List<string> Expressions = new List<string>();
             IEnumerable<D.Text> texts = new List<D.Text>();
             Presentation presentation = _presentationPart.Presentation;
             OpenXmlElementList slideIds = presentation.SlideIdList.ChildElements;
@@ -60,17 +67,65 @@ namespace AutoSrpintReview
                     texts = temptexts;
                 }
             }
+            makeitstatus status = makeitstatus.neutral;
 
-            D.Text teamname = texts.Where(x => x.InnerText.Contains("[TeamName]")).FirstOrDefault();
-           // teamname.Text = teamname.Text.Replace("[Team Name]", TeamName);
+            string bigpowerpointstring = string.Empty;
+            Dictionary<int, D.Text> strindex = new Dictionary<int, D.Text>();
+            int tick = 0;
+            Dictionary<string, List<D.Text> > replacements = new Dictionary<string, List<D.Text>>();
+            foreach (D.Text text in texts)
+            {
+                bigpowerpointstring += text.Text;
+                int tock = tick + text.Text.Length;
+                for (int i=tick;i<tock;i++)
+                {
+                    strindex.Add(i, text);
+                }
+                tick = tock;
+            }
 
+            int index = 0;
+            int index2 = 0;
+            string replacement = string.Empty;
+            do
+            {
+                switch (status)
+                {
+                    case makeitstatus.neutral:
+                        index = bigpowerpointstring.IndexOf('[', index);
+                        status = makeitstatus.open;
+                        break;
+                    case makeitstatus.open:
+                        index2 = bigpowerpointstring.IndexOf(']', index);
+                        replacement = bigpowerpointstring.Substring(index + 1, index2 - index - 1);
+                        if (replacements.ContainsKey(replacement))
+                        {
+                            replacements[replacement].Add(strindex[index + 1]);
+                        }
+                        else
+                        {
+                            List<D.Text> newlist = new List<D.Text>() { strindex[index + 1] };
+                            replacements.Add(replacement, newlist);
+                        }
+                      
+                        index = index2;
+                        status = makeitstatus.neutral;
+                        break;
+                }
 
+            } while (index > -1);
+
+            foreach (KeyValuePair<string,List<D.Text>> kvp in replacements)
+            {
+                string final = subit(kvp.Key);
+                foreach(D.Text text in kvp.Value)
+                {
+                    text.Text = text.Text.Replace(kvp.Key, final);
+                }
+            }
         }
 
 
-     
-
-       
 
     }
 }
