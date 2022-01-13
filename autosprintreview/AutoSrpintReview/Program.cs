@@ -67,15 +67,14 @@ namespace AutoSrpintReview
                 }
             }
 
-            using (PowerPoint powerPoint = new PowerPoint(backlogItems, templatepath))
+            using (PowerPoint powerPoint = new PowerPoint(backlogItems, templatepath, @"D:\SR", "2"))
             {
+                powerPoint.TeamName = "Marauders";
+                powerPoint.TeamDescription = "Isogen Futures";
+                powerPoint.Date = DateTime.Now;
+                powerPoint.LogoPath = @"D:\SR\MaraudersLogo.png";
                 powerPoint.MakeIt();
-
-
             }
-
-          
-
         }
     }
 }
