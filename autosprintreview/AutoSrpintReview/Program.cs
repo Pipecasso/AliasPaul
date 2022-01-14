@@ -73,6 +73,11 @@ namespace AutoSrpintReview
                 powerPoint.TeamDescription = "Isogen Futures";
                 powerPoint.Date = DateTime.Now;
                 powerPoint.LogoPath = @"D:\SR\MaraudersLogo.png";
+                powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "Discover the meaning of life");
+                powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "Invent a new type of cheese");
+                powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "World Peace");
+                powerPoint.AddBulletText(PowerPoint.BulletCat.Demo, "Anti Gravitiy Machine");
+                powerPoint.AddBulletText(PowerPoint.BulletCat.Demo, "Runcornshire Cheese");
                 powerPoint.MakeIt();
             }
         }

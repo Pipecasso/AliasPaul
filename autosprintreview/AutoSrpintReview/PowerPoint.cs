@@ -18,14 +18,15 @@ namespace AutoSrpintReview
 {
     public class PowerPoint : IDisposable
     {
-        private List<string> _Aims;
-        private List<string> _Demonstrations;
+
         private BacklogItems _backlogItems;
         private string _iteration;
         private PresentationPart _presentationPart;
         private PresentationDocument _presentationDocument;
         private enum makeitstatus { neutral, open };
         private SlidePart _teamSlide;
+        private SlidePart _goalSlide;
+        private SlidePart _demoSplide;
 
         public string TeamName { get; set; }
         public string TeamDescription { get; set; }
@@ -33,20 +34,29 @@ namespace AutoSrpintReview
         public DateTime Date { get; set; }
         public string ScreenshotsPath { get; set; }
         public string Iteration { get => _iteration; }
-        public Dictionary<string, Func<PowerPoint,string>> _replacemap;
- 
+        public Dictionary<string, Func<PowerPoint, string>> _replacemap;
 
-        public PowerPoint(BacklogItems backlogItems, string templatepath,string outputdir,string itearion)
+
+        public enum BulletCat
         {
-       
+            SprintGoal,
+            Demo,
+            QuarterGoal
+        }
+
+        private List<Tuple<BulletCat, string>> _BulletText;
+
+        public PowerPoint(BacklogItems backlogItems, string templatepath, string outputdir, string itearion)
+        {
+
             _backlogItems = backlogItems;
-            _Demonstrations = new List<string>();
-            _Aims = new List<string>();
+            _BulletText = new List<Tuple<BulletCat, string>>();
+
 
             string year = DateTime.Now.Year.ToString();
             _iteration = $"{year}_{itearion}";
             string outputfilename = $"{TeamName} Sprint Review {_iteration}.pptx";
-            string outputpath = System.IO.Path.Combine(outputdir,year,_iteration, outputfilename);
+            string outputpath = System.IO.Path.Combine(outputdir, year, _iteration, outputfilename);
             string dir = System.IO.Path.GetDirectoryName(outputpath);
             if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
 
@@ -56,7 +66,7 @@ namespace AutoSrpintReview
             _presentationDocument = PresentationDocument.Open(outputpath, true);
             _presentationPart = _presentationDocument.PresentationPart;
 
-            _replacemap = new Dictionary<string, Func<PowerPoint,string>>();
+            _replacemap = new Dictionary<string, Func<PowerPoint, string>>();
             Func<PowerPoint, string> TeamNameF = x => x.TeamName;
             Func<PowerPoint, string> TeamDescriptionF = x => x.TeamDescription;
             Func<PowerPoint, string> SRDate = x => x.Date.ToLongDateString();
@@ -67,12 +77,48 @@ namespace AutoSrpintReview
             _replacemap.Add("SR.Iteration", Iteration);
 
             StringValue teamSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId3").First();
+            StringValue goalSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId4").First();
+            StringValue demoSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId5").First();
             _teamSlide = (SlidePart)_presentationPart.GetPartById(teamSlideID);
+            _goalSlide = (SlidePart)_presentationPart.GetPartById(goalSlideID);
+            _demoSplide = (SlidePart)_presentationPart.GetPartById(demoSlideID);
 
 
         }
 
-       
+        public void AddBulletText(BulletCat bulletCat, string text)
+        {
+            Tuple<BulletCat, string> Bullet = new Tuple<BulletCat, string>(bulletCat, text);
+            _BulletText.Add(Bullet);
+        }
+
+        public void AddBullets(P.Shape shape,IEnumerable<string> bullets)
+        {
+            D.Paragraph sampleparagraph = shape.TextBody.Descendants<Paragraph>().First();
+            D.Run corn = sampleparagraph.Descendants<D.Run>().First();
+            bool firstgo = true;
+            foreach (string bullet in bullets)
+            {
+                if (firstgo)
+                {
+                    firstgo = false;
+                    corn.Text = new D.Text(bullet);
+                }
+                else
+                {
+                    D.Paragraph newPara = new D.Paragraph();
+                    if (sampleparagraph.ParagraphProperties != null)
+                    {
+                        newPara.ParagraphProperties = new D.ParagraphProperties(sampleparagraph.ParagraphProperties.OuterXml);
+                    }
+                    D.Run newRun = new D.Run();
+                    newRun.RunProperties = new RunProperties(corn.RunProperties.OuterXml);
+                    newRun.Text = new D.Text(bullet);
+                    newPara.Append(newRun);
+                    shape.TextBody.Append(newPara);
+                }
+            }
+        }
 
         public void Dispose()
         {
@@ -92,6 +138,12 @@ namespace AutoSrpintReview
                 togo = "sasauges";
             }
             return togo;
+        }
+
+        private P.Shape ShapeFinder(string id,SlidePart slidePart)
+        {
+            ShapeTree shapeTree = slidePart.Slide.Descendants<ShapeTree>().FirstOrDefault();
+            return shapeTree.Descendants<P.Shape>().Where(x => x.NonVisualShapeProperties.Descendants<P.NonVisualDrawingProperties>().Where(y => y.Id == id).Any()).FirstOrDefault();
         }
 
         private void AddPicture(string path,SlidePart slidepart,string name)
@@ -177,6 +229,9 @@ namespace AutoSrpintReview
             shapeTree.Append(picture);
         }
 
+
+
+
         public void MakeIt()
         {
             List<string> Expressions = new List<string>();
@@ -193,17 +248,7 @@ namespace AutoSrpintReview
                 { 
                     IEnumerable<D.Text> temptexts = texts.Concat(paragraph.Descendants<D.Text>());
                     texts = temptexts;
-                }
-
-                IEnumerable<IdPartPair> parts = slideTitlePart.Parts;
-                IEnumerable<OpenXmlPart> imageparts = parts.Select(x => x.OpenXmlPart).Where(y => y.GetType() == typeof(ImagePart));
-                foreach (OpenXmlPart openXmlPart1 in imageparts)
-                {
-                    ImagePart imagePart = openXmlPart1 as ImagePart;
-                }
-             
-          
-                
+                }  
             }
             makeitstatus status = makeitstatus.neutral;
 
@@ -274,9 +319,22 @@ namespace AutoSrpintReview
             if (File.Exists(LogoPath))
             {
                 AddPicture(LogoPath, _teamSlide,"TeamLogo");
-            
             }
-
+   
+            IEnumerable<string> goals = _BulletText.Where(x => x.Item1 == BulletCat.SprintGoal).Select(y => y.Item2);
+            IEnumerable<string> demos = _BulletText.Where(x => x.Item1 == BulletCat.Demo).Select(y => y.Item2);
+            ShapeTree shapeTree = _goalSlide.Slide.Descendants<ShapeTree>().FirstOrDefault();
+            //P.Shape shape5 = shapeTree.Descendants<P.Shape>().Where(x => x.NonVisualShapeProperties.Descendants<P.NonVisualDrawingProperties>().Where(y => y.Id == "5").Any()).FirstOrDefault();
+            //P.TextBody textBody = shape5.TextBody;
+            P.Shape goalshape = ShapeFinder("5", _goalSlide);
+            AddBullets(goalshape, goals);
+            if (demos.Any())
+            {
+                P.Shape demoshape = ShapeFinder("5", _demoSplide);
+                AddBullets(demoshape, demos);
+            }
+               
+            
 
 
 
