@@ -8,6 +8,7 @@ using GeoFilter;
 using System.Drawing;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using GeoFilterFunctions;
 
 namespace GeoFilterClient
 {
@@ -180,7 +181,7 @@ namespace GeoFilterClient
             //dt.ApplyFlatMatrix();
             //dt.ApplyMatrix(BitmapBox.Colour.Blue | BitmapBox.Colour.Green| BitmapBox.Colour.Red, BitmapBox.OutOfBounds.Rollover);
 
-          //  SingleTransform st = new SingleTransform(YinYang, iDim);
+           SingleTransform st = new SingleTransform(FunctionsXY.Diamond, iDim);
           //  st.ApplyMatrix(BitmapBox.Colour.Red | BitmapBox.Colour.Blue , BitmapBox.OutOfBounds.Rollover);
 
 

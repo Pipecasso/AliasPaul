@@ -60,6 +60,11 @@ namespace TransformParameters
             return new Function("f(x,y) = exp(x*y/x^2*y^2)");
         }
 
+        static public Function Diamond()
+        {
+            return new Function("f(x,y) = abs(x*sin(y) + y * sin(x)");
+        }
+
         public TransformFunctions()
         {
             _FunkyKingston = new Dictionary<string, Function>();
