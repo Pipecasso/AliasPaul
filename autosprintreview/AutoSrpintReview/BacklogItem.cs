@@ -19,25 +19,16 @@ namespace AutoSrpintReview
         public int Points { get; set;}
         public List<string> Tags { get => _tags; }
 
-        
-
        public BacklogItem()
         {
             _tags = new List<string>();
         }
 
-        
-
         public BacklogItem(IEnumerable<Cell> cells,Dictionary<string,string> column_indices,uint rowindex,string[] sharedstrings)
         {
             _tags = new List<string>();
-
-        
-
         }
 
-      
-   
         public bool AddedDuringSprint
         {
             get
@@ -52,6 +43,15 @@ namespace AutoSrpintReview
             {
                 return State == state.done;
             }
+        }
+
+        protected void CopyFrom(BacklogItem backlogItem)
+        {
+            _tags = backlogItem._tags;
+            ID = backlogItem.ID;
+            Title = backlogItem.Title;
+            State = backlogItem.State;
+            Points = backlogItem.Points;
         }
     }
 }

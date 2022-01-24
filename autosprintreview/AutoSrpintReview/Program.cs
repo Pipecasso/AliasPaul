@@ -11,18 +11,12 @@ namespace AutoSrpintReview
 {
     class Program
     {
-        
-        
-        
-   
-        
         static void Main(string[] args)
         {
             string document = args[0];
-            string powerpath = args[1];
-            string templatepath = args[2];
+            string templatepath = args[1];
 
-            AutoSprintReview autoSprintReview = new AutoSprintReview(document, templatepath);
+            AutoSprintReview autoSprintReview = new AutoSprintReview(document, templatepath,"Marauders", @"\\ingrnet\eu\RUN\Users\Marauders\Sprint Review\Screenshots\");
             autoSprintReview.MakeIt();
 
          

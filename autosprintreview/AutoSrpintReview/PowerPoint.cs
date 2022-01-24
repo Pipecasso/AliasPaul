@@ -32,7 +32,7 @@ namespace AutoSrpintReview
         public string TeamDescription { get; set; }
         public string LogoPath { get; set; }
         public DateTime Date { get; set; }
-        public string ScreenshotsPath { get; set; }
+     
         public string Iteration { get => _iteration; }
         public Dictionary<string, Func<PowerPoint, string>> _replacemap;
 

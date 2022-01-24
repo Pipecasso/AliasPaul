@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace AutoSrpintReview
 {
@@ -14,6 +15,8 @@ namespace AutoSrpintReview
         private Dictionary<string, string> _columnIndexMap;
         private string[] _sharedStrings;
         private string _powertemplate;
+        private string _teamName;
+        private string _screenshotsPath;
 
         private Action<BacklogItem, string> ActionID = (x, y) => x.ID = y;
         private Action<BacklogItem, string> ActionTitle = (x, y) => x.Title = y;
@@ -49,10 +52,14 @@ namespace AutoSrpintReview
             return cellref.Substring(0, i);
         }
 
-        public AutoSprintReview(string xlsprint,string powertemplate)
+         
+
+        public AutoSprintReview(string xlsprint,string powertemplate,string teamname,string screenshotpath)
         {
             _backlogItems = new BacklogItems();
             _powertemplate = powertemplate;
+            _teamName = teamname;
+            _screenshotsPath = screenshotpath;
 
             using (SpreadsheetDocument sr_doc = SpreadsheetDocument.Open(xlsprint, false))
             {
@@ -113,7 +120,7 @@ namespace AutoSrpintReview
 
         private string GetActionString(string colname,Row row)
         {
-            string celref = _columnIndexMap["colname"] + row.RowIndex.ToString();
+            string celref = _columnIndexMap[colname] + row.RowIndex.ToString();
             Cell cell = row.Descendants<Cell>().Where(x => x.CellReference == celref).FirstOrDefault();
             string actionstring = string.Empty;
             if (cell.DataType != null && cell.DataType == CellValues.SharedString)
@@ -130,9 +137,29 @@ namespace AutoSrpintReview
 
         public void MakeIt()
         {
+            const string baseURI = "https://dev.azure.com/hexagonPPMCOL/PPM/_boards/board/t/";
+            List<PowerPointBacklogItem> powerPointBacklogItems = new List<PowerPointBacklogItem>();
+            foreach(BacklogItem backlogItem in _backlogItems)
+            {
+                PowerPointBacklogItem powerPointBacklogItem = new PowerPointBacklogItem(backlogItem);
+                powerPointBacklogItems.Add(powerPointBacklogItem);
+                string link = $"{baseURI}{_teamName}/Backlog%20items/?workitem={backlogItem.ID}";
+                string potential_imageloc = $@"{_screenshotsPath}{backlogItem.ID}";
+                powerPointBacklogItem.IDLink = link;
+                if (Directory.Exists(potential_imageloc) && Directory.GetFiles(potential_imageloc).Any())
+                {
+                    powerPointBacklogItem.ImagePath = potential_imageloc;
+                }
+            }
+            
+            
+            
+            
+            
+            
             using (PowerPoint powerPoint = new PowerPoint(_backlogItems, _powertemplate, @"D:\SR", "2"))
             {
-                powerPoint.TeamName = "Marauders";
+                powerPoint.TeamName = _teamName;
                 powerPoint.TeamDescription = "Isogen Futures";
                 powerPoint.Date = DateTime.Now;
                 powerPoint.LogoPath = @"D:\SR\MaraudersLogo.png";
