@@ -27,6 +27,7 @@ namespace AutoSrpintReview
         private SlidePart _teamSlide;
         private SlidePart _goalSlide;
         private SlidePart _demoSplide;
+        private SlidePart _firstTableSlide;
 
         public string TeamName { get; set; }
         public string TeamDescription { get; set; }
@@ -79,10 +80,12 @@ namespace AutoSrpintReview
             StringValue teamSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId3").First();
             StringValue goalSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId4").First();
             StringValue demoSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId5").First();
+            StringValue tableSideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId6").First();
+
             _teamSlide = (SlidePart)_presentationPart.GetPartById(teamSlideID);
             _goalSlide = (SlidePart)_presentationPart.GetPartById(goalSlideID);
             _demoSplide = (SlidePart)_presentationPart.GetPartById(demoSlideID);
-
+            _firstTableSlide = (SlidePart)_presentationPart.GetPartById(tableSideID);
 
         }
 
@@ -230,10 +233,32 @@ namespace AutoSrpintReview
         }
 
 
+        private Slide TeamSlideClone(SlidePart previousSlidePart)
+        {
+            Slide newSlide = (Slide)_teamSlide.Slide.CloneNode(true);
+            SlidePart newSlidePart = _presentationPart.AddNewPart<SlidePart>();
+            newSlidePart.AddPart(previousSlidePart.SlideLayoutPart);
+            newSlide.Save(newSlidePart);
 
+            SlideIdList slideIdList = _presentationPart.Presentation.SlideIdList;
+            uint newSlideIdVal = slideIdList.ChildElements.Cast<SlideId>().Max(x => x.Id.Value) + 1;
+            string prev_id = _presentationPart.GetIdOfPart(previousSlidePart);
+            SlideId prevSlideId = slideIdList.C
+
+            SlideId newSlideId = new SlideId();
+       
+            newSlideId.Id = newSlideIdVal;
+            newSlideId.RelationshipId = _presentationPart.GetIdOfPart(newSlidePart);
+            return newSlide;
+            
+        }
+    
 
         public void MakeIt()
         {
+            Slide newSlide = TeamSlideClone(_firstTableSlide);
+
+
             List<string> Expressions = new List<string>();
             IEnumerable<D.Text> texts = new List<D.Text>();
             Presentation presentation = _presentationPart.Presentation;
@@ -333,8 +358,31 @@ namespace AutoSrpintReview
                 P.Shape demoshape = ShapeFinder("5", _demoSplide);
                 AddBullets(demoshape, demos);
             }
-               
-            
+
+          
+
+
+            //table slides
+            IEnumerable<OpenXmlElement> openXmlElements = _firstTableSlide.Slide.Descendants();
+            Table table = _firstTableSlide.Slide.Descendants<Table>().First();
+            TableRow tableRowLast = _firstTableSlide.Slide.Descendants<TableRow>().Last();
+            TableRow tableRowLastCopy = (TableRow)tableRowLast.Clone();
+            foreach (BacklogItem backlogItem in _backlogItems)
+            {
+              //  PowerPointBacklogItem powerPointBacklogItem = (PowerPointBacklogItem)backlogItem;
+
+            }
+
+           
+           /* IEnumerable<TableCell> tableCells = tableRowLast.Descendants<TableCell>();
+            foreach (TableCell tc in tableCells)
+            {
+                TableCell clone1 = (TableCell)tc.Clone();
+
+            }*/
+
+
+
 
 
 

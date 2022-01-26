@@ -138,7 +138,7 @@ namespace AutoSrpintReview
         public void MakeIt()
         {
             const string baseURI = "https://dev.azure.com/hexagonPPMCOL/PPM/_boards/board/t/";
-            List<PowerPointBacklogItem> powerPointBacklogItems = new List<PowerPointBacklogItem>();
+            BacklogItems powerPointBacklogItems = new BacklogItems();
             foreach(BacklogItem backlogItem in _backlogItems)
             {
                 PowerPointBacklogItem powerPointBacklogItem = new PowerPointBacklogItem(backlogItem);
@@ -153,16 +153,15 @@ namespace AutoSrpintReview
             }
             
             
+  
             
             
-            
-            
-            using (PowerPoint powerPoint = new PowerPoint(_backlogItems, _powertemplate, @"D:\SR", "2"))
+            using (PowerPoint powerPoint = new PowerPoint(_backlogItems, _powertemplate, @"C:\SR", "2"))
             {
                 powerPoint.TeamName = _teamName;
                 powerPoint.TeamDescription = "Isogen Futures";
                 powerPoint.Date = DateTime.Now;
-                powerPoint.LogoPath = @"D:\SR\MaraudersLogo.png";
+                powerPoint.LogoPath = @"C:\SR\mammap.jpg";
                 powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "Discover the meaning of life");
                 powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "Invent a new type of cheese");
                 powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "World Peace");
