@@ -190,10 +190,6 @@ namespace TransformParameters
                 }
             }
 
-
-
-
-
             if (_col == BitmapBox.Colour.None)
             {
                 _col = BitmapBox.Colour.Red;

@@ -65,6 +65,11 @@ namespace TransformParameters
             return new Function("f(x,y) = abs(x*sin(y) + y * sin(x)");
         }
 
+        static public Function PondDrops()
+        {
+            return new Function("f(x,y) = x^2-3*x+5 +(y-250)^2-4*y - x*y/2");
+        }
+
         public TransformFunctions()
         {
             _FunkyKingston = new Dictionary<string, Function>();
