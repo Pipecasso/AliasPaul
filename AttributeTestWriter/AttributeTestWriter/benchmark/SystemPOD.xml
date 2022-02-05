@@ -1,0 +1,4623 @@
+<ALIAS-ATTRIBUTE-SET>
+  <!-- Modification history
+             4-10-02  DLM Added Detail Sketch Identifier / Information Note as Information elements
+                          and deleted DETAILED-SKETCH-ID as attribute of all components
+             4-10-02  DLM Removed TRACING and INSULATION as WELD attributes
+             4-10-02  DLM Added DATA-SOURCE attribute to pipeline, components, information elements etc
+                          Intended for use by applications to record source of object. Read only for user.
+             4-10-02  DLM REFERENCE-DIMENSION moved to be within INFORMATION context
+             4-10-02  DLM Information elements re-organised, comprehensive set now supported
+             4-10-02  DLM Enumerated attributes given default values
+             4-10-02  DLM Hidden ASSOCIATED boolean attribute on MESSAGE to indicate whether
+                          message is associated with component or not
+             4-10-02  DLM Added NOZZLE-ATTRIBUTES and TAP-ATTRIBUTES contexts to hold attributes of
+                          Tap point and nozzle respectively
+             9-10-02  DLM Added Attributes for "Highest-" info elements
+             14-4-03  DL  Change to new format
+             16-5-03  DLM Removed all attributes from Attribute map (now in MaterialData)
+             12-6-03  DLM Changed DisplayName for PIPELINE-REFERENCE and
+                      CONNECTION-REFERENCE to Pipeline Reference and Connection
+                      Reference respectively (InformationElements)
+             8-9-03   DLM DATA-SOURCE made hidden
+             8-9-03   DLM ANGLE property made hidden
+             8-9-03   DLM Attributes reordered to put most significant first
+             8-9-03   DLM REMARK attribute removed from Component (COMPONENT-REMARK-NUMBER is a duplicate)
+             8-9-03   DLM PULLED-BEND Attribute made hidden
+             16-9-03  DLM DefaultValue removed from STATUS and CATEGORY
+             26-9-03  PB  EndPlate welds added to the list of weld types
+             21-11-03 DLM CUT-PIECE-ALLOWANCE Info added
+             28-11-03 DLM BYPASS-CLOSURE-POINT Info added
+             01-12-03 DLM WELD-GAP attributes added to support easier edits in S5
+             01-10-04 DLM WELDING-ALLOWANCE removed
+             04-11-04 IAN WELDING-ALLOWANCE reinstated after discussion with DLM
+             25-11-04 DLM Spool attributes moved to new SPOOL-ATTRIBUTES group to support I-Configure
+             20-07-05 DLM Spool-Identifier and Spool-Drawing-Sequence-Number infos now share attributes
+             20-07-05 DLM ANGLE attribute of weld made hidden
+             20-07-05 DLM PAINTING-SPEC attribute removed from weld
+             03-10-05 PB  ISketch3 Attributes added
+             22-08-06 PB  SUPPORT-WELD-ANGLE
+             20-06-07 NMF Changed FLOW-DIRECTION to be more user friendly
+             07-04-10 DLM Added SPOOL-SUMMARY-ATTRIBUTES and SPOOL-IDENTIFIER-ATTRIBUTES groups
+             07-04-10 DLM Made REPLOT attribute invisible
+             07-04-10 NMF Made *-ORIENTATION attribute on Spool-Summary infos invisible
+             09-10-15 OP Super PCF new attributes added
+             14-03-18 JE Allowed Additional-Item to belong to a Spool.
+        -->
+  <CONTEXT-GROUPS>
+    <GROUP Name="COMMON-ATTRIBUTES">
+      <!-- Attribute attached to everything -->
+      <ATTRIBUTE Name="DATA-SOURCE"
+                 Datatype="string"
+                 Visible="False"
+                 Editable="False"
+                 DisplayName="Data Source" />
+				 
+     <ATTRIBUTE Name="ISOGEN-MESSAGE-SEQUENCE-NUMBER"
+				  Datatype="string"
+				  DisplayName = "ISOGEN-MESSAGE-SEQUENCE-NUMBER"
+				  Visible="False" />
+    </GROUP>
+    <GROUP Name="PIPELINE-PROPERTIES-ATTRIBUTES">
+      <ATTRIBUTE Name="PIPELINE-REFERENCE"
+                 Datatype="string"
+                 DisplayName="Pipeline Reference" />
+      <ATTRIBUTE Name="PIPING-SPEC"
+                 Datatype="string"
+                 DisplayName="Pipe Spec"
+                 Editable="False" />
+      <ATTRIBUTE Name="TRACING-SPEC"
+                 Datatype="string"
+                 DisplayName="Tracing Spec" />
+      <ATTRIBUTE Name="INSULATION-SPEC"
+                 Datatype="string"
+                 DisplayName="Insulation Spec" />
+      <ATTRIBUTE Name="PAINTING-SPEC"
+                 Datatype="string"
+                 DisplayName="Painting Spec" />
+      <ATTRIBUTE Name="MISC-SPEC1"
+                 Datatype="string"
+                 DisplayName="Misc Spec1" />
+      <ATTRIBUTE Name="MISC-SPEC2"
+                 Datatype="string"
+                 DisplayName="Misc Spec2" />
+      <ATTRIBUTE Name="MISC-SPEC3"
+                 Datatype="string"
+                 DisplayName="Misc Spec3" />
+      <ATTRIBUTE Name="MISC-SPEC4"
+                 Datatype="string"
+                 DisplayName="Misc Spec4" />
+      <ATTRIBUTE Name="MISC-SPEC5"
+                 Datatype="string"
+                 DisplayName="Misc Spec5" />
+      <ATTRIBUTE Name="JACKET-SPEC"
+                 Datatype="string"
+                 DisplayName="Jacket Spec" />
+      <ATTRIBUTE Name="REVISION"
+                 Datatype="string"
+                 DisplayName="Revision" />
+      <ATTRIBUTE Name="PROJECT-IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="Project Identifier" />
+      <ATTRIBUTE Name="AREA"
+                 Datatype="string"
+                 DisplayName="Batch/Area" />
+      <ATTRIBUTE Name="DATE-DMY"
+                 Datatype="string"
+                 DisplayName="Date" />
+      <ATTRIBUTE Name="NOMINAL-CLASS"
+                 Datatype="string"
+                 DisplayName="Nominal Class" />
+      <ATTRIBUTE Name="NOMINAL-RATING"
+                 Datatype="string"
+                 DisplayName="Nominal Rating" />
+      <ATTRIBUTE Name="PIPELINE-TEMP"
+                 Datatype="string"
+                 DisplayName="Pipeline Temp" />
+      <ATTRIBUTE Name="PIPELINE-TYPE"
+                 Datatype="string"
+                 DisplayName="Pipeline Type" />
+      <ATTRIBUTE Name="SPECIFIC-GRAVITY"
+                 Datatype="string"
+                 DisplayName="Specific Gravity" />
+      <ATTRIBUTE Name="SPOOL-PREFIX"
+                 Datatype="string"
+                 DisplayName="Spool Prefix" />
+      <ATTRIBUTE Name="REPLOT"
+                 Datatype="boolean"
+                 Visible="False"
+                 Editable="False"
+                 DisplayName="Replot" />
+      <ATTRIBUTE Name="WELD-PREFIX-GENERAL"
+                 Datatype="string"
+                 DisplayName="Weld Prefix (General)" />
+      <ATTRIBUTE Name="WELD-PREFIX-FABRICATION"
+                 Datatype="string"
+                 DisplayName="Weld Prefix (Fab)" />
+      <ATTRIBUTE Name="WELD-PREFIX-ERECTION"
+                 Datatype="string"
+                 DisplayName="Weld Prefix (Erec)" />
+      <ATTRIBUTE Name="WELD-PREFIX-OFFSHORE"
+                 Datatype="string"
+                 DisplayName="Weld Prefix (Offs)" />
+      <ATTRIBUTE Name="SUPPORT-WELD-PREFIX-FABRICATION"
+                 Datatype="string"
+                 DisplayName="Support Weld Prefix (Fab)" />
+      <ATTRIBUTE Name="SUPPORT-WELD-PREFIX-ERECTION"
+                 Datatype="string"
+                 DisplayName="Support Weld Prefix (Erec)" />
+      <ATTRIBUTE Name="SUPPORT-WELD-PREFIX-OFFSHORE"
+                 Datatype="string"
+                 DisplayName="Support Weld Prefix (Offs)" />
+      <ATTRIBUTE Name="OUTPUT-FILE-NAME"
+                 Datatype="string"
+                 DisplayName="Output File Name"
+                 Visible="False" />
+      <!-- Attribute 0 is used to pass the name of the POD file for display on the drawing -->
+      <ATTRIBUTE Name="PODFILE"
+                 Datatype="string"
+                 Visible="False"
+                 Editable="False"
+                 DisplayName="POD File Name" />
+      <ATTRIBUTE Name="SPOOL-NAMING-RULE"
+                 Datatype="string"
+                 DisplayName="Spool Naming Rule" />
+      <ATTRIBUTE Name="CLEANING-REQUIREMENT"
+                 Datatype="string"
+                 DisplayName="Cleaning Requirement" />
+      <ATTRIBUTE Name="PAINT-COLOUR"
+                 Datatype="string"
+                 DisplayName="Paint Colour" />
+      <ATTRIBUTE Name="CONSTRUCTION-TYPE"
+                 Datatype="string"
+                 DisplayName="Construction Type" />
+      <ATTRIBUTE Name="DESIGN-PRESSURE"
+                 Datatype="double"
+                 DisplayName="Design Pressure" />
+      <ATTRIBUTE Name="DESIGN-TEMPERATURE"
+                 Datatype="double"
+                 DisplayName="Design Temperature" />
+      <ATTRIBUTE Name="ENGINEERING-WORK-PACKAGE"
+                 Datatype="string"
+                 DisplayName="Engineering Work Package" />
+      <ATTRIBUTE Name="INSTALLATION-WORK-PACKAGE"
+                 Datatype="string"
+                 DisplayName="Installation Work Package" />
+      <ATTRIBUTE Name="FLUID-CODE"
+                 Datatype="string"
+                 DisplayName="Fluid Code" />
+      <ATTRIBUTE Name="HANDOVER-SYSTEM-ID"
+                 Datatype="string"
+                 DisplayName="Handover System ID" />
+      <ATTRIBUTE Name="TRACING-REQUIREMENT"
+                 Datatype="string"
+                 DisplayName="Tracing Requirement" />
+      <ATTRIBUTE Name="TEST-PRESSURE"
+                 Datatype="double"
+                 DisplayName="Test Pressure" />
+      <ATTRIBUTE Name="INSULATION-THICKNESS"
+                 Datatype="string"
+                 DisplayName="Insulation Thickness" />
+      <ATTRIBUTE Name="MAIN-NS"
+                 Datatype="string"
+                 DisplayName="Main Nominal Size" />
+      <ATTRIBUTE Name="OPERATING-PRESSURE"
+                 Datatype="double"
+                 DisplayName="Operating Pressure" />
+      <ATTRIBUTE Name="OPERATING-TEMPERATURE"
+                 Datatype="double"
+                 DisplayName="Operating Temperature" />
+      <ATTRIBUTE Name="PID-DRAWING-NUMBER"
+                 Datatype="string"
+                 DisplayName="PID Drawing Number" />
+      <ATTRIBUTE Name="LINE-ID"
+                 Datatype="string"
+                 DisplayName="Line ID" />
+      <ATTRIBUTE Name="ALT-DESIGN-PRESSURE"
+                 Datatype="double"
+                 DisplayName="Alt Design Pressure" />
+      <ATTRIBUTE Name="ALT-DESIGN-TEMPERATURE"
+                 Datatype="double"
+                 DisplayName="Alt Design Temperature" />
+      <ATTRIBUTE Name="DESIGN-CODE"
+                 Datatype="string"
+                 DisplayName="Design Code" />
+      <ATTRIBUTE Name="FLUID-PHASE"
+                 Datatype="string"
+                 DisplayName="Fluid Phase" />
+      <ATTRIBUTE Name="FROM"
+                 Datatype="string"
+                 DisplayName="From" />
+      <ATTRIBUTE Name="HANDOVER-SUBSYSTEM-ID"
+                 Datatype="string"
+                 DisplayName="Handover Subsystem ID" />
+      <ATTRIBUTE Name="INSULATION-SPEC-NUMBER"
+                 Datatype="string"
+                 DisplayName="Insulation Spec Number" />
+      <ATTRIBUTE Name="NDT-REQUIREMENT"
+                 Datatype="string"
+                 DisplayName="NDT Requirement" />
+      <ATTRIBUTE Name="PID-REVISION"
+                 Datatype="string"
+                 DisplayName="PID Revision" />
+      <ATTRIBUTE Name="PROCUREMENT-WORK-PACKAGE"
+                 Datatype="string"
+                 DisplayName="Procurement Work Package" />
+      <ATTRIBUTE Name="STRESS-CATEGORY"
+                 Datatype="string"
+                 DisplayName="Stress Category" />
+      <ATTRIBUTE Name="STRESS-PACKAGE"
+                 Datatype="string"
+                 DisplayName="Stress Package" />
+      <ATTRIBUTE Name="TEST-MEDIUM"
+                 Datatype="string"
+                 DisplayName="Test Medium" />
+      <ATTRIBUTE Name="TO"
+                 Datatype="string"
+                 DisplayName="To" />
+      <ATTRIBUTE Name="PWHT-REQUIREMENT"
+                 Datatype="string"
+                 DisplayName="PWHT Requirement" />
+      <ATTRIBUTE Name="SEQUENCE-NUMBER"
+                 Datatype="string"
+                 DisplayName="Sequence Number" />
+      <ATTRIBUTE Name="CONSTRUCTION-WORK-PACKAGE"
+                 Datatype="string"
+                 DisplayName="Construction Work Package" />
+      <ATTRIBUTE Name="MATERIAL-OF-CONSTRUCTION"
+                 Datatype="string"
+                 DisplayName="Material Of Construction" />
+		 <ATTRIBUTE Name="ATTRIBUTE0"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 0" />
+		 <ATTRIBUTE Name="ATTRIBUTE1"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 1" />
+		 <ATTRIBUTE Name="ATTRIBUTE2"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 2" />
+		 <ATTRIBUTE Name="ATTRIBUTE3"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 3" />
+		 <ATTRIBUTE Name="ATTRIBUTE4"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 4" />
+		 <ATTRIBUTE Name="ATTRIBUTE5"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 5" />
+		 <ATTRIBUTE Name="ATTRIBUTE6"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 6" />
+		 <ATTRIBUTE Name="ATTRIBUTE7"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 7" />
+		 <ATTRIBUTE Name="ATTRIBUTE8"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 8" />
+		 <ATTRIBUTE Name="ATTRIBUTE9"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 9" />
+		 <ATTRIBUTE Name="ATTRIBUTE10"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 10" />
+		 <ATTRIBUTE Name="ATTRIBUTE11"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 11" />
+		 <ATTRIBUTE Name="ATTRIBUTE12"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 12" />
+		 <ATTRIBUTE Name="ATTRIBUTE13"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 13" />
+		 <ATTRIBUTE Name="ATTRIBUTE14"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 14" />
+		 <ATTRIBUTE Name="ATTRIBUTE15"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 15" />
+		 <ATTRIBUTE Name="ATTRIBUTE16"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 16" />
+		 <ATTRIBUTE Name="ATTRIBUTE17"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 17" />
+		 <ATTRIBUTE Name="ATTRIBUTE18"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 18" />
+		 <ATTRIBUTE Name="ATTRIBUTE19"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 19" />
+		 <ATTRIBUTE Name="ATTRIBUTE20"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 20" />
+		 <ATTRIBUTE Name="ATTRIBUTE21"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 21" />
+		 <ATTRIBUTE Name="ATTRIBUTE22"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 22" />
+		 <ATTRIBUTE Name="ATTRIBUTE23"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 23" />
+		 <ATTRIBUTE Name="ATTRIBUTE24"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 24" />
+		 <ATTRIBUTE Name="ATTRIBUTE25"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 25" />
+		 <ATTRIBUTE Name="ATTRIBUTE26"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 26" />
+		 <ATTRIBUTE Name="ATTRIBUTE27"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 27" />
+		 <ATTRIBUTE Name="ATTRIBUTE28"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 28" />
+		 <ATTRIBUTE Name="ATTRIBUTE29"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 29" />
+		 <ATTRIBUTE Name="ATTRIBUTE30"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 30" />
+		 <ATTRIBUTE Name="ATTRIBUTE31"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 31" />
+		 <ATTRIBUTE Name="ATTRIBUTE32"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 32" />
+		 <ATTRIBUTE Name="ATTRIBUTE33"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 33" />
+		 <ATTRIBUTE Name="ATTRIBUTE34"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 34" />
+		 <ATTRIBUTE Name="ATTRIBUTE35"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 35" />
+		 <ATTRIBUTE Name="ATTRIBUTE36"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 36" />
+		 <ATTRIBUTE Name="ATTRIBUTE37"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 37" />
+		 <ATTRIBUTE Name="ATTRIBUTE38"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 38" />
+		 <ATTRIBUTE Name="ATTRIBUTE39"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 39" />
+		 <ATTRIBUTE Name="ATTRIBUTE40"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 40" />
+		 <ATTRIBUTE Name="ATTRIBUTE41"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 41" />
+		 <ATTRIBUTE Name="ATTRIBUTE42"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 42" />
+		 <ATTRIBUTE Name="ATTRIBUTE43"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 43" />
+		 <ATTRIBUTE Name="ATTRIBUTE44"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 44" />
+		 <ATTRIBUTE Name="ATTRIBUTE45"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 45" />
+		 <ATTRIBUTE Name="ATTRIBUTE46"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 46" />
+		 <ATTRIBUTE Name="ATTRIBUTE47"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 47" />
+		 <ATTRIBUTE Name="ATTRIBUTE48"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 48" />
+		 <ATTRIBUTE Name="ATTRIBUTE49"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 49" />
+		 <ATTRIBUTE Name="ATTRIBUTE50"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 50" />
+		 <ATTRIBUTE Name="ATTRIBUTE51"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 51"/>
+		 <ATTRIBUTE Name="ATTRIBUTE52"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 52"/>
+		 <ATTRIBUTE Name="ATTRIBUTE53"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 53"/>
+		 <ATTRIBUTE Name="ATTRIBUTE54"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 54"/>
+		 <ATTRIBUTE Name="ATTRIBUTE55"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 55"/>
+		 <ATTRIBUTE Name="ATTRIBUTE56"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 56"/>
+		 <ATTRIBUTE Name="ATTRIBUTE57"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 57"/>
+		 <ATTRIBUTE Name="ATTRIBUTE58"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 58"/>
+		 <ATTRIBUTE Name="ATTRIBUTE59"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 59"/>
+		 <ATTRIBUTE Name="ATTRIBUTE60"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 60"/>
+		 <ATTRIBUTE Name="ATTRIBUTE61"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 61"/>
+		 <ATTRIBUTE Name="ATTRIBUTE62"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 62"/>
+		 <ATTRIBUTE Name="ATTRIBUTE63"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 63"/>
+		 <ATTRIBUTE Name="ATTRIBUTE64"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 64"/>
+		 <ATTRIBUTE Name="ATTRIBUTE65"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 65"/>
+		 <ATTRIBUTE Name="ATTRIBUTE66"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 66"/>
+		 <ATTRIBUTE Name="ATTRIBUTE67"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 67"/>
+		 <ATTRIBUTE Name="ATTRIBUTE68"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 68"/>
+		 <ATTRIBUTE Name="ATTRIBUTE69"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 69"/>
+		 <ATTRIBUTE Name="ATTRIBUTE70"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 70"/>
+		 <ATTRIBUTE Name="ATTRIBUTE71"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 71"/>
+		 <ATTRIBUTE Name="ATTRIBUTE72"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 72"/>
+		 <ATTRIBUTE Name="ATTRIBUTE73"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 73"/>
+		 <ATTRIBUTE Name="ATTRIBUTE74"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 74"/>
+		 <ATTRIBUTE Name="ATTRIBUTE75"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 75"/>
+		 <ATTRIBUTE Name="ATTRIBUTE76"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 76"/>
+		 <ATTRIBUTE Name="ATTRIBUTE77"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 77"/>
+		 <ATTRIBUTE Name="ATTRIBUTE78"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 78"/>
+		 <ATTRIBUTE Name="ATTRIBUTE79"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 79"/>
+		 <ATTRIBUTE Name="ATTRIBUTE80"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 80"/>
+		 <ATTRIBUTE Name="ATTRIBUTE81"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 81"/>
+		 <ATTRIBUTE Name="ATTRIBUTE82"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 82"/>
+		 <ATTRIBUTE Name="ATTRIBUTE83"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 83"/>
+		 <ATTRIBUTE Name="ATTRIBUTE84"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 84"/>
+		 <ATTRIBUTE Name="ATTRIBUTE85"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 85"/>
+		 <ATTRIBUTE Name="ATTRIBUTE86"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 86"/>
+		 <ATTRIBUTE Name="ATTRIBUTE87"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 87"/>
+		 <ATTRIBUTE Name="ATTRIBUTE88"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 88"/>
+		 <ATTRIBUTE Name="ATTRIBUTE89"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 89"/>
+		 <ATTRIBUTE Name="ATTRIBUTE90"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 90"/>
+		 <ATTRIBUTE Name="ATTRIBUTE91"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 91"/>
+		 <ATTRIBUTE Name="ATTRIBUTE92"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 92"/>
+		 <ATTRIBUTE Name="ATTRIBUTE93"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 93"/>
+		 <ATTRIBUTE Name="ATTRIBUTE94"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 94"/>
+		 <ATTRIBUTE Name="ATTRIBUTE95"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 95"/>
+		 <ATTRIBUTE Name="ATTRIBUTE96"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 96"/>
+		 <ATTRIBUTE Name="ATTRIBUTE97"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 97"/>
+		 <ATTRIBUTE Name="ATTRIBUTE98"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 98"/>
+		 <ATTRIBUTE Name="ATTRIBUTE99"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 99"/>
+		 <ATTRIBUTE Name="ATTRIBUTE100"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 100"/>
+		 <ATTRIBUTE Name="ATTRIBUTE101"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 101"/>
+		 <ATTRIBUTE Name="ATTRIBUTE102"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 102"/>
+		 <ATTRIBUTE Name="ATTRIBUTE103"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 103"/>
+		 <ATTRIBUTE Name="ATTRIBUTE104"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 104"/>
+		 <ATTRIBUTE Name="ATTRIBUTE105"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 105"/>
+		 <ATTRIBUTE Name="ATTRIBUTE106"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 106"/>
+		 <ATTRIBUTE Name="ATTRIBUTE107"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 107"/>
+		 <ATTRIBUTE Name="ATTRIBUTE108"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 108"/>
+		 <ATTRIBUTE Name="ATTRIBUTE109"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 109"/>
+		 <ATTRIBUTE Name="ATTRIBUTE110"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 110"/>
+		 <ATTRIBUTE Name="ATTRIBUTE111"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 111"/>
+		 <ATTRIBUTE Name="ATTRIBUTE112"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 112"/>
+		 <ATTRIBUTE Name="ATTRIBUTE113"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 113"/>
+		 <ATTRIBUTE Name="ATTRIBUTE114"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 114"/>
+		 <ATTRIBUTE Name="ATTRIBUTE115"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 115"/>
+		 <ATTRIBUTE Name="ATTRIBUTE116"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 116"/>
+		 <ATTRIBUTE Name="ATTRIBUTE117"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 117"/>
+		 <ATTRIBUTE Name="ATTRIBUTE118"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 118"/>
+		 <ATTRIBUTE Name="ATTRIBUTE119"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 119"/>
+		 <ATTRIBUTE Name="ATTRIBUTE120"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 120"/>
+		 <ATTRIBUTE Name="ATTRIBUTE121"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 121"/>
+		 <ATTRIBUTE Name="ATTRIBUTE122"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 122"/>
+		 <ATTRIBUTE Name="ATTRIBUTE123"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 123"/>
+		 <ATTRIBUTE Name="ATTRIBUTE124"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 124"/>
+		 <ATTRIBUTE Name="ATTRIBUTE125"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 125"/>
+		 <ATTRIBUTE Name="ATTRIBUTE126"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 126"/>
+		 <ATTRIBUTE Name="ATTRIBUTE127"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 127"/>
+		 <ATTRIBUTE Name="ATTRIBUTE128"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 128"/>
+		 <ATTRIBUTE Name="ATTRIBUTE129"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 129"/>
+		 <ATTRIBUTE Name="ATTRIBUTE130"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 130"/>
+		 <ATTRIBUTE Name="ATTRIBUTE131"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 131"/>
+		 <ATTRIBUTE Name="ATTRIBUTE132"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 132"/>
+		 <ATTRIBUTE Name="ATTRIBUTE133"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 133"/>
+		 <ATTRIBUTE Name="ATTRIBUTE134"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 134"/>
+		 <ATTRIBUTE Name="ATTRIBUTE135"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 135"/>
+		 <ATTRIBUTE Name="ATTRIBUTE136"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 136"/>
+		 <ATTRIBUTE Name="ATTRIBUTE137"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 137"/>
+		 <ATTRIBUTE Name="ATTRIBUTE138"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 138"/>
+		 <ATTRIBUTE Name="ATTRIBUTE139"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 139"/>
+		 <ATTRIBUTE Name="ATTRIBUTE140"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 140"/>
+		 <ATTRIBUTE Name="ATTRIBUTE141"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 141"/>
+		 <ATTRIBUTE Name="ATTRIBUTE142"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 142"/>
+		 <ATTRIBUTE Name="ATTRIBUTE143"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 143"/>
+		 <ATTRIBUTE Name="ATTRIBUTE144"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 144"/>
+		 <ATTRIBUTE Name="ATTRIBUTE145"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 145"/>
+		 <ATTRIBUTE Name="ATTRIBUTE146"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 146"/>
+		 <ATTRIBUTE Name="ATTRIBUTE147"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 147"/>
+		 <ATTRIBUTE Name="ATTRIBUTE148"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 148"/>
+		 <ATTRIBUTE Name="ATTRIBUTE149"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 149"/>
+		 <ATTRIBUTE Name="ATTRIBUTE150"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 150"/>
+		 <ATTRIBUTE Name="ATTRIBUTE151"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 151"/>
+		 <ATTRIBUTE Name="ATTRIBUTE152"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 152"/>
+		 <ATTRIBUTE Name="ATTRIBUTE153"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 153"/>
+		 <ATTRIBUTE Name="ATTRIBUTE154"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 154"/>
+		 <ATTRIBUTE Name="ATTRIBUTE155"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 155"/>
+		 <ATTRIBUTE Name="ATTRIBUTE156"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 156"/>
+		 <ATTRIBUTE Name="ATTRIBUTE157"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 157"/>
+		 <ATTRIBUTE Name="ATTRIBUTE158"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 158"/>
+		 <ATTRIBUTE Name="ATTRIBUTE159"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 159"/>
+		 <ATTRIBUTE Name="ATTRIBUTE160"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 160"/>
+		 <ATTRIBUTE Name="ATTRIBUTE161"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 161"/>
+		 <ATTRIBUTE Name="ATTRIBUTE162"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 162"/>
+		 <ATTRIBUTE Name="ATTRIBUTE163"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 163"/>
+		 <ATTRIBUTE Name="ATTRIBUTE164"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 164"/>
+		 <ATTRIBUTE Name="ATTRIBUTE165"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 165"/>
+		 <ATTRIBUTE Name="ATTRIBUTE166"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 166"/>
+		 <ATTRIBUTE Name="ATTRIBUTE167"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 167"/>
+		 <ATTRIBUTE Name="ATTRIBUTE168"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 168"/>
+		 <ATTRIBUTE Name="ATTRIBUTE169"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 169"/>
+		 <ATTRIBUTE Name="ATTRIBUTE170"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 170"/>
+		 <ATTRIBUTE Name="ATTRIBUTE171"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 171"/>
+		 <ATTRIBUTE Name="ATTRIBUTE172"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 172"/>
+		 <ATTRIBUTE Name="ATTRIBUTE173"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 173"/>
+		 <ATTRIBUTE Name="ATTRIBUTE174"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 174"/>
+		 <ATTRIBUTE Name="ATTRIBUTE175"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 175"/>
+		 <ATTRIBUTE Name="ATTRIBUTE176"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 176"/>
+		 <ATTRIBUTE Name="ATTRIBUTE177"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 177"/>
+		 <ATTRIBUTE Name="ATTRIBUTE178"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 178"/>
+		 <ATTRIBUTE Name="ATTRIBUTE179"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 179"/>
+		 <ATTRIBUTE Name="ATTRIBUTE180"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 180"/>
+		 <ATTRIBUTE Name="ATTRIBUTE181"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 181"/>
+		 <ATTRIBUTE Name="ATTRIBUTE182"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 182"/>
+		 <ATTRIBUTE Name="ATTRIBUTE183"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 183"/>
+		 <ATTRIBUTE Name="ATTRIBUTE184"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 184"/>
+		 <ATTRIBUTE Name="ATTRIBUTE185"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 185"/>
+		 <ATTRIBUTE Name="ATTRIBUTE186"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 186"/>
+		 <ATTRIBUTE Name="ATTRIBUTE187"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 187"/>
+		 <ATTRIBUTE Name="ATTRIBUTE188"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 188"/>
+		 <ATTRIBUTE Name="ATTRIBUTE189"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 189"/>
+		 <ATTRIBUTE Name="ATTRIBUTE190"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 190"/>
+		 <ATTRIBUTE Name="ATTRIBUTE191"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 191"/>
+		 <ATTRIBUTE Name="ATTRIBUTE192"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 192"/>
+		 <ATTRIBUTE Name="ATTRIBUTE193"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 193"/>
+		 <ATTRIBUTE Name="ATTRIBUTE194"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 194"/>
+		 <ATTRIBUTE Name="ATTRIBUTE195"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 195"/>
+		 <ATTRIBUTE Name="ATTRIBUTE196"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 196"/>
+		 <ATTRIBUTE Name="ATTRIBUTE197"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 197"/>
+		 <ATTRIBUTE Name="ATTRIBUTE198"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 198"/>
+		 <ATTRIBUTE Name="ATTRIBUTE199"
+					Datatype="string"
+					DisplayName="Pipeline Attribute 199"/>
+    </GROUP>
+    <GROUP Name="POD-PROPERTIES-ATTRIBUTES">
+      <ATTRIBUTE Name="SYSTEM-ISOMETRIC-REFERENCE"
+                 Datatype="string"
+                 DisplayName="System Isometric Reference" />
+      <ATTRIBUTE Name="NORTH-ARROW"
+                 Datatype="string"
+                 DisplayName="North Arrow"
+                 DefaultValue="TOPLEFT">
+        <ALLOWABLE-VALUES>
+          <enumeration value="TOPLEFT"
+                       display="top left" />
+          <enumeration value="TOPRIGHT"
+                       display="top right" />
+          <enumeration value="BOTTOMLEFT"
+                       display="bottom left" />
+          <enumeration value="BOTTOMRIGHT"
+                       display="bottom right" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DATABASE-PATH"
+                 Datatype="string"
+                 Editable="False"
+                 DisplayName="Primary Spec" />
+      <ATTRIBUTE Name="MAJOR-REVISION"
+                 Datatype="string"
+                 Editable="False"
+                 DisplayName="Major Revision" />
+      <ATTRIBUTE Name="MINOR-REVISION"
+                 Datatype="string"
+                 Editable="False"
+                 DisplayName="Minor Revision" />
+      <ATTRIBUTE Name="REVISION-SCHEME"
+                 Datatype="string"
+                 Editable="False"
+                 DisplayName="Revision Scheme" />
+      <ATTRIBUTE Name="SPF-PLANT-OVERRIDE"
+                 Datatype="string"
+                 Editable="True"
+                 DisplayName="SPF Plant Override" />
+      <ATTRIBUTE Name="SPF-SIGNATURE-OVERRIDE"
+                 Datatype="string"
+                 Editable="True"
+                 DisplayName="SPF Signature Override" />
+      <ATTRIBUTE Name="DESCRIPTION"
+                 Datatype="string"
+                 Editable="True"
+                 DisplayName="Description" />
+    </GROUP>
+    <GROUP Name="COMPONENT-ATTRIBUTES">
+      <!-- Attributes to be added to all components -->
+      <ATTRIBUTE Name="ITEM-DESCRIPTION"
+                 Datatype="string"
+                 DisplayName="Item Description" />
+      <ATTRIBUTE Name="NAME"
+                 Datatype="string"
+                 DisplayName="Name or Tag" />
+      <ATTRIBUTE Name="CATEGORY"
+                 Datatype="string"
+                 DisplayName="Category">
+        <ALLOWABLE-VALUES>
+          <enumeration value="NONE"
+                       display="None" />
+          <enumeration value="FABRICATION"
+                       display="Fabrication" />
+          <enumeration value="ERECTION"
+                       display="Erection" />
+          <enumeration value="OFFSHORE"
+                       display="OffShore" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="STATUS"
+                 Datatype="string"
+                 DisplayName="Status">
+        <ALLOWABLE-VALUES>
+          <enumeration value="STANDARD"
+                       display="Standard" />
+          <enumeration value="DOTTED-UNDIMENSIONED"
+                       display="Dotted Undimensioned" />
+          <enumeration value="DOTTED-DIMENSIONED"
+                       display="Dotted Dimensioned" />
+          <enumeration value="UNDIMENSIONED"
+                       display="Undimensioned" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="REPEAT-PART-NUMBER"
+                 Datatype="string"
+                 DisplayName="Part Number" />
+      <ATTRIBUTE Name="PIPING-SPEC"
+                 Datatype="string"
+                 DisplayName="Pipe Spec" />
+      <ATTRIBUTE Name="TRACING-SPEC"
+                 Datatype="string"
+                 DisplayName="Tracing Spec" />
+      <ATTRIBUTE Name="INSULATION-SPEC"
+                 Datatype="string"
+                 DisplayName="Insulation Spec" />
+      <ATTRIBUTE Name="PAINTING-SPEC"
+                 Datatype="string"
+                 DisplayName="Painting Spec" />
+      <ATTRIBUTE Name="MISC-SPEC1"
+                 Datatype="string"
+                 DisplayName="Misc Spec1" />
+      <ATTRIBUTE Name="MISC-SPEC2"
+                 Datatype="string"
+                 DisplayName="Misc Spec2" />
+      <ATTRIBUTE Name="MISC-SPEC3"
+                 Datatype="string"
+                 DisplayName="Misc Spec3" />
+      <ATTRIBUTE Name="MISC-SPEC4"
+                 Datatype="string"
+                 DisplayName="Misc Spec4" />
+      <ATTRIBUTE Name="MISC-SPEC5"
+                 Datatype="string"
+                 DisplayName="Misc Spec5" />
+      <ATTRIBUTE Name="JACKET-SPEC"
+                 Datatype="string"
+                 DisplayName="Jacket Spec" />
+      <ATTRIBUTE Name="INSULATION"
+                 Datatype="string"
+                 DisplayName="Insulation">
+        <ALLOWABLE-VALUES>
+          <enumeration value="OFF"
+                       display="Off" />
+          <enumeration value="ON"
+                       display="On" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="TRACING"
+                 Datatype="string"
+                 DisplayName="Tracing">
+        <ALLOWABLE-VALUES>
+          <enumeration value="OFF"
+                       display="Off" />
+          <enumeration value="ON"
+                       display="On" />
+          <enumeration value="SINGLE"
+                       display="Single" />
+          <enumeration value="DOUBLE"
+                       display="Double" />
+          <enumeration value="TREBLE"
+                       display="Treble" />
+          <enumeration value="QUADRUPLE"
+                       display="Quadruple" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="REVISION"
+                 Datatype="string"
+                 DisplayName="Revision" />
+      <ATTRIBUTE Name="PLANT-AREA"
+                 Datatype="long"
+                 DisplayName="Plant Area" />
+      <ATTRIBUTE Name="COMPONENT-REMARK-NUMBER"
+                 Datatype="string"
+                 DisplayName="Component Remark Number" />
+      <ATTRIBUTE Name="WASTE"
+                 Datatype="double"
+                 DisplayName="Waste" />
+      <ATTRIBUTE Name="WEIGHT"
+                 Datatype="double"
+                 UnitsType="kg"
+                 DisplayName="Weight" />
+      <ATTRIBUTE Name="WEIGHT1"
+                 Datatype="double"
+                 UnitsType="kg"
+                 DisplayName="Weight1" />
+      <ATTRIBUTE Name="WEIGHT2"
+                 Datatype="double"
+                 UnitsType="kg"
+                 DisplayName="Weight2" />
+      <ATTRIBUTE Name="ANGLE"
+                 Datatype="boolean"
+                 DisplayName="AngleSet"
+                 Visible="False" />
+      <ATTRIBUTE Name="BOP-ELEVATION"
+                 Datatype="double"
+                 DisplayName="BOP Elevation" />
+      <ATTRIBUTE Name="FLOW"
+                 Datatype="long"
+                 DisplayName="Flow Direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="1"
+                       display="Positive" />
+          <enumeration value="2"
+                       display="Negative" />
+          <enumeration value="3"
+                       display="Both" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <!-- User not permitted to edit the UCI Attribute -->
+      <ATTRIBUTE Name="UNIQUE-COMPONENT-IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="UCI" />
+      <ATTRIBUTE Name="SUPPRESS-ITEM-CODE"
+                 Datatype="boolean"
+                 DisplayName="Suppress Item Code" />
+      <ATTRIBUTE Name="MATERIAL-LIST"
+                 Datatype="string"
+                 DisplayName="Material List">
+        <ALLOWABLE-VALUES>
+          <enumeration value="INCLUDE"
+                       display="Include" />
+          <enumeration value="EXCLUDE"
+                       display="Exclude" />
+          <enumeration value="INCLUDE-WITH-ISO"
+                       display="Include with Iso" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="JACKET"
+                 Datatype="string"
+                 DisplayName="Jacket">
+        <ALLOWABLE-VALUES>
+          <enumeration value="OFF"
+                       display="Off" />
+          <enumeration value="ON"
+                       display="On" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE1"
+                 Datatype="string"
+                 DisplayName="Component Attribute 1" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE2"
+                 Datatype="string"
+                 DisplayName="Component Attribute 2" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE3"
+                 Datatype="string"
+                 DisplayName="Component Attribute 3" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE4"
+                 Datatype="string"
+                 DisplayName="Component Attribute 4" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE5"
+                 Datatype="string"
+                 DisplayName="Component Attribute 5" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE6"
+                 Datatype="string"
+                 DisplayName="Component Attribute 6" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE7"
+                 Datatype="string"
+                 DisplayName="Component Attribute 7" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE8"
+                 Datatype="string"
+                 DisplayName="Component Attribute 8" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE9"
+                 Datatype="string"
+                 DisplayName="Component Attribute 9" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE10"
+                 Datatype="string"
+                 DisplayName="Component Attribute 10" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE11"
+                 Datatype="string"
+                 DisplayName="Component Attribute 11" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE12"
+                 Datatype="string"
+                 DisplayName="Component Attribute 12" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE13"
+                 Datatype="string"
+                 DisplayName="Component Attribute 13" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE14"
+                 Datatype="string"
+                 DisplayName="Component Attribute 14" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE15"
+                 Datatype="string"
+                 DisplayName="Component Attribute 15" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE16"
+                 Datatype="string"
+                 DisplayName="Component Attribute 16" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE17"
+                 Datatype="string"
+                 DisplayName="Component Attribute 17" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE18"
+                 Datatype="string"
+                 DisplayName="Component Attribute 18" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE19"
+                 Datatype="string"
+                 DisplayName="Component Attribute 19" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE20"
+                 Datatype="string"
+                 DisplayName="Component Attribute 20" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE21"
+                 Datatype="string"
+                 DisplayName="Component Attribute 21" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE22"
+                 Datatype="string"
+                 DisplayName="Component Attribute 22" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE23"
+                 Datatype="string"
+                 DisplayName="Component Attribute 23" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE24"
+                 Datatype="string"
+                 DisplayName="Component Attribute 24" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE25"
+                 Datatype="string"
+                 DisplayName="Component Attribute 25" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE26"
+                 Datatype="string"
+                 DisplayName="Component Attribute 26" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE27"
+                 Datatype="string"
+                 DisplayName="Component Attribute 27" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE28"
+                 Datatype="string"
+                 DisplayName="Component Attribute 28" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE29"
+                 Datatype="string"
+                 DisplayName="Component Attribute 29" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE30"
+                 Datatype="string"
+                 DisplayName="Component Attribute 30" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE31"
+                 Datatype="string"
+                 DisplayName="Component Attribute 31" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE32"
+                 Datatype="string"
+                 DisplayName="Component Attribute 32" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE33"
+                 Datatype="string"
+                 DisplayName="Component Attribute 33" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE34"
+                 Datatype="string"
+                 DisplayName="Component Attribute 34" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE35"
+                 Datatype="string"
+                 DisplayName="Component Attribute 35" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE36"
+                 Datatype="string"
+                 DisplayName="Component Attribute 36" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE37"
+                 Datatype="string"
+                 DisplayName="Component Attribute 37" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE38"
+                 Datatype="string"
+                 DisplayName="Component Attribute 38" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE39"
+                 Datatype="string"
+                 DisplayName="Component Attribute 39" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE40"
+                 Datatype="string"
+                 DisplayName="Component Attribute 40" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE41"
+                 Datatype="string"
+                 DisplayName="Component Attribute 41" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE42"
+                 Datatype="string"
+                 DisplayName="Component Attribute 42" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE43"
+                 Datatype="string"
+                 DisplayName="Component Attribute 43" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE44"
+                 Datatype="string"
+                 DisplayName="Component Attribute 44" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE45"
+                 Datatype="string"
+                 DisplayName="Component Attribute 45" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE46"
+                 Datatype="string"
+                 DisplayName="Component Attribute 46" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE47"
+                 Datatype="string"
+                 DisplayName="Component Attribute 47" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE48"
+                 Datatype="string"
+                 DisplayName="Component Attribute 48" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE49"
+                 Datatype="string"
+                 DisplayName="Component Attribute 49" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE50"
+                 Datatype="string"
+                 DisplayName="Component Attribute 50" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE51"
+                 Datatype="string"
+                 DisplayName="Component Attribute 51" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE52"
+                 Datatype="string"
+                 DisplayName="Component Attribute 52" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE53"
+                 Datatype="string"
+                 DisplayName="Component Attribute 53" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE54"
+                 Datatype="string"
+                 DisplayName="Component Attribute 54" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE55"
+                 Datatype="string"
+                 DisplayName="Component Attribute 55" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE56"
+                 Datatype="string"
+                 DisplayName="Component Attribute 56" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE57"
+                 Datatype="string"
+                 DisplayName="Component Attribute 57" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE58"
+                 Datatype="string"
+                 DisplayName="Component Attribute 58" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE59"
+                 Datatype="string"
+                 DisplayName="Component Attribute 59" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE60"
+                 Datatype="string"
+                 DisplayName="Component Attribute 60" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE61"
+                 Datatype="string"
+                 DisplayName="Component Attribute 61" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE62"
+                 Datatype="string"
+                 DisplayName="Component Attribute 62" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE63"
+                 Datatype="string"
+                 DisplayName="Component Attribute 63" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE64"
+                 Datatype="string"
+                 DisplayName="Component Attribute 64" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE65"
+                 Datatype="string"
+                 DisplayName="Component Attribute 65" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE66"
+                 Datatype="string"
+                 DisplayName="Component Attribute 66" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE67"
+                 Datatype="string"
+                 DisplayName="Component Attribute 67" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE68"
+                 Datatype="string"
+                 DisplayName="Component Attribute 68" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE69"
+                 Datatype="string"
+                 DisplayName="Component Attribute 69" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE70"
+                 Datatype="string"
+                 DisplayName="Component Attribute 70" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE71"
+                 Datatype="string"
+                 DisplayName="Component Attribute 71" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE72"
+                 Datatype="string"
+                 DisplayName="Component Attribute 72" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE73"
+                 Datatype="string"
+                 DisplayName="Component Attribute 73" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE74"
+                 Datatype="string"
+                 DisplayName="Component Attribute 74" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE75"
+                 Datatype="string"
+                 DisplayName="Component Attribute 75" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE76"
+                 Datatype="string"
+                 DisplayName="Component Attribute 76" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE77"
+                 Datatype="string"
+                 DisplayName="Component Attribute 77" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE78"
+                 Datatype="string"
+                 DisplayName="Component Attribute 78" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE79"
+                 Datatype="string"
+                 DisplayName="Component Attribute 79" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE80"
+                 Datatype="string"
+                 DisplayName="Component Attribute 80" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE81"
+                 Datatype="string"
+                 DisplayName="Component Attribute 81" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE82"
+                 Datatype="string"
+                 DisplayName="Component Attribute 82" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE83"
+                 Datatype="string"
+                 DisplayName="Component Attribute 83" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE84"
+                 Datatype="string"
+                 DisplayName="Component Attribute 84" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE85"
+                 Datatype="string"
+                 DisplayName="Component Attribute 85" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE86"
+                 Datatype="string"
+                 DisplayName="Component Attribute 86" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE87"
+                 Datatype="string"
+                 DisplayName="Component Attribute 87" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE88"
+                 Datatype="string"
+                 DisplayName="Component Attribute 88" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE89"
+                 Datatype="string"
+                 DisplayName="Component Attribute 89" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE90"
+                 Datatype="string"
+                 DisplayName="Component Attribute 90" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE91"
+                 Datatype="string"
+                 DisplayName="Component Attribute 91" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE92"
+                 Datatype="string"
+                 DisplayName="Component Attribute 92" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE93"
+                 Datatype="string"
+                 DisplayName="Component Attribute 93" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE94"
+                 Datatype="string"
+                 DisplayName="Component Attribute 94" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE95"
+                 Datatype="string"
+                 DisplayName="Component Attribute 95" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE96"
+                 Datatype="string"
+                 DisplayName="Component Attribute 96" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE97"
+                 Datatype="string"
+                 DisplayName="Component Attribute 97" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE98"
+                 Datatype="string"
+                 DisplayName="Component Attribute 98" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE99"
+                 Datatype="string"
+                 DisplayName="Component Attribute 99" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE100"
+                 Datatype="string"
+                 DisplayName="Component Attribute 100" />
+      <ATTRIBUTE Name="LEG-PROPERTIES-OVERRIDE"
+                 Datatype="boolean"
+                 DisplayName="Leg Properties Override"
+                 Visible="False" />
+      <ATTRIBUTE Name="LEG-INSULATION-LEVELS"
+                 Datatype="string"
+                 DisplayName="Leg Insulation Levels"
+                 Visible="False" />
+      <ATTRIBUTE Name="LEG-TRACING-LEVELS"
+                 Datatype="string"
+                 DisplayName="Leg Tracing Levels"
+                 Visible="False" />
+      <ATTRIBUTE Name="SPOOL-SEQUENCE-NUMBER"
+                 Datatype="long"
+                 DisplayName="Spool Sequence Number"
+                 Visible="False" />
+      <ATTRIBUTE Name="CUT-PIECE-SEQUENCE-NUMBER"
+                 Datatype="long"
+                 DisplayName="Cut Piece Sequence Number"
+                 Visible="False" />
+      <ATTRIBUTE Name="MASTER-SEQUENCE-NUMBER"
+                 Datatype="string"
+                 DisplayName="Master Sequence Number"
+                 Visible="False" />
+      <ATTRIBUTE Name="MASTER-SEQUENCE-NUMBER-KEYPOINT"
+                 Datatype="string"
+                 DisplayName="Master Sequence Number Keypoint"
+                 Visible="False" />
+      <ATTRIBUTE Name="SKEY-OVERRIDE"
+                 Datatype="string"
+                 Editable="False"
+                 DisplayName="Skey Override"/>
+	   <ATTRIBUTE Name="ISOGEN-SEQUENCE-NUMBER"
+				  Datatype="string"
+				  DisplayName = "ISOGEN-SEQUENCE-NUMBER"
+				  Visible="False" />
+    </GROUP>
+    <GROUP Name="SPINDLE-ATTRIBUTES">
+      <ATTRIBUTE Name="GEARBOX"
+                 Datatype="string"
+                 DisplayName="Gearbox">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="SPINDLE-DIRECTION"
+                 Datatype="string"
+                 DisplayName="Spindle direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DIRECTION"
+                 Datatype="string"
+                 DisplayName="Direction" />
+    </GROUP>
+    <GROUP Name="WINDOW-ATTRIBUTES">
+      <ATTRIBUTE Name="WINDOW-DIRECTION"
+                 Datatype="string"
+                 DisplayName="Window direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DIRECTION"
+                 Datatype="string"
+                 DisplayName="Direction" />
+    </GROUP>
+    <GROUP Name="ORIFICE-ATTRIBUTES">
+      <ATTRIBUTE Name="ORIFICE-TAP-DIRECTION"
+                 Datatype="string"
+                 DisplayName="Orifice Tap direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DIRECTION"
+                 Datatype="string"
+                 DisplayName="Direction" />
+    </GROUP>
+    <GROUP Name="FLAT-DIRECTION-ATTRIBUTES">
+      <!-- Attributes dealing with Flat Direction -->
+      <ATTRIBUTE Name="FLAT-DIRECTION"
+                 Datatype="string"
+                 DisplayName="Flat direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DIRECTION"
+                 Datatype="string"
+                 DisplayName="Direction" />
+    </GROUP>
+    <GROUP Name="GASKET-ATTRIBUTES">
+      <!-- Attributes to be added to all components with Type Gasket -->
+      <ATTRIBUTE Name="GASKET-CLASS"
+                 Datatype="string"
+                 UnitsType=""
+                 DisplayName="Gasket Class" />
+      <ATTRIBUTE Name="GASKET-RATING"
+                 Datatype="string"
+                 UnitsType=""
+                 DisplayName="Gasket Rating" />
+    </GROUP>
+    <GROUP Name="FLANGE-ATTRIBUTES">
+      <!-- ComponentTypes appearing here will get these attributes plus the COMPONENT set -->
+      <ATTRIBUTE Name="FLANGE-CUT-PLUS"
+                 Datatype="double"
+                 DisplayName="FlangeCutPlus"
+                 UnitsType="mm" />
+      <ATTRIBUTE Name="FLANGE-CUT-MINUS"
+                 Datatype="double"
+                 DisplayName="FlangeCutMinus"
+                 UnitsType="mm" />
+      <ATTRIBUTE Name="FLANGE-LEFT-LOOSE"
+                 Datatype="string"
+                 DisplayName="Flange Left Loose"
+                 DefaultValue="OFF">
+        <ALLOWABLE-VALUES>
+          <enumeration value="OFF"
+                       display="Off" />
+          <enumeration value="ON"
+                       display="On" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="ROTATION-ANGLE"
+                 Datatype="double"
+                 DisplayName="Rotation Angle" />
+    </GROUP>
+    <GROUP Name="DIAL-ATTRIBUTES">
+      <ATTRIBUTE Name="DIAL-FACE-DIRECTION"
+                 Datatype="string"
+                 DisplayName="Dial Face direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DIRECTION"
+                 Datatype="string"
+                 DisplayName="Direction" />
+      <ATTRIBUTE Name="COORDS-X"
+                 Datatype="double"
+                 DisplayName="Coordinate X" />
+      <ATTRIBUTE Name="COORDS-Y"
+                 Datatype="double"
+                 DisplayName="Coordinate Y" />
+      <ATTRIBUTE Name="COORDS-Z"
+                 Datatype="double"
+                 DisplayName="Coordinate Z" />
+    </GROUP>
+    <GROUP Name="SUPPORT-ATTRIBUTES">
+      <ATTRIBUTE Name="SUPPORT-DIRECTION"
+                 Datatype="string"
+                 DisplayName="Support direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DIRECTION"
+                 Datatype="string"
+                 DisplayName="Direction" />
+      <ATTRIBUTE Name="SUPPORT-TYPE"
+                 Datatype="string"
+                 DisplayName="Support Type" />
+    </GROUP>
+    <GROUP Name="PIPE-ATTRIBUTES">
+      <ATTRIBUTE Name="WELDING-ALLOWANCE"
+                 Datatype="string"
+                 DisplayName="Welding Allowance" />
+      <ATTRIBUTE Name="PULLED-BEND"
+                 Datatype="boolean"
+                 DisplayName="Pulled Bend"
+                 Visible='False' />
+      <ATTRIBUTE Name="PULLED-BEND-SKEY"
+                 Datatype="string"
+                 DisplayName="Pulled Bend Skey"
+                 Visible='False' />
+      <ATTRIBUTE Name="IGNORED"
+                 Datatype="boolean"
+                 DisplayName="Ignored Tube" />
+      <ATTRIBUTE Name="CUT-PIECE-LENGTH"
+                 Datatype="double"
+                 DisplayName="Cut Piece Length" />
+    </GROUP>
+    <GROUP Name="SLIP-ATTRIBUTES">
+      <ATTRIBUTE Name="SLIP-PLATE-TAIL-DIRECTION"
+                 Datatype="string"
+                 DisplayName="Slip Plate Tail Direction">
+        <ALLOWABLE-VALUES>
+          <enumeration value="EAST"
+                       display="East" />
+          <enumeration value="NORTH"
+                       display="North" />
+          <enumeration value="UP"
+                       display="Up" />
+          <enumeration value="WEST"
+                       display="West" />
+          <enumeration value="SOUTH"
+                       display="South" />
+          <enumeration value="DOWN"
+                       display="Down" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="DIRECTION"
+                 Datatype="string"
+                 DisplayName="Direction" />
+    </GROUP>
+    <GROUP Name="ADDITIONAL-ITEM-ATTRIBUTES">
+      <!-- Additional Item is not a normal component, but carries some of the Component Attributes
+                                 It gets its own context because of its special nature -->
+      <ATTRIBUTE Name="CATEGORY"
+                 Datatype="string"
+                 DisplayName="Category">
+        <ALLOWABLE-VALUES>
+          <enumeration value="NONE"
+                       display="None" />
+          <enumeration value="FABRICATION"
+                       display="Fabrication" />
+          <enumeration value="ERECTION"
+                       display="Erection" />
+          <enumeration value="OFFSHORE"
+                       display="OffShore" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="ITEM-CODE"
+                 Datatype="string"
+                 DisplayName="Item Code" />
+      <ATTRIBUTE Name="ITEM-GROUP"
+                 Datatype="string"
+                 DisplayName="Item Group" />
+      <ATTRIBUTE Name="ITEM-DESCRIPTION"
+                 Datatype="string"
+                 DisplayName="Item Description" />
+      <ATTRIBUTE Name="LENGTH"
+                 Datatype="double"
+                 UnitsType="mm"
+                 DisplayName="Length" />
+      <ATTRIBUTE Name="QUANTITY"
+                 Datatype="double"
+                 DisplayName="Quantity" />
+      <ATTRIBUTE Name="REPEAT-PART-NUMBER"
+                 Datatype="string"
+                 DisplayName="Part Number" />
+      <ATTRIBUTE Name="SIZE"
+                 Datatype="double"
+                 DisplayName="Size" />
+      <ATTRIBUTE Name="UNIQUE-COMPONENT-IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="UCI" />
+      <ATTRIBUTE Name="WEIGHT"
+                 Datatype="double"
+                 UnitsType="kg"
+                 DisplayName="Weight" />
+      <ATTRIBUTE Name="WELD-REMARK-NUMBER"
+                 Datatype="string"
+                 DisplayName="Weld Remark Number" />
+      <ATTRIBUTE Name="WELD-SPEC"
+                 Datatype="string"
+                 DisplayName="Weld Spec" />
+      <ATTRIBUTE Name="BOLT-DIA"
+                 Datatype="double"
+                 UnitsType="mm"
+                 Visible="True"
+                 Editable="True"
+                 DisplayName="Bolt Diameter">
+        <ALLOWABLE-VALUES>
+          <minInclusive value="0" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="BOLT-LENGTH"
+                 Datatype="double"
+                 UnitsType="mm"
+                 Visible="True"
+                 Editable="True"
+                 DisplayName="Bolt Length">
+        <ALLOWABLE-VALUES>
+          <minInclusive value="0" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="BOLT-QUANTITY"
+                 Datatype="long"
+                 DisplayName="Bolt Quantity" />
+      <ATTRIBUTE Name="BOLT-ITEM-CODE"
+                 Datatype="string"
+                 DisplayName="Bolt Item Code" />
+      <ATTRIBUTE Name="BOLT-ITEM-DESCRIPTION"
+                 Datatype="string"
+                 DisplayName="Bolt Item Description" />
+      <ATTRIBUTE Name="ASSOCIATED"
+                 Datatype="boolean"
+                 Visible="False"
+                 DefaultValue="True" />
+      <ATTRIBUTE Name="MASTER-SEQUENCE-NUMBER"
+                 Datatype="string"
+                 DisplayName="Master Sequence Number"
+                 Visible="False" />
+      <ATTRIBUTE Name="MASTER-SEQUENCE-NUMBER-KEYPOINT"
+                 Datatype="string"
+                 DisplayName="Master Sequence Number Keypoint"
+                 Visible="False" />
+      <ATTRIBUTE Name="SPOOL-SEQUENCE-NUMBER"
+                Datatype="long"
+                DisplayName="Spool Sequence Number"
+                Visible="False" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE1"
+                 Datatype="string"
+                 DisplayName="Component Attribute 1" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE2"
+                 Datatype="string"
+                 DisplayName="Component Attribute 2" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE3"
+                 Datatype="string"
+                 DisplayName="Component Attribute 3" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE4"
+                 Datatype="string"
+                 DisplayName="Component Attribute 4" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE5"
+                 Datatype="string"
+                 DisplayName="Component Attribute 5" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE6"
+                 Datatype="string"
+                 DisplayName="Component Attribute 6" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE7"
+                 Datatype="string"
+                 DisplayName="Component Attribute 7" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE8"
+                 Datatype="string"
+                 DisplayName="Component Attribute 8" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE9"
+                 Datatype="string"
+                 DisplayName="Component Attribute 9" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE10"
+                 Datatype="string"
+                 DisplayName="Component Attribute 10" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE11"
+                 Datatype="string"
+                 DisplayName="Component Attribute 11" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE12"
+                 Datatype="string"
+                 DisplayName="Component Attribute 12" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE13"
+                 Datatype="string"
+                 DisplayName="Component Attribute 13" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE14"
+                 Datatype="string"
+                 DisplayName="Component Attribute 14" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE15"
+                 Datatype="string"
+                 DisplayName="Component Attribute 15" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE16"
+                 Datatype="string"
+                 DisplayName="Component Attribute 16" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE17"
+                 Datatype="string"
+                 DisplayName="Component Attribute 17" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE18"
+                 Datatype="string"
+                 DisplayName="Component Attribute 18" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE19"
+                 Datatype="string"
+                 DisplayName="Component Attribute 19" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE20"
+                 Datatype="string"
+                 DisplayName="Component Attribute 20" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE21"
+                 Datatype="string"
+                 DisplayName="Component Attribute 21" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE22"
+                 Datatype="string"
+                 DisplayName="Component Attribute 22" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE23"
+                 Datatype="string"
+                 DisplayName="Component Attribute 23" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE24"
+                 Datatype="string"
+                 DisplayName="Component Attribute 24" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE25"
+                 Datatype="string"
+                 DisplayName="Component Attribute 25" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE26"
+                 Datatype="string"
+                 DisplayName="Component Attribute 26" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE27"
+                 Datatype="string"
+                 DisplayName="Component Attribute 27" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE28"
+                 Datatype="string"
+                 DisplayName="Component Attribute 28" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE29"
+                 Datatype="string"
+                 DisplayName="Component Attribute 29" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE30"
+                 Datatype="string"
+                 DisplayName="Component Attribute 30" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE31"
+                 Datatype="string"
+                 DisplayName="Component Attribute 31" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE32"
+                 Datatype="string"
+                 DisplayName="Component Attribute 32" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE33"
+                 Datatype="string"
+                 DisplayName="Component Attribute 33" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE34"
+                 Datatype="string"
+                 DisplayName="Component Attribute 34" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE35"
+                 Datatype="string"
+                 DisplayName="Component Attribute 35" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE36"
+                 Datatype="string"
+                 DisplayName="Component Attribute 36" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE37"
+                 Datatype="string"
+                 DisplayName="Component Attribute 37" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE38"
+                 Datatype="string"
+                 DisplayName="Component Attribute 38" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE39"
+                 Datatype="string"
+                 DisplayName="Component Attribute 39" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE40"
+                 Datatype="string"
+                 DisplayName="Component Attribute 40" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE41"
+                 Datatype="string"
+                 DisplayName="Component Attribute 41" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE42"
+                 Datatype="string"
+                 DisplayName="Component Attribute 42" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE43"
+                 Datatype="string"
+                 DisplayName="Component Attribute 43" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE44"
+                 Datatype="string"
+                 DisplayName="Component Attribute 44" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE45"
+                 Datatype="string"
+                 DisplayName="Component Attribute 45" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE46"
+                 Datatype="string"
+                 DisplayName="Component Attribute 46" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE47"
+                 Datatype="string"
+                 DisplayName="Component Attribute 47" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE48"
+                 Datatype="string"
+                 DisplayName="Component Attribute 48" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE49"
+                 Datatype="string"
+                 DisplayName="Component Attribute 49" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE50"
+                 Datatype="string"
+                 DisplayName="Component Attribute 50" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE51"
+                 Datatype="string"
+                 DisplayName="Component Attribute 51" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE52"
+                 Datatype="string"
+                 DisplayName="Component Attribute 52" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE53"
+                 Datatype="string"
+                 DisplayName="Component Attribute 53" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE54"
+                 Datatype="string"
+                 DisplayName="Component Attribute 54" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE55"
+                 Datatype="string"
+                 DisplayName="Component Attribute 55" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE56"
+                 Datatype="string"
+                 DisplayName="Component Attribute 56" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE57"
+                 Datatype="string"
+                 DisplayName="Component Attribute 57" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE58"
+                 Datatype="string"
+                 DisplayName="Component Attribute 58" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE59"
+                 Datatype="string"
+                 DisplayName="Component Attribute 59" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE60"
+                 Datatype="string"
+                 DisplayName="Component Attribute 60" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE61"
+                 Datatype="string"
+                 DisplayName="Component Attribute 61" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE62"
+                 Datatype="string"
+                 DisplayName="Component Attribute 62" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE63"
+                 Datatype="string"
+                 DisplayName="Component Attribute 63" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE64"
+                 Datatype="string"
+                 DisplayName="Component Attribute 64" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE65"
+                 Datatype="string"
+                 DisplayName="Component Attribute 65" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE66"
+                 Datatype="string"
+                 DisplayName="Component Attribute 66" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE67"
+                 Datatype="string"
+                 DisplayName="Component Attribute 67" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE68"
+                 Datatype="string"
+                 DisplayName="Component Attribute 68" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE69"
+                 Datatype="string"
+                 DisplayName="Component Attribute 69" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE70"
+                 Datatype="string"
+                 DisplayName="Component Attribute 70" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE71"
+                 Datatype="string"
+                 DisplayName="Component Attribute 71" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE72"
+                 Datatype="string"
+                 DisplayName="Component Attribute 72" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE73"
+                 Datatype="string"
+                 DisplayName="Component Attribute 73" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE74"
+                 Datatype="string"
+                 DisplayName="Component Attribute 74" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE75"
+                 Datatype="string"
+                 DisplayName="Component Attribute 75" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE76"
+                 Datatype="string"
+                 DisplayName="Component Attribute 76" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE77"
+                 Datatype="string"
+                 DisplayName="Component Attribute 77" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE78"
+                 Datatype="string"
+                 DisplayName="Component Attribute 78" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE79"
+                 Datatype="string"
+                 DisplayName="Component Attribute 79" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE80"
+                 Datatype="string"
+                 DisplayName="Component Attribute 80" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE81"
+                 Datatype="string"
+                 DisplayName="Component Attribute 81" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE82"
+                 Datatype="string"
+                 DisplayName="Component Attribute 82" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE83"
+                 Datatype="string"
+                 DisplayName="Component Attribute 83" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE84"
+                 Datatype="string"
+                 DisplayName="Component Attribute 84" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE85"
+                 Datatype="string"
+                 DisplayName="Component Attribute 85" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE86"
+                 Datatype="string"
+                 DisplayName="Component Attribute 86" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE87"
+                 Datatype="string"
+                 DisplayName="Component Attribute 87" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE88"
+                 Datatype="string"
+                 DisplayName="Component Attribute 88" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE89"
+                 Datatype="string"
+                 DisplayName="Component Attribute 89" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE90"
+                 Datatype="string"
+                 DisplayName="Component Attribute 90" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE91"
+                 Datatype="string"
+                 DisplayName="Component Attribute 91" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE92"
+                 Datatype="string"
+                 DisplayName="Component Attribute 92" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE93"
+                 Datatype="string"
+                 DisplayName="Component Attribute 93" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE94"
+                 Datatype="string"
+                 DisplayName="Component Attribute 94" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE95"
+                 Datatype="string"
+                 DisplayName="Component Attribute 95" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE96"
+                 Datatype="string"
+                 DisplayName="Component Attribute 96" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE97"
+                 Datatype="string"
+                 DisplayName="Component Attribute 97" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE98"
+                 Datatype="string"
+                 DisplayName="Component Attribute 98" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE99"
+                 Datatype="string"
+                 DisplayName="Component Attribute 99" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE100"
+                 Datatype="string"
+                 DisplayName="Component Attribute 100" />
+      <ATTRIBUTE Name="CUT-PIECE-SEQUENCE-NUMBER"
+                 Datatype="long"
+                 DisplayName="Cut Piece Sequence Number"/>			 
+    </GROUP>
+    <GROUP Name="BOLT-ATTRIBUTES">
+      <!-- Bolt is not a normal component, but carries some of the Component Attributes
+                                 It gets its own context because of its special nature -->
+      <ATTRIBUTE Name="BOLT-LENGTH"
+                 Datatype="double"
+                 UnitsType="mm"
+                 Visible="True"
+                 Editable="False"
+                 DisplayName="Bolt Length"
+                 DefaultValue="0">
+        <ALLOWABLE-VALUES>
+          <minInclusive value="0" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="BOLT-DIA"
+                 Datatype="double"
+                 UnitsType="mm"
+                 Visible="True"
+                 Editable="False"
+                 DisplayName="Bolt Diameter"
+                 DefaultValue="0">
+        <ALLOWABLE-VALUES>
+          <minInclusive value="0" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="BOLT-QUANTITY"
+                 Datatype="long"
+                 DisplayName="Bolt Quantity" />
+      <ATTRIBUTE Name="BOLT-ITEM-DESCRIPTION"
+                 Datatype="string"
+                 DisplayName="Bolt Item Description" />
+      <ATTRIBUTE Name="REPEAT-PART-NUMBER"
+                 Datatype="string"
+                 DisplayName="Part Number" />
+      <ATTRIBUTE Name="ASSEMBLY-ID"
+                 Datatype="string"
+                 DisplayName="Assembly ID" />
+      <ATTRIBUTE Name="CATEGORY"
+                 Datatype="string"
+                 DisplayName="Category">
+        <ALLOWABLE-VALUES>
+          <enumeration value="NONE"
+                       display="None" />
+          <enumeration value="FABRICATION"
+                       display="Fabrication" />
+          <enumeration value="ERECTION"
+                       display="Erection" />
+          <enumeration value="OFFSHORE"
+                       display="OffShore" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="MATERIAL-LIST"
+                 Datatype="string"
+                 DisplayName="Material List">
+        <ALLOWABLE-VALUES>
+          <enumeration value="INCLUDE"
+                       display="Include" />
+          <enumeration value="EXCLUDE"
+                       display="Exclude" />
+          <enumeration value="INCLUDE-WITH-ISO"
+                       display="Include with Iso" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="WEIGHT"
+                 Datatype="double"
+                 UnitsType="kg"
+                 DisplayName="Weight" />
+      <ATTRIBUTE Name="UNIQUE-COMPONENT-IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="UCI" />
+      <ATTRIBUTE Name="AUTOGENERATED"
+                 Datatype="boolean"
+                 DisplayName="Auto Generated" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE1"
+                 Datatype="string"
+                 DisplayName="Component Attribute 1" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE2"
+                 Datatype="string"
+                 DisplayName="Component Attribute 2" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE3"
+                 Datatype="string"
+                 DisplayName="Component Attribute 3" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE4"
+                 Datatype="string"
+                 DisplayName="Component Attribute 4" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE5"
+                 Datatype="string"
+                 DisplayName="Component Attribute 5" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE6"
+                 Datatype="string"
+                 DisplayName="Component Attribute 6" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE7"
+                 Datatype="string"
+                 DisplayName="Component Attribute 7" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE8"
+                 Datatype="string"
+                 DisplayName="Component Attribute 8" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE9"
+                 Datatype="string"
+                 DisplayName="Component Attribute 9" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE10"
+                 Datatype="string"
+                 DisplayName="Component Attribute 10" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE11"
+                 Datatype="string"
+                 DisplayName="Component Attribute 11" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE12"
+                 Datatype="string"
+                 DisplayName="Component Attribute 12" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE13"
+                 Datatype="string"
+                 DisplayName="Component Attribute 13" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE14"
+                 Datatype="string"
+                 DisplayName="Component Attribute 14" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE15"
+                 Datatype="string"
+                 DisplayName="Component Attribute 15" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE16"
+                 Datatype="string"
+                 DisplayName="Component Attribute 16" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE17"
+                 Datatype="string"
+                 DisplayName="Component Attribute 17" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE18"
+                 Datatype="string"
+                 DisplayName="Component Attribute 18" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE19"
+                 Datatype="string"
+                 DisplayName="Component Attribute 19" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE20"
+                 Datatype="string"
+                 DisplayName="Component Attribute 20" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE21"
+                 Datatype="string"
+                 DisplayName="Component Attribute 21" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE22"
+                 Datatype="string"
+                 DisplayName="Component Attribute 22" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE23"
+                 Datatype="string"
+                 DisplayName="Component Attribute 23" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE24"
+                 Datatype="string"
+                 DisplayName="Component Attribute 24" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE25"
+                 Datatype="string"
+                 DisplayName="Component Attribute 25" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE26"
+                 Datatype="string"
+                 DisplayName="Component Attribute 26" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE27"
+                 Datatype="string"
+                 DisplayName="Component Attribute 27" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE28"
+                 Datatype="string"
+                 DisplayName="Component Attribute 28" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE29"
+                 Datatype="string"
+                 DisplayName="Component Attribute 29" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE30"
+                 Datatype="string"
+                 DisplayName="Component Attribute 30" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE31"
+                 Datatype="string"
+                 DisplayName="Component Attribute 31" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE32"
+                 Datatype="string"
+                 DisplayName="Component Attribute 32" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE33"
+                 Datatype="string"
+                 DisplayName="Component Attribute 33" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE34"
+                 Datatype="string"
+                 DisplayName="Component Attribute 34" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE35"
+                 Datatype="string"
+                 DisplayName="Component Attribute 35" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE36"
+                 Datatype="string"
+                 DisplayName="Component Attribute 36" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE37"
+                 Datatype="string"
+                 DisplayName="Component Attribute 37" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE38"
+                 Datatype="string"
+                 DisplayName="Component Attribute 38" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE39"
+                 Datatype="string"
+                 DisplayName="Component Attribute 39" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE40"
+                 Datatype="string"
+                 DisplayName="Component Attribute 40" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE41"
+                 Datatype="string"
+                 DisplayName="Component Attribute 41" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE42"
+                 Datatype="string"
+                 DisplayName="Component Attribute 42" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE43"
+                 Datatype="string"
+                 DisplayName="Component Attribute 43" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE44"
+                 Datatype="string"
+                 DisplayName="Component Attribute 44" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE45"
+                 Datatype="string"
+                 DisplayName="Component Attribute 45" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE46"
+                 Datatype="string"
+                 DisplayName="Component Attribute 46" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE47"
+                 Datatype="string"
+                 DisplayName="Component Attribute 47" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE48"
+                 Datatype="string"
+                 DisplayName="Component Attribute 48" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE49"
+                 Datatype="string"
+                 DisplayName="Component Attribute 49" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE50"
+                 Datatype="string"
+                 DisplayName="Component Attribute 50" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE51"
+                 Datatype="string"
+                 DisplayName="Component Attribute 51" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE52"
+                 Datatype="string"
+                 DisplayName="Component Attribute 52" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE53"
+                 Datatype="string"
+                 DisplayName="Component Attribute 53" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE54"
+                 Datatype="string"
+                 DisplayName="Component Attribute 54" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE55"
+                 Datatype="string"
+                 DisplayName="Component Attribute 55" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE56"
+                 Datatype="string"
+                 DisplayName="Component Attribute 56" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE57"
+                 Datatype="string"
+                 DisplayName="Component Attribute 57" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE58"
+                 Datatype="string"
+                 DisplayName="Component Attribute 58" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE59"
+                 Datatype="string"
+                 DisplayName="Component Attribute 59" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE60"
+                 Datatype="string"
+                 DisplayName="Component Attribute 60" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE61"
+                 Datatype="string"
+                 DisplayName="Component Attribute 61" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE62"
+                 Datatype="string"
+                 DisplayName="Component Attribute 62" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE63"
+                 Datatype="string"
+                 DisplayName="Component Attribute 63" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE64"
+                 Datatype="string"
+                 DisplayName="Component Attribute 64" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE65"
+                 Datatype="string"
+                 DisplayName="Component Attribute 65" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE66"
+                 Datatype="string"
+                 DisplayName="Component Attribute 66" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE67"
+                 Datatype="string"
+                 DisplayName="Component Attribute 67" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE68"
+                 Datatype="string"
+                 DisplayName="Component Attribute 68" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE69"
+                 Datatype="string"
+                 DisplayName="Component Attribute 69" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE70"
+                 Datatype="string"
+                 DisplayName="Component Attribute 70" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE71"
+                 Datatype="string"
+                 DisplayName="Component Attribute 71" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE72"
+                 Datatype="string"
+                 DisplayName="Component Attribute 72" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE73"
+                 Datatype="string"
+                 DisplayName="Component Attribute 73" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE74"
+                 Datatype="string"
+                 DisplayName="Component Attribute 74" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE75"
+                 Datatype="string"
+                 DisplayName="Component Attribute 75" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE76"
+                 Datatype="string"
+                 DisplayName="Component Attribute 76" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE77"
+                 Datatype="string"
+                 DisplayName="Component Attribute 77" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE78"
+                 Datatype="string"
+                 DisplayName="Component Attribute 78" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE79"
+                 Datatype="string"
+                 DisplayName="Component Attribute 79" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE80"
+                 Datatype="string"
+                 DisplayName="Component Attribute 80" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE81"
+                 Datatype="string"
+                 DisplayName="Component Attribute 81" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE82"
+                 Datatype="string"
+                 DisplayName="Component Attribute 82" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE83"
+                 Datatype="string"
+                 DisplayName="Component Attribute 83" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE84"
+                 Datatype="string"
+                 DisplayName="Component Attribute 84" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE85"
+                 Datatype="string"
+                 DisplayName="Component Attribute 85" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE86"
+                 Datatype="string"
+                 DisplayName="Component Attribute 86" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE87"
+                 Datatype="string"
+                 DisplayName="Component Attribute 87" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE88"
+                 Datatype="string"
+                 DisplayName="Component Attribute 88" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE89"
+                 Datatype="string"
+                 DisplayName="Component Attribute 89" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE90"
+                 Datatype="string"
+                 DisplayName="Component Attribute 90" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE91"
+                 Datatype="string"
+                 DisplayName="Component Attribute 91" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE92"
+                 Datatype="string"
+                 DisplayName="Component Attribute 92" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE93"
+                 Datatype="string"
+                 DisplayName="Component Attribute 93" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE94"
+                 Datatype="string"
+                 DisplayName="Component Attribute 94" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE95"
+                 Datatype="string"
+                 DisplayName="Component Attribute 95" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE96"
+                 Datatype="string"
+                 DisplayName="Component Attribute 96" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE97"
+                 Datatype="string"
+                 DisplayName="Component Attribute 97" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE98"
+                 Datatype="string"
+                 DisplayName="Component Attribute 98" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE99"
+                 Datatype="string"
+                 DisplayName="Component Attribute 99" />
+      <ATTRIBUTE Name="COMPONENT-ATTRIBUTE100"
+                 Datatype="string"
+                 DisplayName="COMPONENT Attribute 100" />
+      <ATTRIBUTE Name="JACKET"
+                 Datatype="string"
+                 DisplayName="Jacket">
+        <ALLOWABLE-VALUES>
+          <enumeration value="OFF"
+                       display="Off" />
+          <enumeration value="ON"
+                       display="On" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+        <ATTRIBUTE Name="REVISION"
+                       Datatype="string"
+                 DisplayName="Revision" />
+    </GROUP>
+    <GROUP Name="WELD-ATTRIBUTES">
+      <!-- Weld is different to most components -->
+      <ATTRIBUTE Name="WELD-GAP"
+                 Datatype="double"
+                 UnitsType="mm"
+                 DisplayName="Weld Gap">
+        <ALLOWABLE-VALUES>
+          <minInclusive value="0" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="CATEGORY"
+                 Datatype="string"
+                 DisplayName="Category">
+        <ALLOWABLE-VALUES>
+          <enumeration value="NONE"
+                       display="None" />
+          <enumeration value="FABRICATION"
+                       display="Fabrication" />
+          <enumeration value="ERECTION"
+                       display="Erection" />
+          <enumeration value="OFFSHORE"
+                       display="OffShore" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="STATUS"
+                 Datatype="string"
+                 DisplayName="Status">
+        <ALLOWABLE-VALUES>
+          <enumeration value="STANDARD"
+                       display="Standard" />
+          <enumeration value="DOTTED-UNDIMENSIONED"
+                       display="Dotted Undimensioned" />
+          <enumeration value="DOTTED-DIMENSIONED"
+                       display="Dotted Dimensioned" />
+          <enumeration value="UNDIMENSIONED"
+                       display="Undimensioned" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="REPEAT-WELD-IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="Weld Number" />
+      <ATTRIBUTE Name="WELD-SPEC"
+                 Datatype="string"
+                 DisplayName="Weld Spec" />
+      <ATTRIBUTE Name="WELD-REMARK-NUMBER"
+                 Datatype="string"
+                 DisplayName="Weld Remark Number" />
+      <ATTRIBUTE Name="PLANT"
+                 Datatype="string"
+                 DisplayName="Plant" />
+      <ATTRIBUTE Name="UNIQUE-COMPONENT-IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="UCI" />
+      <ATTRIBUTE Name="SUPPRESS-ITEM-CODE"
+                 Datatype="boolean"
+                 DisplayName="Suppress Item Code" />
+      <ATTRIBUTE Name="ANGLE"
+                 Datatype="string"
+                 DisplayName="Angle"
+                 Visible="False" />
+      <ATTRIBUTE Name="PIPING-SPEC"
+                 Datatype="string"
+                 DisplayName="Pipe Spec" />
+      <ATTRIBUTE Name="TRACING-SPEC"
+                 Datatype="string"
+                 DisplayName="Tracing Spec" />
+      <ATTRIBUTE Name="INSULATION-SPEC"
+                 Datatype="string"
+                 DisplayName="Insulation Spec" />
+      <ATTRIBUTE Name="ITEM-DESCRIPTION"
+                 Datatype="string"
+                 DisplayName="Item Description" />
+      <ATTRIBUTE Name="MISC-SPEC1"
+                 Datatype="string"
+                 DisplayName="Misc Spec1" />
+      <ATTRIBUTE Name="MISC-SPEC2"
+                 Datatype="string"
+                 DisplayName="Misc Spec2" />
+      <ATTRIBUTE Name="MISC-SPEC3"
+                 Datatype="string"
+                 DisplayName="Misc Spec3" />
+      <ATTRIBUTE Name="MISC-SPEC4"
+                 Datatype="string"
+                 DisplayName="Misc Spec4" />
+      <ATTRIBUTE Name="MISC-SPEC5"
+                 Datatype="string"
+                 DisplayName="Misc Spec5" />
+      <ATTRIBUTE Name="INSULATION"
+                 Datatype="string"
+                 DisplayName="Insulation" />
+      <ALLOWABLE-VALUES>
+        <enumeration value="OFF"
+                     display="Off" />
+        <enumeration value="ON"
+                     display="On" />
+      </ALLOWABLE-VALUES>
+      <ATTRIBUTE Name="TRACING"
+                 Datatype="string"
+                 DisplayName="Tracing" />
+      <ALLOWABLE-VALUES>
+        <enumeration value="OFF"
+                     display="Off" />
+        <enumeration value="ON"
+                     display="On" />
+      </ALLOWABLE-VALUES>
+      <ATTRIBUTE Name="NAME"
+                 Datatype="string"
+                 DisplayName="Name or Tag" />
+      <ATTRIBUTE Name="MATERIAL-LIST"
+                 Datatype="string"
+                 DisplayName="Material List">
+        <ALLOWABLE-VALUES>
+          <enumeration value="INCLUDE"
+                       display="Include" />
+          <enumeration value="EXCLUDE"
+                       display="Exclude" />
+          <enumeration value="INCLUDE-WITH-ISO"
+                       display="Include with Iso" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="THICKNESS/RATING"
+                 Datatype="string"
+                 DisplayName="Thickness/Rating" />
+      <ATTRIBUTE Name="ASSOCIATED"
+                 Datatype="boolean"
+                 Visible="False" />
+      <ATTRIBUTE Name="WELD-TYPE"
+                 Datatype="string"
+                 DisplayName="Weld Type" />
+      <ATTRIBUTE Name="SPOOL-SEQUENCE-NUMBER"
+                 Datatype="long"
+                 DisplayName="Spool Sequence Number"
+                 Visible="False" />
+      <ATTRIBUTE Name="MASTER-SEQUENCE-NUMBER"
+                 Datatype="string"
+                 DisplayName="Master Sequence Number"
+                 Visible="False" />
+      <ATTRIBUTE Name="MASTER-SEQUENCE-NUMBER-KEYPOINT"
+                 Datatype="string"
+                 DisplayName="Master Sequence Number Keypoint"
+                 Visible="False" />
+      <ATTRIBUTE Name="COST-FACTOR"
+                 Datatype="double"
+                 DisplayName="Cost Factor" />
+      <ATTRIBUTE Name="JACKET"
+                 Datatype="string"
+                 DisplayName="Jacket">
+        <ALLOWABLE-VALUES>
+          <enumeration value="OFF"
+                       display="Off" />
+          <enumeration value="ON"
+                       display="On" />
+        </ALLOWABLE-VALUES>
+      </ATTRIBUTE>
+      <ATTRIBUTE Name="WELD-ATTRIBUTE1"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 1" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE2"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 2" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE3"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 3" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE4"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 4" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE5"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 5" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE6"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 6" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE7"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 7" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE8"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 8" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE9"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 9" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE10"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 10" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE11"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 11" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE12"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 12" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE13"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 13" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE14"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 14" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE15"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 15" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE16"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 16" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE17"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 17" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE18"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 18" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE19"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 19" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE20"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 20" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE21"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 21" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE22"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 22" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE23"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 23" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE24"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 24" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE25"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 25" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE26"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 26" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE27"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 27" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE28"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 28" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE29"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 29" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE30"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 30" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE31"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 31" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE32"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 32" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE33"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 33" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE34"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 34" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE35"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 35" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE36"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 36" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE37"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 37" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE38"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 38" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE39"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 39" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE40"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 40" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE41"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 41" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE42"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 42" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE43"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 43" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE44"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 44" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE45"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 45" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE46"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 46" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE47"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 47" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE48"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 48" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE49"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 49" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE50"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 50" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE51"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 51" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE52"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 52" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE53"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 53" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE54"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 54" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE55"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 55" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE56"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 56" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE57"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 57" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE58"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 58" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE59"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 59" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE60"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 60" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE61"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 61" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE62"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 62" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE63"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 63" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE64"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 64" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE65"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 65" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE66"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 66" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE67"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 67" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE68"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 68" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE69"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 69" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE70"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 70" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE71"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 71" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE72"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 72" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE73"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 73" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE74"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 74" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE75"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 75" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE76"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 76" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE77"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 77" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE78"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 78" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE79"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 79" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE80"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 80" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE81"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 81" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE82"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 82" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE83"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 83" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE84"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 84" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE85"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 85" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE86"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 86" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE87"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 87" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE88"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 88" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE89"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 89" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE90"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 90" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE91"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 91" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE92"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 92" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE93"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 93" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE94"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 94" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE95"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 95" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE96"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 96" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE97"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 97" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE98"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 98" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE99"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 99" />
+      <ATTRIBUTE Name="WELD-ATTRIBUTE100"
+                 Datatype="string"
+                 DisplayName="Weld Attribute 100" />
+      <ATTRIBUTE Name="SKEY-OVERRIDE"
+                 Datatype="string"
+                 Editable="False"
+                 DisplayName="Skey Override"/>
+    </GROUP>
+    <GROUP Name="SUPPORT-WELD-ATTRIBUTES">
+      <ATTRIBUTE Name="SUPPORT-WELD-ANGLE"
+                 Datatype="double"
+                 DisplayName="Support Weld Angle" />
+    </GROUP>
+    <GROUP Name="ASSOCIATED-ATTRIBUTE">
+      <!-- Hidden attribute can be used to control whether the message is "associated"
+                                 or "standalone" -->
+      <ATTRIBUTE Name="ASSOCIATED"
+                 Datatype="boolean"
+                 Visible="False" />
+    </GROUP>
+    <GROUP Name='SPOOL-SUMMARY-ATTRIBUTES'>
+      <ATTRIBUTE Name="IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="Identifier" />
+      <ATTRIBUTE Name="SEQUENCE-NUMBER"
+                 Datatype="long"
+                 DisplayName="Sequence Number"
+                 Visible="False" />
+    </GROUP>
+    <GROUP Name='SPOOL-IDENTIFIER-ATTRIBUTES'>
+      <ATTRIBUTE Name="SPOOL-IDENTIFIER"
+                 Datatype="string"
+                 DisplayName="Spool Identifier" />
+    </GROUP>
+    <GROUP Name='SPOOL-ATTRIBUTES'>
+      <ATTRIBUTE Name="SPOOL-DRAWING-SEQUENCE-NUMBER"
+                 Datatype="string"
+                 DisplayName="Spool Drawing Number" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE1"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 1" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE2"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 2" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE3"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 3" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE4"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 4" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE5"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 5" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE6"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 6" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE7"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 7" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE8"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 8" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE9"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 9" />
+      <ATTRIBUTE Name="SPOOL-ATTRIBUTE10"
+                 Datatype="string"
+                 DisplayName="Spool Attribute 10" />
+    </GROUP>
+    <GROUP Name='PULLED-BEND-ATTRIBUTES'>
+      <ATTRIBUTE Name="BEND-RADIUS"
+                 Datatype="double"
+                 UnitsType="mm"
+                 DisplayName="Bend Radius"
+                 Editable="False" />
+      <ATTRIBUTE Name="BEND-RADIUS-D"
+                 Datatype="string"
+                 DisplayName="Bend Radius Multiple"
+                 Editable="False" />
+    </GROUP>
+    <GROUP Name='TML-ATTRIBUTES'>
+        <ATTRIBUTE Name="NAME"
+                   Datatype="string"
+                   DisplayName="Name or Tag" />
+        <ATTRIBUTE Name="SKEY"
+                   Datatype="string"
+                   DisplayName="SKEY"
+                   Visible="False" />
+        <ATTRIBUTE Name="ENCLOSURE"
+                   Datatype="string"
+                   DisplayName="Enclosure">
+          <ALLOWABLE-VALUES>
+            <enumeration value="NONE"
+                         display="None" />
+            <enumeration value="SQUARE"
+                         display="Square Ends" />
+            <enumeration value="POINTED"
+                         display="Pointed Ends" />
+            <enumeration value="ROUND"
+                         display="Round Ends" />
+            <enumeration value="CIRCLE"
+                         display="Circle" />
+            <enumeration value="TRIANGLE"
+                         display="Triangle" />
+            <enumeration value="DIAMOND"
+                         display="Diamond" />
+            <enumeration value="DOUBLE-CIRCLE"
+                         display="Double Circle" />
+            <enumeration value="ELLIPSE"
+                         display="Ellipse" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="MEASUREMENT-TYPE"
+                   Datatype="string"
+                   DisplayName="Measurement Type" />
+        <ATTRIBUTE Name="MEASUREMENT-POINTS"
+                   Datatype="string"
+                   DisplayName="Measurement Points" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE1"
+                   Datatype="string"
+                   DisplayName="TML Attribute 1" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE2"
+                   Datatype="string"
+                   DisplayName="TML Attribute 2" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE3"
+                   Datatype="string"
+                   DisplayName="TML Attribute 3" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE4"
+                   Datatype="string"
+                   DisplayName="TML Attribute 4" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE5"
+                   Datatype="string"
+                   DisplayName="TML Attribute 5" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE6"
+                   Datatype="string"
+                   DisplayName="TML Attribute 6" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE7"
+                   Datatype="string"
+                   DisplayName="TML Attribute 7" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE8"
+                   Datatype="string"
+                   DisplayName="TML Attribute 8" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE9"
+                   Datatype="string"
+                   DisplayName="TML Attribute 9" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE10"
+                   Datatype="string"
+                   DisplayName="TML Attribute 10" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE11"
+                   Datatype="string"
+                   DisplayName="TML Attribute 11" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE12"
+                   Datatype="string"
+                   DisplayName="TML Attribute 12" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE13"
+                   Datatype="string"
+                   DisplayName="TML Attribute 13" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE14"
+                   Datatype="string"
+                   DisplayName="TML Attribute 14" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE15"
+                   Datatype="string"
+                   DisplayName="TML Attribute 15" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE16"
+                   Datatype="string"
+                   DisplayName="TML Attribute 16" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE17"
+                   Datatype="string"
+                   DisplayName="TML Attribute 17" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE18"
+                   Datatype="string"
+                   DisplayName="TML Attribute 18" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE19"
+                   Datatype="string"
+                   DisplayName="TML Attribute 19" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE20"
+                   Datatype="string"
+                   DisplayName="TML Attribute 20" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE21"
+                   Datatype="string"
+                   DisplayName="TML Attribute 21" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE22"
+                   Datatype="string"
+                   DisplayName="TML Attribute 22" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE23"
+                   Datatype="string"
+                   DisplayName="TML Attribute 23" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE24"
+                   Datatype="string"
+                   DisplayName="TML Attribute 24" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE25"
+                   Datatype="string"
+                   DisplayName="TML Attribute 25" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE26"
+                   Datatype="string"
+                   DisplayName="TML Attribute 26" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE27"
+                   Datatype="string"
+                   DisplayName="TML Attribute 27" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE28"
+                   Datatype="string"
+                   DisplayName="TML Attribute 28" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE29"
+                   Datatype="string"
+                   DisplayName="TML Attribute 29" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE30"
+                   Datatype="string"
+                   DisplayName="TML Attribute 30" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE31"
+                   Datatype="string"
+                   DisplayName="TML Attribute 31" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE32"
+                   Datatype="string"
+                   DisplayName="TML Attribute 32" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE33"
+                   Datatype="string"
+                   DisplayName="TML Attribute 33" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE34"
+                   Datatype="string"
+                   DisplayName="TML Attribute 34" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE35"
+                   Datatype="string"
+                   DisplayName="TML Attribute 35" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE36"
+                   Datatype="string"
+                   DisplayName="TML Attribute 36" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE37"
+                   Datatype="string"
+                   DisplayName="TML Attribute 37" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE38"
+                   Datatype="string"
+                   DisplayName="TML Attribute 38" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE39"
+                   Datatype="string"
+                   DisplayName="TML Attribute 39" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE40"
+                   Datatype="string"
+                   DisplayName="TML Attribute 40" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE41"
+                   Datatype="string"
+                   DisplayName="TML Attribute 41" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE42"
+                   Datatype="string"
+                   DisplayName="TML Attribute 42" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE43"
+                   Datatype="string"
+                   DisplayName="TML Attribute 43" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE44"
+                   Datatype="string"
+                   DisplayName="TML Attribute 44" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE45"
+                   Datatype="string"
+                   DisplayName="TML Attribute 45" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE46"
+                   Datatype="string"
+                   DisplayName="TML Attribute 46" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE47"
+                   Datatype="string"
+                   DisplayName="TML Attribute 47" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE48"
+                   Datatype="string"
+                   DisplayName="TML Attribute 48" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE49"
+                   Datatype="string"
+                   DisplayName="TML Attribute 49" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE50"
+                   Datatype="string"
+                   DisplayName="TML Attribute 50" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE51"
+                   Datatype="string"
+                   DisplayName="TML Attribute 51" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE52"
+                   Datatype="string"
+                   DisplayName="TML Attribute 52" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE53"
+                   Datatype="string"
+                   DisplayName="TML Attribute 53" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE54"
+                   Datatype="string"
+                   DisplayName="TML Attribute 54" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE55"
+                   Datatype="string"
+                   DisplayName="TML Attribute 55" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE56"
+                   Datatype="string"
+                   DisplayName="TML Attribute 56" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE57"
+                   Datatype="string"
+                   DisplayName="TML Attribute 57" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE58"
+                   Datatype="string"
+                   DisplayName="TML Attribute 58" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE59"
+                   Datatype="string"
+                   DisplayName="TML Attribute 59" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE60"
+                   Datatype="string"
+                   DisplayName="TML Attribute 60" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE61"
+                   Datatype="string"
+                   DisplayName="TML Attribute 61" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE62"
+                   Datatype="string"
+                   DisplayName="TML Attribute 62" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE63"
+                   Datatype="string"
+                   DisplayName="TML Attribute 63" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE64"
+                   Datatype="string"
+                   DisplayName="TML Attribute 64" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE65"
+                   Datatype="string"
+                   DisplayName="TML Attribute 65" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE66"
+                   Datatype="string"
+                   DisplayName="TML Attribute 66" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE67"
+                   Datatype="string"
+                   DisplayName="TML Attribute 67" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE68"
+                   Datatype="string"
+                   DisplayName="TML Attribute 68" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE69"
+                   Datatype="string"
+                   DisplayName="TML Attribute 69" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE70"
+                   Datatype="string"
+                   DisplayName="TML Attribute 70" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE71"
+                   Datatype="string"
+                   DisplayName="TML Attribute 71" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE72"
+                   Datatype="string"
+                   DisplayName="TML Attribute 72" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE73"
+                   Datatype="string"
+                   DisplayName="TML Attribute 73" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE74"
+                   Datatype="string"
+                   DisplayName="TML Attribute 74" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE75"
+                   Datatype="string"
+                   DisplayName="TML Attribute 75" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE76"
+                   Datatype="string"
+                   DisplayName="TML Attribute 76" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE77"
+                   Datatype="string"
+                   DisplayName="TML Attribute 77" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE78"
+                   Datatype="string"
+                   DisplayName="TML Attribute 78" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE79"
+                   Datatype="string"
+                   DisplayName="TML Attribute 79" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE80"
+                   Datatype="string"
+                   DisplayName="TML Attribute 80" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE81"
+                   Datatype="string"
+                   DisplayName="TML Attribute 81" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE82"
+                   Datatype="string"
+                   DisplayName="TML Attribute 82" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE83"
+                   Datatype="string"
+                   DisplayName="TML Attribute 83" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE84"
+                   Datatype="string"
+                   DisplayName="TML Attribute 84" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE85"
+                   Datatype="string"
+                   DisplayName="TML Attribute 85" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE86"
+                   Datatype="string"
+                   DisplayName="TML Attribute 86" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE87"
+                   Datatype="string"
+                   DisplayName="TML Attribute 87" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE88"
+                   Datatype="string"
+                   DisplayName="TML Attribute 88" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE89"
+                   Datatype="string"
+                   DisplayName="TML Attribute 89" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE90"
+                   Datatype="string"
+                   DisplayName="TML Attribute 90" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE91"
+                   Datatype="string"
+                   DisplayName="TML Attribute 91" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE92"
+                   Datatype="string"
+                   DisplayName="TML Attribute 92" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE93"
+                   Datatype="string"
+                   DisplayName="TML Attribute 93" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE94"
+                   Datatype="string"
+                   DisplayName="TML Attribute 94" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE95"
+                   Datatype="string"
+                   DisplayName="TML Attribute 95" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE96"
+                   Datatype="string"
+                   DisplayName="TML Attribute 96" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE97"
+                   Datatype="string"
+                   DisplayName="TML Attribute 97" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE98"
+                   Datatype="string"
+                   DisplayName="TML Attribute 98" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE99"
+                   Datatype="string"
+                   DisplayName="TML Attribute 99" />
+        <ATTRIBUTE Name="INFORMATION-ATTRIBUTE100"
+                   Datatype="string"
+                   DisplayName="TML Attribute 100" />
+    </GROUP>
+    <GROUP Name='MESSAGE-ATTRIBUTES'>
+     <ATTRIBUTE Name="TEXT"
+                       Datatype="string"
+                       DisplayName="Text" />
+            <ATTRIBUTE Name="STATUS"
+                       Datatype="string"
+                       DisplayName="Status">
+              <ALLOWABLE-VALUES>
+                <enumeration value="DIMENSIONED"
+                             display="Dimensioned" />
+                <enumeration value="UNDIMENSIONED"
+                             display="Undimensioned" />
+              </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+    </GROUP>
+    <GROUP Name='HYBRID-ATTRIBUTES'>
+            <ATTRIBUTE Name="SKEY"
+                       Datatype="string"
+                       DisplayName="SKEY" />
+            <ATTRIBUTE Name="STATUS"
+                       Datatype="string"
+                       DisplayName="Status">
+              <ALLOWABLE-VALUES>
+                <enumeration value="STANDARD"
+                             display="Standard" />
+                <enumeration value="DOTTED-UNDIMENSIONED"
+                             display="Dotted Undimensioned" />
+                <enumeration value="DOTTED-DIMENSIONED"
+                             display="Dotted Dimensioned" />
+                <enumeration value="UNDIMENSIONED"
+                             display="Undimensioned" />
+              </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+    </GROUP>
+  </CONTEXT-GROUPS>
+  <CONTEXT-NAMES>
+    <LIST>
+      <Pipeline />
+      <PIPELINE-PROPERTIES />
+      <ATTRIBUTES>
+        <GROUP>PIPELINE-PROPERTIES-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <POD-PROPERTIES />
+      <ATTRIBUTES>
+        <GROUP>PIPELINE-PROPERTIES-ATTRIBUTES</GROUP>
+        <GROUP>POD-PROPERTIES-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <POD />
+      <ATTRIBUTES>
+        <GROUP>POD-PROPERTIES-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Equipment />
+      <EQUIPMENT-PROPERTIES />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="LOCATION-X"
+                   Datatype="double"
+                   DisplayName="Equipment Centre Point X" />
+        <ATTRIBUTE Name="LOCATION-Y"
+                   Datatype="double"
+                   DisplayName="Equipment Centre Point Y" />
+        <ATTRIBUTE Name="LOCATION-Z"
+                   Datatype="double"
+                   DisplayName="Equipment Centre Point Z" />
+        <ATTRIBUTE Name="ORIENTATION"
+                   Datatype="string"
+                   DisplayName="Equipment Orientation">
+          <ALLOWABLE-VALUES>
+            <enumeration value="EAST"
+                         display="East" />
+            <enumeration value="NORTH"
+                         display="North" />
+            <enumeration value="UP"
+                         display="Up" />
+            <enumeration value="WEST"
+                         display="West" />
+            <enumeration value="SOUTH"
+                         display="South" />
+            <enumeration value="DOWN"
+                         display="Down" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="CENTRE-POINT-X"
+                   Datatype="double"
+                   DisplayName="Equipment Centre Point X" />
+        <ATTRIBUTE Name="CENTRE-POINT-Y"
+                   Datatype="double"
+                   DisplayName="Equipment Centre Point Y" />
+        <ATTRIBUTE Name="CENTRE-POINT-Z"
+                   Datatype="double"
+                   DisplayName="Equipment Centre Point Z" />
+        <ATTRIBUTE Name="DIAMETER"
+                   Datatype="double"
+                   DisplayName="Equipment Diameter" />
+        <ATTRIBUTE Name="SIZE-X"
+                   Datatype="double"
+                   DisplayName="Equipment Size X" />
+        <ATTRIBUTE Name="SIZE-Y"
+                   Datatype="double"
+                   DisplayName="Equipment Size Y" />
+        <ATTRIBUTE Name="SHAPE"
+                   Datatype="string"
+                   DisplayName="Equipment Shape" />
+        <ATTRIBUTE Name="SHAPE2"
+                   Datatype="string"
+                   DisplayName="Equipment Shape2" />
+        <ATTRIBUTE Name="NON-PRIMARY-ORIENTATION"
+                   Datatype="string"
+                   DisplayName="Equipment Non Primary Orientation" />
+        <ATTRIBUTE Name="CATEGORY"
+                   Datatype="string"
+                   DisplayName="Category">
+          <ALLOWABLE-VALUES>
+            <enumeration value="NONE"
+                         display="None" />
+            <enumeration value="FABRICATION"
+                         display="Fabrication" />
+            <enumeration value="ERECTION"
+                         display="Erection" />
+            <enumeration value="OFFSHORE"
+                         display="OffShore" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- There are really 2 types of nozzles for some reason -->
+    <!-- This is the real Equipment Nozzle, the other is the same as an E-C-P -->
+    <LIST>
+      <Equipment-Nozzle />
+      <EQUIPMENT-NOZZLE-PROPERTIES />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="CO-ORDS-X"
+                   Datatype="double"
+                   DisplayName="Nozzle Coordinates X" />
+        <ATTRIBUTE Name="CO-ORDS-Y"
+                   Datatype="double"
+                   DisplayName="Nozzle Coordinates Y" />
+        <ATTRIBUTE Name="CO-ORDS-Z"
+                   Datatype="double"
+                   DisplayName="Nozzle Coordinates Z" />
+        <ATTRIBUTE Name="DIAMETER"
+                   Datatype="double"
+                   DisplayName="Nozzle Diameter" />
+        <ATTRIBUTE Name="END-PREP"
+                   Datatype="string"
+                   DisplayName="Nozzle End Prep" />
+        <ATTRIBUTE Name="POSITION"
+                   Datatype="string"
+                   DisplayName="Nozzle Position">
+          <ALLOWABLE-VALUES>
+            <enumeration value="EDGE"
+                         display="Edge" />
+            <enumeration value="END"
+                         display="End" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="DIRECTION"
+                   Datatype="string"
+                   DisplayName="Nozzle Direction">
+          <ALLOWABLE-VALUES>
+            <enumeration value="EAST"
+                         display="East" />
+            <enumeration value="NORTH"
+                         display="North" />
+            <enumeration value="UP"
+                         display="Up" />
+            <enumeration value="WEST"
+                         display="West" />
+            <enumeration value="SOUTH"
+                         display="South" />
+            <enumeration value="DOWN"
+                         display="Down" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="NON-PRIMARY-DIRECTION"
+                   Datatype="string"
+                   DisplayName="Nozzle Non Primary Direction" />
+        <ATTRIBUTE Name="CATEGORY"
+                   Datatype="string"
+                   DisplayName="Category">
+          <ALLOWABLE-VALUES>
+            <enumeration value="NONE"
+                         display="None" />
+            <enumeration value="FABRICATION"
+                         display="Fabrication" />
+            <enumeration value="ERECTION"
+                         display="Erection" />
+            <enumeration value="OFFSHORE"
+                         display="OffShore" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- Other User defined attributes set up in User schema -->
+    <!-- Objects belonging to the pipeline -->
+    <LIST>
+      <Component />
+      <PipeBlockFixed />
+      <PipeBlockVariable />
+      <Concentric-Reducer />
+      <Teed-Concentric-Reducer />
+      <Elbow-90-V />
+      <Elbow-90 />
+      <Elbow-60-V />
+      <Elbow-60 />
+      <Elbow-45-V />
+      <Elbow-45 />
+      <Elbow-30-V />
+      <Elbow-30 />
+      <Elbow-NonStandard />
+      <MitredBend />
+      <TeedElbow />
+      <ReturnElbow />
+      <Weldolet />
+      <HalfCoupling />
+      <Latrolet />
+      <Nipolet />
+      <Sockolet />
+      <Sweepolet />
+      <Thredolet />
+      <Elbolet />
+      <Nippoflange />
+      <Tee />
+      <Y-Piece />
+      <Instrument-Tee />
+      <Cross />
+      <Nonreturn-Valve />
+      <Pressure-Relief-Valve />
+      <Instrument-Offset />
+      <Instrument-Return />
+      <Instrument-Angle />
+      <Safety-Disc />
+      <Miscellaneous-Hygienic />
+      <Nut />
+      <Clamp />
+      <Clamp-Inline />
+      <Cap />
+      <Jacket-Cap />
+      <Filter />
+      <Filter-Angle />
+      <Filter-Offset />
+      <Filter-Return />
+      <Trap />
+      <Trap-Angle />
+      <Trap-Offset />
+      <Trap-Return />
+      <Misc-Component-Offset />
+      <Misc-Component-Return />
+      <Misc-Component-Plug />
+      <Connector />
+      <Coupling />
+      <Union />
+      <Reinforcement-Pad />
+      <Set-On-Tee />
+      <Tee-Stub />
+      <Gap />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Angle-Valve />
+      <Ball-Valve />
+      <Basic-Valve />
+      <Butterfly-Valve />
+      <Cock-Valve />
+      <Check-Valve />
+      <Diaphragm-Valve />
+      <Gate-Valve />
+      <Globe-Valve />
+      <Needle-Valve />
+      <Plug-Valve />
+      <Relief-Valve />
+      <Slide-Valve />
+      <Valve-3Way />
+      <Valve-4Way />
+      <Valve-Multiway />
+      <TwoLevel-3Port />
+      <TwoLevel-4Port />
+      <Control-Valve />
+      <Control-Valve-3Way />
+      <Control-Valve-4Way />
+      <Control-Valve-Angle />
+      <Instrument />
+      <Misc-Component-Angle />
+      <Pressure-Reducing-Valve />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>SPINDLE-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Misc-Component />
+      <Misc-Component-Sight-Glass />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>WINDOW-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Orifice-Plate />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>ORIFICE-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Eccentric-Reducer />
+      <Teed-Eccentric-Reducer />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>FLAT-DIRECTION-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Gasket />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>GASKET-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Lapjoint-StubEnd-Ring-Combined />
+      <Lapjoint-StubEnd />
+      <Lapjoint-Ring />
+      <Blind-Flange />
+      <Backing-Flange />
+      <Flange />
+      <Weld-Neck-Flange />
+      <Slip-on-Flange />
+      <Ball-Socket-Flange />
+      <Concentric-Reducing-Flange />
+      <Weld-Neck-Jacket-Flange />
+      <Slip-on-Jacket-Flange />
+      <Concentric-Reducing-Jacket-Flange />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>FLANGE-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Eccentric-Reducing-Flange />
+      <Eccentric-Reducing-Jacket-Flange />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>FLANGE-ATTRIBUTES</GROUP>
+        <GROUP>FLAT-DIRECTION-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Instrument-Balloon />
+      <Instrument-Dial />
+      <Instrument-External />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>DIAL-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Support />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>SUPPORT-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Pipe-Break />
+      <ATTRIBUTES>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Pipe />
+	   <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>PIPE-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+      <FixedPipe />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>PIPE-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Restrictor />
+      <Misc-Component-Spectacle-Blind />
+      <Misc-Component-Slip-Plate />
+      <Misc-Component-Slip-Ring />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>SLIP-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Additional-Item />
+      <ATTRIBUTES>
+        <GROUP>ADDITIONAL-ITEM-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Bolt />
+      <ATTRIBUTES>
+        <GROUP>BOLT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Weld />
+      <Mitre-Weld />
+      <Workshop-Weld />
+      <Field-Weld />
+      <Offshore-Weld />
+      <Site-Weld />
+      <EndPlate-Weld />
+      <Workshop-Jacket-Weld />
+      <Site-Jacket-Weld />
+      <Offshore-Jacket-Weld />
+      <ATTRIBUTES>
+        <GROUP>WELD-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Support-Weld />
+      <ATTRIBUTES>
+        <GROUP>WELD-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>SUPPORT-WELD-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Set-On-Cross />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <ATTRIBUTE Name="COMPONENT-PARTNER-UCI"
+                   Datatype="string"
+                   Visible="False" />
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Tap />
+      <Jacket-Tap />
+      <ATTRIBUTES>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <!-- Tapping point attributes -->
+        <ATTRIBUTE Name="TAP-POINT"
+                   Datatype="string"
+                   DisplayName="Tap Point" />
+        <ATTRIBUTE Name="UNIQUE-COMPONENT-IDENTIFIER"
+                   Datatype="string"
+                   DisplayName="UCI" />
+        <ATTRIBUTE Name="CO-ORDS-ON"
+                   Datatype="string"
+                   DisplayName="Coords On" />
+        <ATTRIBUTE Name="PORT-REFERENCE3"
+                   Datatype="string"
+                   DisplayName="Port Reference 3" />
+        <ATTRIBUTE Name="PORT-REFERENCE4"
+                   Datatype="string"
+                   DisplayName="Port Reference 4" />
+        <ATTRIBUTE Name="PORT-REFERENCE5"
+                   Datatype="string"
+                   DisplayName="Port Reference 5" />
+        <ATTRIBUTE Name="PORT-REFERENCE6"
+                   Datatype="string"
+                   DisplayName="Port Reference 6" />
+        <ATTRIBUTE Name="PORT-REFERENCE7"
+                   Datatype="string"
+                   DisplayName="Port Reference 7" />
+        <ATTRIBUTE Name="PORT-REFERENCE8"
+                   Datatype="string"
+                   DisplayName="Port Reference 8" />
+        <ATTRIBUTE Name="PORT-REFERENCE9"
+                   Datatype="string"
+                   DisplayName="Port Reference 9" />
+        <ATTRIBUTE Name="PORT-REFERENCE10"
+                   Datatype="string"
+                   DisplayName="Port Reference 10" />
+        <ATTRIBUTE Name="PORT-REFERENCE11"
+                   Datatype="string"
+                   DisplayName="Port Reference 11" />
+        <ATTRIBUTE Name="PORT-REFERENCE12"
+                   Datatype="string"
+                   DisplayName="Port Reference 12" />
+        <ATTRIBUTE Name="PORT-REFERENCE13"
+                   Datatype="string"
+                   DisplayName="Port Reference 13" />
+        <ATTRIBUTE Name="PORT-REFERENCE14"
+                   Datatype="string"
+                   DisplayName="Port Reference 14" />
+        <ATTRIBUTE Name="PORT-REFERENCE15"
+                   Datatype="string"
+                   DisplayName="Port Reference 15" />
+        <ATTRIBUTE Name="PORT-REFERENCE16"
+                   Datatype="string"
+                   DisplayName="Port Reference 16" />
+        <ATTRIBUTE Name="PORT-REFERENCE17"
+                   Datatype="string"
+                   DisplayName="Port Reference 17" />
+        <ATTRIBUTE Name="PORT-REFERENCE18"
+                   Datatype="string"
+                   DisplayName="Port Reference 18" />
+        <ATTRIBUTE Name="PORT-REFERENCE19"
+                   Datatype="string"
+                   DisplayName="Port Reference 19" />
+        <ATTRIBUTE Name="PORT-REFERENCE20"
+                   Datatype="string"
+                   DisplayName="Port Reference 20" />
+        <ATTRIBUTE Name="CATEGORY"
+                   Datatype="string"
+                   DisplayName="Category">
+          <ALLOWABLE-VALUES>
+            <enumeration value="NONE"
+                         display="None" />
+            <enumeration value="FABRICATION"
+                         display="Fabrication" />
+            <enumeration value="ERECTION"
+                         display="Erection" />
+            <enumeration value="OFFSHORE"
+                         display="OffShore" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="JACKET"
+                   Datatype="string"
+                   DisplayName="Jacket">
+          <ALLOWABLE-VALUES>
+            <enumeration value="OFF"
+                         display="Off" />
+            <enumeration value="ON"
+                         display="On" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <PulledBend-V />
+      <PulledBend />
+      <PulledBendFab />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>PULLED-BEND-ATTRIBUTES</GROUP>
+        <GROUP>PIPE-ATTRIBUTES</GROUP>
+        <ATTRIBUTE Name="CURVED-PIPE-INDEX"
+                   Datatype="string"
+                   Visible="False"
+                   Editable="False"
+                   DisplayName="Curved Pipe Index" />
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <TeedBend />
+      <ReturnBend />
+      <ReturnBendFab />
+      <ATTRIBUTES>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>PULLED-BEND-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- ########################## INFORMATIONS ################################# -->
+    <LIST>
+      <BIP-Identifier />
+      <Induction-Start />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="TEXT"
+                   Datatype="string"
+                   DisplayName="Text" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- Spool-Identifier is legacy item, can be placed in SP Iso -->
+    <LIST>
+      <Spool-Identifier />
+      <Spool-Drawing-Number />
+      <ATTRIBUTES>
+        <GROUP>SPOOL-IDENTIFIER-ATTRIBUTES</GROUP>
+        <GROUP>SPOOL-ATTRIBUTES</GROUP>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- Spool Summary is created in Spoolgen, it has a hidden attribute to hold spool sequence number -->
+    <LIST>
+      <Spool />
+      <Spool-Summary />
+      <ATTRIBUTES>
+        <GROUP>SPOOL-SUMMARY-ATTRIBUTES</GROUP>
+        <GROUP>SPOOL-ATTRIBUTES</GROUP>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <ATTRIBUTE Name="CENTRELINE-LENGTH"
+                   Datatype="long"
+                   UnitsType="mm"
+                   DisplayName="Centreline Length"
+                   Editable="False" />
+        <ATTRIBUTE Name="CENTRE-OF-GRAVITY-X"
+                   Datatype="double"
+                   DisplayName="Centre Of Gravity X"
+                   Editable="False" />
+        <ATTRIBUTE Name="CENTRE-OF-GRAVITY-Y"
+                   Datatype="double"
+                   DisplayName="Centre Of Gravity Y"
+                   Editable="False" />
+        <ATTRIBUTE Name="CENTRE-OF-GRAVITY-Z"
+                   Datatype="double"
+                   DisplayName="Centre Of Gravity Z"
+                   Editable="False" />
+        <ATTRIBUTE Name="FACTOR-DIAMETER"
+                   Datatype="long"
+                   UnitsType="mm"
+                   DisplayName="Factor Diameter"
+                   Editable="False" />
+        <ATTRIBUTE Name="SERVICE-COMMODITY-CODE"
+                   Datatype="string"
+                   DisplayName="Service Commodity Code" />
+        <ATTRIBUTE Name="SURFACE-AREA"
+                   Datatype="long"
+                   DisplayName="Surface Area"
+                   Editable="False" />
+        <ATTRIBUTE Name="WEIGHT"
+                   Datatype="long"
+                   UnitsType="g"
+                   DisplayName="Weight" />
+        <ATTRIBUTE Name="WELD-DIAMETER"
+                   Datatype="long"
+                   UnitsType="mm"
+                   DisplayName="Weld Diameter"
+                   Editable="False" />
+        <ATTRIBUTE Name="ORIENTATION-EAST-X"
+                   Datatype="double"
+                   DisplayName="Orientation East X"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-EAST-Y"
+                   Datatype="double"
+                   DisplayName="Orientation East Y"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-EAST-Z"
+                   Datatype="double"
+                   DisplayName="Orientation East Z"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-NORTH-X"
+                   Datatype="double"
+                   DisplayName="Orientation North X"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-NORTH-Y"
+                   Datatype="double"
+                   DisplayName="Orientation North Y"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-NORTH-Z"
+                   Datatype="double"
+                   DisplayName="Orientation North Z"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-ELEVATION-X"
+                   Datatype="double"
+                   DisplayName="Orientation Elevation X"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-ELEVATION-Y"
+                   Datatype="double"
+                   DisplayName="Orientation Elevation Y"
+                   Editable="False"
+                   Visible="False" />
+        <ATTRIBUTE Name="ORIENTATION-ELEVATION-Z"
+                   Datatype="double"
+                   DisplayName="Orientation Elevation Z"
+                   Editable="False"
+                   Visible="False" />
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Cut-Piece-Summary />
+      <ATTRIBUTES>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <ATTRIBUTE Name="SEQUENCE-NUMBER"
+                   Datatype="long"
+                   DisplayName="Sequence Number"
+                   Visible="False" />
+        <ATTRIBUTE Name="IDENTIFIER"
+                   Datatype="string"
+                   DisplayName="Identifier" />
+        <ATTRIBUTE Name="LENGTH"
+                   Datatype="long"
+                   UnitsType="mm"
+                   DisplayName="Length"
+                   Editable="False" />
+        <ATTRIBUTE Name="END-PREP1"
+                   Datatype="string"
+                   DisplayName="End Prep1"
+                   Editable="False" />
+        <ATTRIBUTE Name="END-PREP2"
+                   Datatype="string"
+                   DisplayName="End Prep2"
+                   Editable="False" />
+        <ATTRIBUTE Name="REMARK"
+                   Datatype="string"
+                   DisplayName="Remark"
+                   Editable="False" />
+        <ATTRIBUTE Name="SPOOL-SEQUENCE-NUMBER"
+                   Datatype="long"
+                   DisplayName="Spool Sequence Number"
+                   Visible="False" />
+        <ATTRIBUTE Name="WEIGHT"
+                   Datatype="long"
+                   UnitsType="g"
+                   DisplayName="Weight"
+                   Editable="False" />
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Induction-End />
+      <Iso-Split-Point />
+      <System-Split />
+      <ATTRIBUTES>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <ByPass-Closure />
+      <ATTRIBUTES>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Insulation-Symbol />
+      <Location-Point />
+      <Floor-Symbol />
+      <Wall-Symbol />
+	   <ATTRIBUTES>
+     	<GROUP>HYBRID-ATTRIBUTES</GROUP> 
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Flow-Arrow />
+<ATTRIBUTES>
+        <ATTRIBUTE Name="FLOW"
+                   Datatype="long"
+                   DisplayName="Flow Direction">
+          <ALLOWABLE-VALUES>
+            <enumeration value="1"
+                         display="Positive" />
+            <enumeration value="2"
+                         display="Negative" />
+            <enumeration value="3"
+                         display="Both" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <GROUP>HYBRID-ATTRIBUTES</GROUP>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Thickness-Measurement-Location />
+      <ATTRIBUTES>
+	        <GROUP>TML-ATTRIBUTES</GROUP>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+        <GROUP>MESSAGE-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- This group of information elements are always exported to the
+                         PCF as attributes - the hidden ASSOCIATED attribute is always TRUE -->
+    <LIST>
+      <Client-Drawing-Identifier />
+      <Pipeline-Drawing-Number />
+      <Pipeline-Drawing-Sequence-Number />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="IDENTIFIER"
+                   Datatype="string"
+                   DisplayName="Identifier" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Cut-Piece-Allowance />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="ALLOWANCE"
+                   Datatype="double"
+                   UnitsType="mm"
+                   DisplayName="Allowance" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- An information element that holds repeatability data at the pipeline level -->
+    <!-- That is, records the highest number in use in the file -->
+    <LIST>
+      <Highest-Part-Number />
+      <Highest-Assembly-Number />
+      <Highest-Spool-Number />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="SHEET-NUMBER"
+                   Datatype="long"
+                   DisplayName="Sheet Number" />
+        <ATTRIBUTE Name="HIGHEST-NUMBER"
+                   Datatype="long"
+                   DisplayName="Highest Number" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Highest-Unique-Identifier />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="SHEET-NUMBER"
+                   Datatype="long"
+                   DisplayName="Sheet Number" />
+        <ATTRIBUTE Name="PART-NUMBER"
+                   Datatype="long"
+                   DisplayName="Part Number" />
+        <ATTRIBUTE Name="HIGHEST-ID"
+                   Datatype="long"
+                   DisplayName="Highest ID" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- An information element that holds weld repeatability data at the pipeline -->
+    <!-- level for normal and Support Welds. Different to Set6 because there may -->
+    <!-- be separate values for fabrication, erection, offshore welds -->
+    <LIST>
+      <Highest-Weld-Number />
+      <Highest-Support-Weld-Number />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="SHEET-NUMBER"
+                   Datatype="long"
+                   DisplayName="Sheet Number" />
+        <ATTRIBUTE Name="HIGHEST-NUMBER"
+                   Datatype="long"
+                   DisplayName="Highest Number" />
+        <ATTRIBUTE Name="HIGHEST-ERECTION-NUMBER"
+                   Datatype="long"
+                   DisplayName="Highest Erection Number" />
+        <ATTRIBUTE Name="HIGHEST-OFFSHORE-NUMBER"
+                   Datatype="long"
+                   DisplayName="Highest Offshore Number" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- This group of information elements are always exported to the
+                                PCF as attributes - the hidden ASSOCIATED attribute is always TRUE -->
+    <LIST>
+      <Detail-Sketch-Identifier />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="IDENTIFIER"
+                   Datatype="string"
+                   DisplayName="Identifier" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <End-Connection-Pipeline />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="PIPELINE-REFERENCE"
+                   Datatype="string"
+                   DisplayName="Pipeline Reference" />
+        <ATTRIBUTE Name="CONNECTION-REFERENCE"
+                   Datatype="string"
+                   DisplayName="Connection Reference" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <End-Connection-Equipment />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="CONNECTION-REFERENCE"
+                   Datatype="string"
+                   DisplayName="Connection Reference" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Nozzle />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="CONNECTION-REFERENCE"
+                   Datatype="string"
+                   DisplayName="Connection Reference" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <End-Position-Null />
+      <End-Position-Open />
+      <End-Position-Closed />
+      <End-Position-Vent />
+      <End-Position-Drain />
+      <ATTRIBUTES>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <End-Connection-Jacket />
+      <End-Connection-Core />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="PIPELINE-REFERENCE"
+                   Datatype="string"
+                   DisplayName="Pipeline Reference" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Message />
+      <Message-Circle />
+      <Message-Diamond />
+      <Message-Double-Circle />
+      <Message-Ellipse />
+      <Message-Pointed />
+      <Message-Round />
+      <Message-Square />
+      <Message-Triangle />
+      <ATTRIBUTES>
+        <GROUP>MESSAGE-ATTRIBUTES</GROUP>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- Reference Dimensions need a lot of attributes, so are separated out -->
+    <LIST>
+      <Reference-Dimension />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="REF-ITEM"
+                   Datatype="string"
+                   DisplayName="Referenced Item"
+                   DefaultValue="Horizontal steel">
+          <ALLOWABLE-VALUES>
+            <enumeration value="Building"
+                         display="Building" />
+            <enumeration value="Equipment Item"
+                         display="Equipment Item" />
+            <enumeration value="Floor Level"
+                         display="Floor Level" />
+            <enumeration value="Grid Line"
+                         display="Grid Line" />
+            <enumeration value="Horizontal Steel"
+                         display="Horizontal Steel" />
+            <enumeration value="Vertical Steel"
+                         display="Vertical Steel" />
+            <enumeration value="Pipeline"
+                         display="Pipeline" />
+            <enumeration value="User Defined"
+                         display="User Defined" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="REF-ITEM-DIR"
+                   Datatype="string"
+                   DisplayName="Referenced Item Direction">
+          <ALLOWABLE-VALUES>
+            <enumeration value="EAST"
+                         display="East" />
+            <enumeration value="NORTH"
+                         display="North" />
+            <enumeration value="UP"
+                         display="Up" />
+            <enumeration value="WEST"
+                         display="West" />
+            <enumeration value="SOUTH"
+                         display="South" />
+            <enumeration value="DOWN"
+                         display="Down" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="LINE-STYLE"
+                   Datatype="string"
+                   DisplayName="LineStyle"
+                   DefaultValue="0">
+          <ALLOWABLE-VALUES>
+            <enumeration value="*" />
+            <enumeration value="0" />
+            <enumeration value="1" />
+            <enumeration value="2" />
+            <enumeration value="3" />
+            <enumeration value="4" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <!-- This is a rehash of the MESSAGE information -->
+        <ATTRIBUTE Name="TEXT"
+                   Datatype="string"
+                   DisplayName="Message Text" />
+        <ATTRIBUTE Name="MESSAGE-STYLE"
+                   Datatype="string"
+                   DisplayName="Style">
+          <ALLOWABLE-VALUES>
+            <enumeration value="CIRCLE"
+                         display="Circle" />
+            <enumeration value="DIAMOND"
+                         display="Diamond" />
+            <enumeration value="POINTED"
+                         display="Pointed" />
+            <enumeration value="ROUND"
+                         display="Round" />
+            <enumeration value="SQUARE"
+                         display="Square" />
+            <enumeration value="TRIANGLE"
+                         display="Triangle" />
+            <enumeration value="UNBOXED"
+                         display="Unboxed" />
+            <enumeration value="DOUBLE-CIRCLE"
+                         display="Double Circle" />
+            <enumeration value="ELLIPSE"
+                         display="Ellipse" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="STATUS"
+                   Datatype="string"
+                   DisplayName="Status"
+                   DefaultValue="DIMENSIONED">
+          <ALLOWABLE-VALUES>
+            <enumeration value="DIMENSIONED"
+                         display="Dimensioned" />
+            <enumeration value="UNDIMENSIONED"
+                         display="Undimensioned" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="DIMENSION-TYPE"
+                   Datatype="string"
+                   DisplayName="Type Of Dimension"
+                   DefaultValue="ORTHOGONAL">
+          <ALLOWABLE-VALUES>
+            <enumeration value="ORTHOGONAL"
+                         display="Orthogonal" />
+            <enumeration value="SKEW"
+                         display="Skew" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- PUTTY ??? -->
+    <LIST>
+      <Repeat-Weld-Identifier />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="WELDNUMBER1"
+                   Datatype="string"
+                   DisplayName="Weld Number 1" />
+        <ATTRIBUTE Name="WELDNUMBER2"
+                   Datatype="string"
+                   DisplayName="Weld Number 2" />
+        <ATTRIBUTE Name="WELDNUMBER3"
+                   Datatype="string"
+                   DisplayName="Weld Number 3" />
+        <ATTRIBUTE Name="WELDNUMBER4"
+                   Datatype="string"
+                   DisplayName="Weld Number 4" />
+        <ATTRIBUTE Name="WELDNUMBER5"
+                   Datatype="string"
+                   DisplayName="Weld Number 5" />
+        <ATTRIBUTE Name="WELDNUMBER6"
+                   Datatype="string"
+                   DisplayName="Weld Number 6" />
+        <ATTRIBUTE Name="WELDNUMBER7"
+                   Datatype="string"
+                   DisplayName="Weld Number 7" />
+        <ATTRIBUTE Name="WELDNUMBER8"
+                   Datatype="string"
+                   DisplayName="Weld Number 8" />
+        <ATTRIBUTE Name="WELDNUMBER9"
+                   Datatype="string"
+                   DisplayName="Weld Number 9" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Penetration-Plate />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="PLATE-DIRECTION"
+                   Datatype="string"
+                   DisplayName="Plate Direction">
+          <ALLOWABLE-VALUES>
+            <enumeration value="EAST"
+                         display="East" />
+            <enumeration value="NORTH"
+                         display="North" />
+            <enumeration value="UP"
+                         display="Up" />
+            <enumeration value="WEST"
+                         display="West" />
+            <enumeration value="SOUTH"
+                         display="South" />
+            <enumeration value="DOWN"
+                         display="Down" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <ATTRIBUTE Name="PLATE-THICKNESS"
+                   Datatype="double"
+                   DisplayName="Plate Thickness" />
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+	<GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <LIST>
+      <Multi-Port-Component />
+      <ATTRIBUTES>
+        <ATTRIBUTE Name="PORT-REFERENCE1"
+                   Datatype="string"
+                   DisplayName="Port Reference 1" />
+        <ATTRIBUTE Name="PORT-REFERENCE2"
+                   Datatype="string"
+                   DisplayName="Port Reference 2" />
+        <ATTRIBUTE Name="ITEM-DESCRIPTION"
+                   Datatype="string"
+                   DisplayName="Item Description" />
+        <ATTRIBUTE Name="FLOW"
+                   Datatype="long"
+                   DisplayName="Flow Direction">
+          <ALLOWABLE-VALUES>
+            <minInclusive value="0" />
+            <maxInclusive value="3" />
+          </ALLOWABLE-VALUES>
+        </ATTRIBUTE>
+        <GROUP>ASSOCIATED-ATTRIBUTE</GROUP>
+        <GROUP>COMPONENT-ATTRIBUTES</GROUP>
+        <GROUP>COMMON-ATTRIBUTES</GROUP>
+      </ATTRIBUTES>
+    </LIST>
+    <!-- These are sets of attributes which are specific to component types. Used by I-Configure to allow user to specify attribute behaviour -->
+    <LIST>
+    	<GasketSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>GASKET-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<FlangeSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>FLANGE-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<SupportSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>SUPPORT-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<PipeSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>PIPE-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+	  <LIST>
+		  <SpindleSpecific />
+		  <ATTRIBUTES>
+		  <GROUP>SPINDLE-ATTRIBUTES</GROUP>
+		  </ATTRIBUTES>
+	  </LIST>
+    <LIST>
+    	<InstrumentWindowSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>WINDOW-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<InstrumentDialSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>DIAL-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<OrificeSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>ORIFICE-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<FlatDirectionSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>FLAT-DIRECTION-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<SlipPlateSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>SLIP-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<SupportWeldSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>SUPPORT-WELD-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+    <LIST>
+    	<PulledBendSpecific />
+    	<ATTRIBUTES>
+    	<GROUP>PULLED-BEND-ATTRIBUTES</GROUP>
+    	</ATTRIBUTES>
+    </LIST>
+  </CONTEXT-NAMES>
+  <CONTEXT-PROPERTIES>
+    <POD>
+      <PROPERTIES>
+        <PROPERTY Name="Name" />
+      </PROPERTIES>
+    </POD>
+    <PIPELINE>
+      <PROPERTIES>
+        <PROPERTY Name="Name" />
+      </PROPERTIES>
+    </PIPELINE>
+    <COMPONENT>
+      <PROPERTIES>
+        <PROPERTY Name="CharacteristicBore" />
+        <PROPERTY Name="ExternalUCI" />
+        <PROPERTY Name="FlyText" />
+        <PROPERTY Name="SequenceNumber" />
+        <PROPERTY Name="SHEET" />
+        <PROPERTY Name="Size1" />
+        <PROPERTY Name="Size1Units" />
+        <PROPERTY Name="Size2" />
+        <PROPERTY Name="Size2Units" />
+        <PROPERTY Name="Size3" />
+        <PROPERTY Name="Size3Units" />
+      </PROPERTIES>
+    </COMPONENT>
+    <MATERIAL>
+      <PROPERTIES>
+        <PROPERTY Name="CharacteristicBore" />
+        <PROPERTY Name="ComponentType" />
+        <PROPERTY Name="ConfigurationAsString" />
+        <PROPERTY Name="Description" />
+        <PROPERTY Name="Group" />
+        <PROPERTY Name="ItemCode" />
+        <PROPERTY Name="MaterialOfConstruction" />
+        <PROPERTY Name="Rating" />
+        <PROPERTY Name="Size1" />
+        <PROPERTY Name="Size1Units" />
+        <PROPERTY Name="Size2" />
+        <PROPERTY Name="Size2Units" />
+        <PROPERTY Name="Size3" />
+        <PROPERTY Name="Size3Units" />
+        <PROPERTY Name="SKEY" />
+        <PROPERTY Name="Standard" />
+        <PROPERTY Name="Weight" />
+      </PROPERTIES>
+    </MATERIAL>
+  </CONTEXT-PROPERTIES>
+  <ATTRIBUTE-MAPS>
+    <!-- The system attribute map for Alias pipeline based projects -->
+    <PCF>
+      <!-- PODFile attribute Name is assumed to be the same as the PCF equivalent -->
+      <!-- Only make an entry here if, for some reason, it is necessary to have -->
+      <!-- a different name in the PODFile and the PCF -->
+      <EXTERNAL-MAP Name="BEND-RADIUS-D"
+                    ExternalName="BEND-RADIUS" />
+      <EXTERNAL-MAP Name="SUPPORT-WELD-ANGLE"
+                    ExternalName="ANGLE" />
+    </PCF>
+  </ATTRIBUTE-MAPS>
+</ALIAS-ATTRIBUTE-SET>
