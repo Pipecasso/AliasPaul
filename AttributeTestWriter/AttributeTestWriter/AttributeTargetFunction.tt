@@ -1,0 +1,17 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+
+ internal static List<string> <#= _name #>()
+{
+    List<string> attributeNames = new List<string>{ 
+    <#foreach (string name in _attributeNames) {#>
+    "<#=name#>"
+    <# if (_attributeNames.IndexOf(name) < _attributeNames.Count -1){#>,<#}#>
+    <#}#>
+    
+    };
+    return attributeNames;
+}
