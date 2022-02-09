@@ -232,32 +232,45 @@ namespace AutoSrpintReview
             shapeTree.Append(picture);
         }
 
-
-        private Slide TeamSlideClone(SlidePart previousSlidePart)
+    
+        private Slide TeamSlideClone(int position)
         {
-            Slide newSlide = (Slide)_teamSlide.Slide.CloneNode(true);
-            SlidePart newSlidePart = _presentationPart.AddNewPart<SlidePart>();
-            newSlidePart.AddPart(previousSlidePart.SlideLayoutPart);
-            newSlide.Save(newSlidePart);
+            //clone the slide
+            Slide newSlide = (Slide)_firstTableSlide.Slide.CloneNode(true);
+
 
             SlideIdList slideIdList = _presentationPart.Presentation.SlideIdList;
-            uint newSlideIdVal = slideIdList.ChildElements.Cast<SlideId>().Max(x => x.Id.Value) + 1;
-            string prev_id = _presentationPart.GetIdOfPart(previousSlidePart);
-            SlideId prevSlideId = slideIdList.C
+            IEnumerable<SlideId> slideIdCollection = slideIdList.ChildElements.Cast<SlideId>();
+  
+            SlideId thatsourman = null;
+            foreach (SlideId slideId in slideIdCollection)
+            {
+                position--;
+                if (position == 0)
+                {
+                    thatsourman = slideId;
+                    break;
+                }
+            }
 
-            SlideId newSlideId = new SlideId();
-       
+            uint newSlideIdVal = slideIdCollection.Max(x => x.Id.Value) + 1;
+
+            SlidePart newSlidePart = _presentationPart.AddNewPart<SlidePart>();
+            newSlide.Save(newSlidePart);
+
+            SlideId newSlideId = slideIdList.InsertAfter(new SlideId(), thatsourman);
             newSlideId.Id = newSlideIdVal;
             newSlideId.RelationshipId = _presentationPart.GetIdOfPart(newSlidePart);
+
+            newSlidePart.AddPart(_firstTableSlide.SlideLayoutPart);
+            
             return newSlide;
             
         }
     
-
         public void MakeIt()
         {
-            Slide newSlide = TeamSlideClone(_firstTableSlide);
-
+            Slide newSlide = TeamSlideClone(5);
 
             List<string> Expressions = new List<string>();
             IEnumerable<D.Text> texts = new List<D.Text>();
@@ -372,24 +385,6 @@ namespace AutoSrpintReview
               //  PowerPointBacklogItem powerPointBacklogItem = (PowerPointBacklogItem)backlogItem;
 
             }
-
-           
-           /* IEnumerable<TableCell> tableCells = tableRowLast.Descendants<TableCell>();
-            foreach (TableCell tc in tableCells)
-            {
-                TableCell clone1 = (TableCell)tc.Clone();
-
-            }*/
-
-
-
-
-
-
-
-
-
-
         }
     }
 }
