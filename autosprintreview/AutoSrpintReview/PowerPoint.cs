@@ -19,6 +19,7 @@ namespace AutoSrpintReview
     public class PowerPoint : IDisposable
     {
 
+        private const string _linkbase = "https://dev.azure.com/hexagonPPMCOL/PPM/_workitems/edit/";
         private BacklogItems _backlogItems;
         private string _iteration;
         private PresentationPart _presentationPart;
@@ -232,7 +233,7 @@ namespace AutoSrpintReview
             shapeTree.Append(picture);
         }
 
-    
+
         private Slide TeamSlideClone(int position)
         {
             //clone the slide
@@ -241,7 +242,7 @@ namespace AutoSrpintReview
 
             SlideIdList slideIdList = _presentationPart.Presentation.SlideIdList;
             IEnumerable<SlideId> slideIdCollection = slideIdList.ChildElements.Cast<SlideId>();
-  
+
             SlideId thatsourman = null;
             foreach (SlideId slideId in slideIdCollection)
             {
@@ -263,15 +264,117 @@ namespace AutoSrpintReview
             newSlideId.RelationshipId = _presentationPart.GetIdOfPart(newSlidePart);
 
             newSlidePart.AddPart(_firstTableSlide.SlideLayoutPart);
-            
+
             return newSlide;
-            
+
+        }
+
+
+        private enum ColumnType { unset, id, description, points }
+
+        private void AddColumn(BacklogItem backlogItem,ColumnType columnType,TableRow tableRow)
+        {
+            BodyProperties commonBodyProperties = new BodyProperties();
+            ListStyle commonListStyle = new ListStyle();
+            EndParagraphRunProperties commonEndRunProperties = new EndParagraphRunProperties() { Language = "en-GB", Dirty = false };
+            TableCellProperties commonTableProperties = new TableCellProperties();
+            RunProperties commonRunProperties = new RunProperties() { Language = "en-US", Dirty = false, SmartTagClean = false };
+
+            TableCell tableCell = new TableCell();
+            D.TextBody textBody = new D.TextBody();
+            Paragraph paragraph = new Paragraph();
+
+            string textval = string.Empty;
+            switch (columnType)
+            {
+                case ColumnType.id:textval = backlogItem.ID;break;
+                case ColumnType.description:textval = backlogItem.Title;break;
+                case ColumnType.points:textval = backlogItem.Points.ToString();break;
+
+            }
+
+            Run run = new Run();
+            D.Text text = new D.Text();
+            text.Text = textval;
+
+
+            run.Append(commonRunProperties);
+            run.Append(text);
+
+            paragraph.Append(run);
+            paragraph.Append(commonEndRunProperties);
+            textBody.Append(commonBodyProperties);
+            textBody.Append(commonListStyle);
+            textBody.Append(paragraph);
+
+            tableCell.Append(textBody);
+            tableCell.Append(commonTableProperties);
+
+            tableRow.Append(tableCell);
+
+
+        }
+
+        private void PopulateTableSide(IEnumerable<BacklogItem> backlogItems, Slide slide)
+        {
+
+
+            Table table = slide.Descendants<Table>().First();
+            TableRow tableRowLast = slide.Descendants<TableRow>().Last();
+            int colCount = tableRowLast.Descendants<TableCell>().Count();
+
+            bool first = true;
+            foreach (BacklogItem backlogItem in _backlogItems)
+            {
+                if (first)
+                {
+                    TableCell[] cells = tableRowLast.Descendants<TableCell>().ToArray();
+
+                    Run runlink = cells[0].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+                    D.Text id = runlink.Descendants<D.Text>().First();
+                    id.Text = backlogItem.ID;
+                    HyperlinkOnClick hyperlinkOnClick = runlink.RunProperties.Descendants<HyperlinkOnClick>().First();
+                    string hyperlikid = hyperlinkOnClick.Id;
+                    HyperlinkRelationship hlr = slide.SlidePart.HyperlinkRelationships.Where(x => x.Id == hyperlinkOnClick.Id).FirstOrDefault();
+                    if (hlr != null)
+                    {
+                        string newuri = $"{_linkbase}/{backlogItem.ID}";
+                        Uri uriID = new Uri(newuri, UriKind.Absolute);
+                        slide.SlidePart.DeleteReferenceRelationship(hlr);
+                        slide.SlidePart.AddHyperlinkRelationship(uriID, true, hyperlikid);
+                    }
+
+
+                    Run runtitle = cells[1].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+                    D.Text title = runtitle.Descendants<D.Text>().First();
+                    title.Text = backlogItem.Title;
+
+
+                    Run runpoints = cells[2].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+                    D.Text points = runpoints.Descendants<D.Text>().First();
+                    points.Text = backlogItem.Points.ToString();
+                    first = false;
+                }
+                else
+                {
+                    TableRow tableRow = new TableRow();
+                    tableRow.Height = tableRowLast.Height;
+
+                    AddColumn(backlogItem, ColumnType.id, tableRow);
+                    AddColumn(backlogItem, ColumnType.description, tableRow);
+                    AddColumn(backlogItem, ColumnType.points, tableRow);
+                    table.Append(tableRow);
+                }
+            }
+        }
+
+        private void AddTableSlide(IEnumerable<BacklogItem> backlogItems,int index)
+        {
+
         }
     
         public void MakeIt()
         {
-            Slide newSlide = TeamSlideClone(5);
-
             List<string> Expressions = new List<string>();
             IEnumerable<D.Text> texts = new List<D.Text>();
             Presentation presentation = _presentationPart.Presentation;
@@ -372,19 +475,19 @@ namespace AutoSrpintReview
                 AddBullets(demoshape, demos);
             }
 
+
+          //  Slide newSlide = TeamSlideClone(5);
+
+            //somehow group stuff into tables
+            IEnumerable<BacklogItem> backlogItems = _backlogItems;
+            PopulateTableSide(backlogItems,_firstTableSlide.Slide);
+
+       
           
-
-
-            //table slides
-            IEnumerable<OpenXmlElement> openXmlElements = _firstTableSlide.Slide.Descendants();
-            Table table = _firstTableSlide.Slide.Descendants<Table>().First();
-            TableRow tableRowLast = _firstTableSlide.Slide.Descendants<TableRow>().Last();
-            TableRow tableRowLastCopy = (TableRow)tableRowLast.Clone();
-            foreach (BacklogItem backlogItem in _backlogItems)
-            {
-              //  PowerPointBacklogItem powerPointBacklogItem = (PowerPointBacklogItem)backlogItem;
-
-            }
+         
+            
+            
+           
         }
     }
 }
