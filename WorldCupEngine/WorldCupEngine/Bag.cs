@@ -25,26 +25,51 @@ namespace WorldCupEngine
             }
         }
 
+        public int Count
+        {
+            get { return _items.Count; }
+        }
+
+        public bool Empty
+        {
+            get { return !_items.Any<T>(); }
+        }
+
         public void Add(T t)
         {
             _items.Add(t);
         }
 
+        public IEnumerable<T> Contents
+        {
+            get
+            {
+                return _items;
+            }
+        }
+
         public T Take()
         {
             T togo = default(T);
-            int r = _randy.Next(1, _items.Count);
-            int tick = 1;
-            foreach (T t in _items)
+            if (_items.Count == 1)
             {
-                if (tick == r)
+                togo = _items.First<T>();
+            }
+            else
+            {
+                int r = _randy.Next(1, _items.Count);
+                int tick = 1;
+                foreach (T t in _items)
                 {
-                    togo = t;
-                    break;
-                }
-                else
-                {
-                    tick++;
+                    if (tick == r)
+                    {
+                        togo = t;
+                        break;
+                    }
+                    else
+                    {
+                        tick++;
+                    }
                 }
             }
             _items.Remove(togo);

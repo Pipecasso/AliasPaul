@@ -35,10 +35,17 @@ namespace WorldCupEngine
             }
             return togo;
         }
-        
 
-
-
-
+        public Result result
+        {
+            get
+            {
+                return _result;
+            }
+            set
+            {
+                _result = value;
+            }
+        }
     }
 }

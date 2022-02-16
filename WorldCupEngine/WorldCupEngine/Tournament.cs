@@ -8,27 +8,75 @@ namespace WorldCupEngine
 {
     public class Tournament
     {
-        private Bag<Contestent> _contestentBag;
-        private Match[] _Initial = new Match[16];
+
         private int _round;
         private int _match;
+        private Dictionary<int, Round> _Rounds;
+     
+
+        private bool _facup;
 
 
-        public Tournament(ContestentPool contestentPool)
+        public Tournament(ContestentPool contestentPool, int numberofrounds, bool facup)
         {
-            _round = 0;
+            _round = 1;
             _match = 0;
-            _contestentBag = new Bag<Contestent>();
-            _contestentBag.Fill(contestentPool);
-
-            for (int i = 0; i < 16; i++)
+            _facup = facup;
+            Bag<Contestent> contestentBag = new Bag<Contestent>();
+            contestentBag.Fill(contestentPool);
+            _Rounds = new Dictionary<int, Round>();
+            int contestent_total = Convert.ToInt32(Math.Pow(2, numberofrounds));
+            if (contestent_total <= contestentPool.Count)
             {
-                Match match = new Match(_contestentBag.Take(), _contestentBag.Take());
-                _Initial[i] = match;
-            }
+                List<Contestent> contestents = new List<Contestent>();
+                for (int i = 0; i < contestent_total; i++)
+                {
+                    contestents.Add(contestentBag.Take());
+                }
 
-        
-        
+                Round round1 = new Round(contestents);
+                _Rounds.Add(1, round1);
+            }
+        }
+
+        public Match CurrentMatch
+        {
+            get
+            {
+                return _Rounds[_round].CurrentMatch;
+            }
+        }
+
+        public IEnumerable<Contestent> Contestents  
+        {
+            get
+            {
+                List<Contestent> Contestents = new List<Contestent>();
+                Round round1 = _Rounds[1];
+                foreach (Match m in round1.AllMatches)
+                {
+                    Contestents.Add(m.Item1);
+                    Contestents.Add(m.Item2);
+                }
+                return Contestents;
+            }
+        }
+
+        public Match NextMatch()
+        {
+            Match current = null;
+            if (_Rounds[_round].NextMatch())
+            {
+                current = _Rounds[_round].CurrentMatch;
+            }
+            else
+            {
+                Round nextRound = _Rounds[_round].Next(_facup);
+                _round++;
+                _Rounds.Add(_round, nextRound);
+                current = nextRound.CurrentMatch;
+            }
+            return current;
         }
         
        
