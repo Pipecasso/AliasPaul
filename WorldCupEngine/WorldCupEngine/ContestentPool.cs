@@ -20,6 +20,7 @@ namespace WorldCupEngine
                 SharedStringTablePart sharedStringTablePart = workbook.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
 
                 Worksheet contestentwsheet = null;
+                IEnumerable<Sheet> sheets = workbook.Descendants<Sheet>();
                 Sheet contestentsheet = workbook.Descendants<Sheet>().Where(x => x.Name == sheetname).FirstOrDefault();
                 if (contestentsheet != null)
                 {

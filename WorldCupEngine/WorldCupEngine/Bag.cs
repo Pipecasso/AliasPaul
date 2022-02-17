@@ -57,7 +57,7 @@ namespace WorldCupEngine
             }
             else
             {
-                int r = _randy.Next(1, _items.Count);
+                int r = _randy.Next(1, _items.Count+1);
                 int tick = 1;
                 foreach (T t in _items)
                 {

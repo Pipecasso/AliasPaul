@@ -74,7 +74,12 @@ namespace WorldCupEngine
         {
             get
             {
-                return _matches[_heat];
+                Match m = null;
+                if (_heat<_matches.Length)
+                {
+                    m = _matches[_heat];
+                }
+                return m;
             }
         }
 
@@ -101,17 +106,21 @@ namespace WorldCupEngine
             else
             {
                 IEnumerator<Contestent> contestentenum = contestents.GetEnumerator();
-                contestentenum.Reset();
+                //contestentenum.Reset();
                 bool keegoing = true;
                 matches = new List<Match>();
                 while (keegoing)
                 {
-                    Contestent c1 = contestentenum.Current;
-                    contestentenum.MoveNext();
-                    Contestent c2 = contestentenum.Current;
                     keegoing = contestentenum.MoveNext();
-                    Match m = new Match(c1, c2);
-                    matches.Add(m);
+                    if (keegoing)
+                    {
+                        Contestent c1 = contestentenum.Current;
+                        contestentenum.MoveNext();
+                        Contestent c2 = contestentenum.Current;
+
+                        Match m = new Match(c1, c2);
+                        matches.Add(m);
+                    }
                 }
             }
             return matches;
@@ -127,7 +136,17 @@ namespace WorldCupEngine
                 nextround = new Round(_number + 1, matches);
             }
             return nextround;
+        }
 
+        public IEnumerable<Contestent> GetContestents()
+        {
+            List<Contestent> contestents = new List<Contestent>();
+            foreach(Match m in _matches)
+            {
+                contestents.Add(m.Item1);
+                contestents.Add(m.Item2);
+            }
+            return contestents;
         }
     
     

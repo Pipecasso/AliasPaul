@@ -47,6 +47,15 @@ namespace WorldCupEngine
             }
         }
 
+        public Round CurrentRound
+        {
+
+            get
+            {
+                return _Rounds[_round];
+            }
+        }
+
         public IEnumerable<Contestent> Contestents  
         {
             get
@@ -72,11 +81,25 @@ namespace WorldCupEngine
             else
             {
                 Round nextRound = _Rounds[_round].Next(_facup);
-                _round++;
-                _Rounds.Add(_round, nextRound);
-                current = nextRound.CurrentMatch;
+                if (nextRound != null)
+                {
+                    _round++;
+                    _Rounds.Add(_round, nextRound);
+                    current = nextRound.CurrentMatch;
+                }
             }
-            return current;
+            return current; 
+        }
+
+        public Contestent Winner()
+        {
+            Contestent winner = null;
+            Round current = _Rounds[_round];
+            if (current.AllMatches.Count() == 1 && current.AllMatches.First().result != Match.Result.notplayed)
+            {
+                winner = current.AllMatches.First().Winner();
+            }
+            return winner;
         }
         
        
