@@ -31,7 +31,9 @@ namespace WorldCupEngine
                 List<Contestent> contestents = new List<Contestent>();
                 for (int i = 0; i < contestent_total; i++)
                 {
-                    contestents.Add(contestentBag.Take());
+                    Contestent contestent = contestentBag.Take();
+                    contestent.Picked();
+                    contestents.Add(contestent);
                 }
 
                 Round round1 = new Round(contestents);
@@ -80,6 +82,17 @@ namespace WorldCupEngine
             }
             else
             {
+                IEnumerable<Contestent> Winners = CurrentRound.AllMatches.Select(x => x.Winner());
+                IEnumerable<Contestent> Losers = CurrentRound.AllMatches.Select(x => x.Loser());
+                foreach (Contestent winner in Winners)
+                {
+                    winner.IncWin();
+                }
+                foreach (Contestent loser in Losers)
+                {
+                    loser.IncLoss();
+                }
+                
                 Round nextRound = _Rounds[_round].Next(_facup);
                 if (nextRound != null)
                 {

@@ -5,22 +5,25 @@ namespace WorldCupEngine
     public class Contestent
     {
         private int _points;
+        private int _tournaments;
+        private int _wins;
+        private int _losses;
         
         public string Name { get; set; }
-        public int Wins { get; set; }
-        public int Losses { get; set; }
-        public int Last32 { get; set; }
-        public int Last16 { get; set; }
-        public int Last8 { get; set; }
-        public int Last4 { get; set; }
-        public int Final { get; set; }
-        public int Win { get; set; }
+  
         public int Points { get => _points; }
+        public int Tornaments { get => _tournaments; }
+        public int 
 
         public Contestent()
         {
             _points = 0;
+            _tournaments = 0;
+            _wins = 0;
+            _losses = 0;
         }
+
+
 
         public void AddPoints(int p) { _points += p; }
 
