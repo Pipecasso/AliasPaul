@@ -91,10 +91,23 @@ namespace WorldCupEngine
                 foreach (Contestent loser in Losers)
                 {
                     loser.IncLoss();
+                    if (_round > 1)
+                    {
+                        int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 2)));
+                        loser.AddPoints(points);
+                    }   
                 }
                 
                 Round nextRound = _Rounds[_round].Next(_facup);
-                if (nextRound != null)
+                if (nextRound == null)
+                {
+                    Round final_round = _Rounds[_round];
+                    Match final = final_round.AllMatches.Single<Match>();
+                    final.Winner().TournamentWin();
+                    int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 1)));
+                    final.Winner().AddPoints(points);
+                }
+                else 
                 {
                     _round++;
                     _Rounds.Add(_round, nextRound);
