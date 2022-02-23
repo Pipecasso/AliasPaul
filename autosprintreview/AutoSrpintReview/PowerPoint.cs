@@ -20,7 +20,7 @@ namespace AutoSrpintReview
     {
 
         private const string _linkbase = "https://dev.azure.com/hexagonPPMCOL/PPM/_workitems/edit/";
-        private BacklogItems _backlogItems;
+        private PowerpointBacklogItems _backlogItems;
         private string _iteration;
         private PresentationPart _presentationPart;
         private PresentationDocument _presentationDocument;
@@ -48,7 +48,7 @@ namespace AutoSrpintReview
 
         private List<Tuple<BulletCat, string>> _BulletText;
 
-        public PowerPoint(BacklogItems backlogItems, string templatepath, string outputdir, string itearion)
+        public PowerPoint(PowerpointBacklogItems backlogItems, string templatepath, string outputdir, string itearion)
         {
 
             _backlogItems = backlogItems;
@@ -317,8 +317,6 @@ namespace AutoSrpintReview
 
         private void PopulateTableSide(IEnumerable<BacklogItem> backlogItems, Slide slide)
         {
-
-
             Table table = slide.Descendants<Table>().First();
             TableRow tableRowLast = slide.Descendants<TableRow>().Last();
             int colCount = tableRowLast.Descendants<TableCell>().Count();
@@ -465,8 +463,6 @@ namespace AutoSrpintReview
             IEnumerable<string> goals = _BulletText.Where(x => x.Item1 == BulletCat.SprintGoal).Select(y => y.Item2);
             IEnumerable<string> demos = _BulletText.Where(x => x.Item1 == BulletCat.Demo).Select(y => y.Item2);
             ShapeTree shapeTree = _goalSlide.Slide.Descendants<ShapeTree>().FirstOrDefault();
-            //P.Shape shape5 = shapeTree.Descendants<P.Shape>().Where(x => x.NonVisualShapeProperties.Descendants<P.NonVisualDrawingProperties>().Where(y => y.Id == "5").Any()).FirstOrDefault();
-            //P.TextBody textBody = shape5.TextBody;
             P.Shape goalshape = ShapeFinder("5", _goalSlide);
             AddBullets(goalshape, goals);
             if (demos.Any())
@@ -476,12 +472,10 @@ namespace AutoSrpintReview
             }
 
 
-          //  Slide newSlide = TeamSlideClone(5);
+            //PopulateTableSide(backlogItems,_firstTableSlide.Slide);
 
-            //somehow group stuff into tables
-            IEnumerable<BacklogItem> backlogItems = _backlogItems;
-            PopulateTableSide(backlogItems,_firstTableSlide.Slide);
-
+              IEnumerable<PowerPointBacklogItem> inProgressItems = _backlogItems.Where(x => !x.Done);
+              IEnumerable<PowerPointBacklogItem> screenshotItems = _backlogItems.Where(x => x.solo);
        
           
          

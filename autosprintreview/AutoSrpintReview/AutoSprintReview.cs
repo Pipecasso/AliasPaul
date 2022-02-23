@@ -11,7 +11,7 @@ namespace AutoSrpintReview
 {
     public class AutoSprintReview
     {
-        private BacklogItems _backlogItems;
+        private List<BacklogItem> _backlogItems;
         private Dictionary<string, string> _columnIndexMap;
         private string[] _sharedStrings;
         private string _powertemplate;
@@ -56,7 +56,7 @@ namespace AutoSrpintReview
 
         public AutoSprintReview(string xlsprint,string powertemplate,string teamname,string screenshotpath)
         {
-            _backlogItems = new BacklogItems();
+            _backlogItems = new List<BacklogItem>();
             _powertemplate = powertemplate;
             _teamName = teamname;
             _screenshotsPath = screenshotpath;
@@ -138,25 +138,19 @@ namespace AutoSrpintReview
         public void MakeIt()
         {
             const string baseURI = "https://dev.azure.com/hexagonPPMCOL/PPM/_boards/board/t/";
-            BacklogItems powerPointBacklogItems = new BacklogItems();
-            foreach(BacklogItem backlogItem in _backlogItems)
+            PowerpointBacklogItems powerPointBacklogItems = new PowerpointBacklogItems(_backlogItems);
+            foreach(PowerPointBacklogItem backlogItem in powerPointBacklogItems)
             {
-                PowerPointBacklogItem powerPointBacklogItem = new PowerPointBacklogItem(backlogItem);
-                powerPointBacklogItems.Add(powerPointBacklogItem);
                 string link = $"{baseURI}{_teamName}/Backlog%20items/?workitem={backlogItem.ID}";
-                string potential_imageloc = $@"{_screenshotsPath}{backlogItem.ID}";
-                powerPointBacklogItem.IDLink = link;
+                string potential_imageloc = $@"{_screenshotsPath}\\{backlogItem.ID}";
+                backlogItem.IDLink = link;
                 if (Directory.Exists(potential_imageloc) && Directory.GetFiles(potential_imageloc).Any())
                 {
-                    powerPointBacklogItem.ImagePath = potential_imageloc;
+                    backlogItem.ImagePath = potential_imageloc;
                 }
             }
             
-            
-  
-            
-            
-            using (PowerPoint powerPoint = new PowerPoint(_backlogItems, _powertemplate, @"C:\SR", "2"))
+            using (PowerPoint powerPoint = new PowerPoint(powerPointBacklogItems, _powertemplate, @"C:\SR", "2"))
             {
                 powerPoint.TeamName = _teamName;
                 powerPoint.TeamDescription = "Isogen Futures";

@@ -11,6 +11,7 @@ namespace AutoSrpintReview
         public string IDLink { get; set; }
         public string ImagePath { get; set; }
 
+        
         public PowerPointBacklogItem()
         {
             ImagePath = string.Empty;
