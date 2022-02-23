@@ -14,7 +14,7 @@ namespace WorldCupEngine
     {
         public ContestentPool(string openxmlpath,string sheetname)
         {
-            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(openxmlpath,true))
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(openxmlpath,false))
             {
                 Workbook workbook = spreadsheetDocument.WorkbookPart.Workbook;
                 SharedStringTablePart sharedStringTablePart = workbook.WorkbookPart.GetPartsOfType<SharedStringTablePart>().First();
@@ -46,7 +46,13 @@ namespace WorldCupEngine
             }
 
         }
-    
-    
+
+        public void Export(string openxmlpath,string sheetname)
+        {
+            using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(openxmlpath, true))
+            {
+
+            }
+        }
     }
 }
