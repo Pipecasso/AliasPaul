@@ -10,38 +10,37 @@ namespace WorldCupEngine2
     {
         static void Main(string[] args)
         {
-            WorldCupEngine.ContestentPool cp = new ContestentPool(@"P:\Geo\ages.xlsx", "Sheet1");
+            WorldCupEngine.ContestentPool cp = new ContestentPool(@"P:\Geo\WorldCup.xlsx", "Sheet1");
             Console.WriteLine("Hello World!");
-            Tournament t = new Tournament(cp, 8, false);
-            foreach (Contestent c in t.Contestents)
+          
+            for (int i = 0; i < 10; i++)
             {
-                System.Diagnostics.Debug.WriteLine(c.Name);
-            }
-
-            using (StreamWriter sw = new StreamWriter("pwc.txt"))
-            {
-                int cround = 0;
-                while (t.CurrentMatch != null)
+                Tournament t = new Tournament(cp, 8, false);
+                using (StreamWriter sw = new StreamWriter("pwc.txt"))
                 {
-                    Round r = t.CurrentRound;
-                    if (r.RoundNumber != cround)
+                    int cround = 0;
+                    while (t.CurrentMatch != null)
                     {
-                        sw.WriteLine($"Round {r.RoundNumber}\n ");
-                        foreach (Contestent c in r.GetContestents())
+                        Round r = t.CurrentRound;
+                        if (r.RoundNumber != cround)
                         {
-                            sw.WriteLine(c.Name);
+                            sw.WriteLine($"Round {r.RoundNumber}\n ");
+                            foreach (Contestent c in r.GetContestents())
+                            {
+                                sw.WriteLine(c.Name);
+                            }
+                            cround = r.RoundNumber;
                         }
-                        cround = r.RoundNumber;
+
+                        Match m = t.CurrentMatch;
+                        PlayMatch(m, Random);
+                        sw.WriteLine($" {m.Item1.Name} vs {m.Item2.Name} won by {m.Winner().Name}");
+                        t.NextMatch();
                     }
-
-                    Match m = t.CurrentMatch;
-                    PlayMatch(m, Random);
-                    sw.WriteLine($" {m.Item1.Name} vs {m.Item2.Name} won by {m.Winner().Name}");
-                    t.NextMatch();
+                    sw.WriteLine($"They think its all over the winner was {t.Winner().Name}");
                 }
-                sw.WriteLine($"They think its all over the winner was {t.Winner().Name}");
-
             }
+            cp.Export(@"P:\Geo\WorldCup.xlsx", "Sheet1");
 
          
         }
