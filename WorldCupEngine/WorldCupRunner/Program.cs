@@ -1,21 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using WorldCupEngine;
 using System.IO;
-using System.Collections;
 
-
-namespace WorldCupEngine2
+namespace WorldCupRunner
 {
     class Program
-    {
+    {   
         static void Main(string[] args)
         {
-            WorldCupEngine.ContestentPool cp = new ContestentPool(@"P:\Geo\WorldCup.xlsx", "Sheet1");
+            WorldCupEngine.ContestentPool cp = new ContestentPool(@"C:\git\AliasPaul\WorldCupEngine\Celebs.xlsx", "Sheet1");
             Console.WriteLine("Hello World!");
-          
+
             for (int i = 0; i < 10; i++)
             {
-                Tournament t = new Tournament(cp, 8, false);
+                Tournament t = new Tournament(cp, 5, false);
                 using (StreamWriter sw = new StreamWriter("pwc.txt"))
                 {
                     int cround = 0;
@@ -40,12 +42,8 @@ namespace WorldCupEngine2
                     sw.WriteLine($"They think its all over the winner was {t.Winner().Name}");
                 }
             }
-            cp.Export(@"P:\Geo\WorldCup.xlsx", "Sheet1");
-
-         
+            cp.Export(@"C:\git\AliasPaul\WorldCupEngine\Celebs.xlsx", "Sheet1");
         }
-
-     
 
         static void PlayMatch(Match m, Func<Match, bool> rules)
         {
@@ -63,4 +61,5 @@ namespace WorldCupEngine2
             return r.Next(1, 3) == 1;
         }
     }
+    
 }

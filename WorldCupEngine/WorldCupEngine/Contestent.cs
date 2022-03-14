@@ -15,11 +15,11 @@ namespace WorldCupEngine
         
         public string Name { get; set; }
   
-        public int Points { get => _points; }
-        public int Tornaments { get => _tournaments; }
-        public int Wins { get => _wins; }
-        public int Losses { get => _losses; }
-        public int TournementWins { get => _tournamentwins; }
+        public int Points { get => _points; set { _points = value; } }
+        public int Tornaments { get => _tournaments; set { _tournamentwins = value; } }
+        public int Wins { get => _wins;set { _wins = value; } }
+        public int Losses { get => _losses;set { _losses = value; } }
+        public int TournementWins { get => _tournamentwins; set { _tournamentwins = value; } }
 
         public Contestent()
         {
