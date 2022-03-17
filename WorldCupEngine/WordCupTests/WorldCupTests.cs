@@ -19,7 +19,7 @@ namespace WordCupTests
         [TestMethod]
         public void ContestentPoolNew()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1", true);
+            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
             Assert.AreEqual(106, contestents.Count);
             Assert.IsTrue(contestents.All(x => x.Tornaments == 0));
             Assert.IsTrue(contestents.All(x => x.Points == 0));
@@ -31,7 +31,7 @@ namespace WordCupTests
         [TestMethod]
         public void ContestFromNew()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1", true);
+            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
             Assert.IsNotNull(tournament.Winner());
@@ -44,8 +44,44 @@ namespace WordCupTests
 
             Assert.AreEqual(48, contestents.Sum(x => x.Points));
 
-            Assert.AreEqual(62, contestents.Sum(x => x.Wins));
-            Assert.AreEqual(62, contestents.Sum(x => x.Losses));
+            Assert.AreEqual(31, contestents.Sum(x => x.Wins));
+            Assert.AreEqual(31, contestents.Sum(x => x.Losses));
+            contestents.Export("Celebs2.xlsx","Tournament1",false);
+
+            ContestentPool cpCheck = new ContestentPool("Celebs2.xlsx", "Tournament1",false);
+            Assert.AreEqual(106, cpCheck.Count);
+            Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
+            Assert.AreEqual(105, cpCheck.Where(x => x.TournementWins == 0).Count());
+
+            Assert.AreEqual(32, cpCheck.Where(x => x.Tornaments == 1).Count());
+            Assert.AreEqual(74, cpCheck.Where(x => x.Tornaments == 0).Count());
+
+            Assert.AreEqual(48, cpCheck.Sum(x => x.Points));
+
+            Assert.AreEqual(31, cpCheck.Sum(x => x.Wins));
+            Assert.AreEqual(31, cpCheck.Sum(x => x.Losses));
+
+        }
+
+        [TestMethod]
+        public void PlayOneRound()
+        {
+            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            Tournament tournament = new Tournament(contestents, 5, false);
+            Round firstRound = tournament.CurrentRound;
+            while (tournament.CurrentRound == firstRound)
+            {
+                Match m = tournament.CurrentMatch;
+                PlayMatch(m, Random);
+                tournament.NextMatch();
+            }
+
+            Assert.IsTrue(contestents.All(x => (x.Wins == 1 || x.Wins == 0)));
+            Assert.IsTrue(contestents.All(x => (x.Losses == 1 || x.Losses == 0)));
+            Assert.IsFalse(contestents.Any(x=> (x.Wins == 1 && x.Losses==1)));
+            Assert.AreEqual(16, contestents.Sum(x => x.Wins));
+            Assert.AreEqual(16, contestents.Sum(x => x.Losses));
+
         }
 
         static void PlayRandomTournamemt(Tournament t)

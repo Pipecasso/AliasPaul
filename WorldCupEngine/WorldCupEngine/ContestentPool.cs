@@ -41,30 +41,66 @@ namespace WorldCupEngine
             }
         }
 
-        public void Export(string openxmlpath,string sheetname)
+        public void Export(string openxmlpath,string sheetname,bool overwrite)
         {
-            XLWorkbook wb = new XLWorkbook(openxmlpath);
-            IXLWorksheet ws = wb.Worksheets.Where(x => x.Name == sheetname).FirstOrDefault();
-            foreach (Contestent contestent in this)
+            IXLWorkbook wb = null;
+            IXLWorksheet ws = null;
+            IEnumerable<Contestent> contestents;
+            if (overwrite)
             {
-                IXLRow row = ws.Rows().Where(x => x.Cells().First().GetString() == contestent.Name).FirstOrDefault();
+                wb = new XLWorkbook(openxmlpath);
+                ws = wb.Worksheet(sheetname);
+                contestents = this;
+            }
+            else
+            {
+                wb = new XLWorkbook();
+                ws = wb.AddWorksheet(sheetname);
+                contestents = this.OrderByDescending(x => x.Points);
+            }
+
+            foreach (Contestent contestent in contestents)
+            {
+                IXLRow row = null;
+                if (overwrite)
+                {
+                    row = ws.Rows().Where(x => x.Cells().First().GetString() == contestent.Name).FirstOrDefault();
+                }
+                else
+                {
+                    row = ws.LastRowUsed() == null ? ws.Row(1) : ws.LastRowUsed().RowBelow();
+                }
+
+                if (!overwrite)
+                {
+                    IXLCell name = row.Cell("A");
+                    name.SetValue<string>(contestent.Name);
+                }
+
                 IXLCell picked = row.Cell("B");
-                picked.Value = contestent.Tornaments;
+                picked.SetValue<int>(contestent.Tornaments);
 
                 IXLCell champion = row.Cell("G");
-                champion.Value = contestent.TournementWins;
+                champion.SetValue<int> (contestent.TournementWins);
 
                 IXLCell wins = row.Cell("H");
-                wins.Value = contestent.Wins;
+                wins.SetValue<int>(contestent.Wins);
 
                 IXLCell losses = row.Cell("I");
-                losses.Value = contestent.Losses;
+                losses.SetValue<int>(contestent.Losses);
 
                 IXLCell points = row.Cell("J");
-                points.Value = contestent.Points;
+                points.SetValue<int>(contestent.Points);
 
             }
-            wb.Save();
+            if (overwrite)
+            {
+                wb.Save();
+            }
+            else
+            {
+                wb.SaveAs(openxmlpath);
+            }
         }
     }
 }
