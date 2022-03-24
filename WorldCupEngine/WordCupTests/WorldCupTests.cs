@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WorldCupEngine;
+using System.IO;
 
 
 
@@ -66,12 +67,13 @@ namespace WordCupTests
         [TestMethod]
         public void ContestFromNewOverwrite()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            File.Copy("Celebs.xlsx", "CelebsCFNO.xlsx");
+            ContestentPool contestents = new ContestentPool("CelebsCFNO.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
-            contestents.Export("Celebs.xlsx", "Sheet1", true);
+            contestents.Export("CelebsCFNO.xlsx", "Sheet1", true);
 
-            ContestentPool cpCheck = new ContestentPool("Celebs.xlsx", "Sheet1", false);
+            ContestentPool cpCheck = new ContestentPool("CelebsCFNO.xlsx", "Sheet1", false);
             Assert.AreEqual(106, cpCheck.Count);
             Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
             Assert.AreEqual(105, cpCheck.Where(x => x.TournementWins == 0).Count());
@@ -200,6 +202,47 @@ namespace WordCupTests
             Assert.AreEqual(48, contestents.Sum(x => x.Points));
         }
 
+        [TestMethod]
+        public void PauseAndSave()
+        {
+            File.Copy("Celebs.xlsx", "CelebsPS.xlsx");
+            ContestentPool contestents = new ContestentPool("CelebsPS.xlsx", "Sheet1");
+            Tournament tournament = new Tournament(contestents, 6, false);
+            for (int i = 0; i < 20; i++)
+            {
+                PlayMatch(tournament.CurrentMatch, Random);
+                tournament.NextMatch();
+            }
+            tournament.Save("PausedTournament2.xlsx");
+            Tournament loadedTournament = new Tournament(contestents);
+            loadedTournament.Load("PausedTournament2.xlsx");
+     
+
+            while (loadedTournament.CurrentMatch != null)
+            {
+                Match m = loadedTournament.CurrentMatch;
+                PlayMatch(m, Random);
+                loadedTournament.NextMatch();
+            }
+
+            contestents.Export("CelebsPS.xlsx", "Sheet1", true);
+
+
+            ContestentPool cpCheck = new ContestentPool("CelebsPS.xlsx", "Sheet1", false);
+            Assert.AreEqual(106, cpCheck.Count);
+            Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
+            Assert.AreEqual(105, cpCheck.Where(x => x.TournementWins == 0).Count());
+
+            Assert.AreEqual(64, cpCheck.Where(x => x.Tornaments == 1).Count());
+            Assert.AreEqual(42, cpCheck.Where(x => x.Tornaments == 0).Count());
+
+            Assert.AreEqual(112, cpCheck.Sum(x => x.Points));
+
+            Assert.AreEqual(63, cpCheck.Sum(x => x.Wins));
+            Assert.AreEqual(63, cpCheck.Sum(x => x.Losses));
+
+        }
+
 
         static void PlayRandomTournamemt(Tournament t)
         {
@@ -210,9 +253,6 @@ namespace WordCupTests
                 t.NextMatch();
             }
         }
-
- 
-       
 
         static void PlayMatch(Match m, Func<Match, bool> rules)
         {
@@ -229,7 +269,5 @@ namespace WordCupTests
             Random r = new Random();
             return r.Next(1, 3) == 1;
         }
-
-
     }
 }
