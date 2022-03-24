@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 
 namespace WorldCupEngine
 {
@@ -10,17 +11,21 @@ namespace WorldCupEngine
     {
 
         private int _round;
-        private int _match;
         private Dictionary<int, Round> _Rounds;
+        private ContestentPool _contestents;
      
 
         private bool _facup;
 
+        public Tournament(ContestentPool contestentPool)
+        {
+            _contestents = contestentPool;
+            _Rounds = new Dictionary<int, Round>();
+        }
 
         public Tournament(ContestentPool contestentPool, int numberofrounds, bool facup)
         {
             _round = 1;
-            _match = 0;
             _facup = facup;
             Bag<Contestent> contestentBag = new Bag<Contestent>();
             contestentBag.Fill(contestentPool);
@@ -126,6 +131,43 @@ namespace WorldCupEngine
                 winner = current.AllMatches.First().Winner();
             }
             return winner;
+        }
+
+        public void Save(string path)
+        {
+            IXLWorkbook workbook = new XLWorkbook();
+            IXLWorksheet worksheet = workbook.AddWorksheet("Tournament");
+            IXLCell label=worksheet.Cell("A1");
+            label.SetValue<string>("Rounds");
+            IXLCell labelright = label.CellRight();
+            labelright.SetValue<int>(_Rounds.Count);
+            IXLCell coltop = worksheet.Cell("A2");
+            foreach (KeyValuePair<int,Round> kvp in _Rounds)
+            {
+                Round round = kvp.Value;
+                coltop.SetValue<int>(kvp.Key);
+                IXLCell firstContestent = coltop.CellBelow();
+                coltop = coltop.CellRight().CellRight();
+                round.Save(firstContestent);
+            }
+            workbook.SaveAs(path);
+        }
+
+        public void Load(string path)
+        {
+            IXLWorkbook workbook = new XLWorkbook(path);
+            IXLWorksheet worksheet = workbook.Worksheet("Tournament");
+            IXLCell totalrounds = worksheet.Cell("B1");
+            _round = totalrounds.GetValue<int>();
+            IXLCell labelright = worksheet.Cell("A2");
+            int round = labelright.GetValue<int>();
+            IXLCell coltop = worksheet.Cell("A3");
+            for (int i=0;i<_round;i++)
+            {
+                Round r = new Round(i+1, coltop, _contestents);
+                _Rounds.Add(i+1, r);
+                coltop = coltop.CellRight().CellRight();
+            }
         }
         
        

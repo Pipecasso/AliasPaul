@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 
 namespace WorldCupEngine
 {
@@ -12,7 +13,11 @@ namespace WorldCupEngine
         private int _number;
         private int _heat;
 
-        
+        internal Round(int number,IXLCell cell,IEnumerable<Contestent> contestent_pool)
+        {
+            _number = number;
+            Load(cell, contestent_pool);
+        }
 
         public Round(IEnumerable<Contestent> initialContestents)
         {
@@ -56,19 +61,6 @@ namespace WorldCupEngine
                 return _matches;
             }
         }
-
-        /* public IEnumerable<Match> CurrentMatch()
-         {
-             Match togo = null;
-             int current = _heat;
-
-             if (current < _matches.Length)
-             {
-                 _heat++;
-                 togo = _matches[current];
-             }
-             yield return togo;
-         }*/
 
         public Match CurrentMatch
         {
@@ -147,6 +139,69 @@ namespace WorldCupEngine
                 contestents.Add(m.Item2);
             }
             return contestents;
+        }
+
+        private void Load(IXLCell celltop,IEnumerable<Contestent> cpool)
+        {
+            IXLCell cellmatches = celltop.CellRight();
+            int matches = cellmatches.GetValue<int>();
+            IXLCell cellheat = cellmatches.CellBelow();
+            _heat = cellheat.GetValue<int>();
+            _matches = new Match[matches];
+            IXLCell player2cell = cellheat.CellBelow();
+            IXLCell player1cell = player2cell.CellLeft();
+            for (int i=1;i<=matches;i++)
+            {
+                string player1 = player1cell.GetValue<string>();
+                string player2 = player2cell.GetValue<string>();
+                Contestent c1 = cpool.Single(x => x.Name == player1);
+                Contestent c2 = cpool.Single(x => x.Name == player2);
+                Match m = new Match(c1, c2);
+                if (i<=_heat)
+                {
+                    if (player1cell.Style.Fill.BackgroundColor == XLColor.AppleGreen)
+                    {
+                        m.result = Match.Result.firstw;
+                    }
+                    else
+                    {
+                        m.result = Match.Result.secondw;
+                    }
+                }
+                else
+                {
+                    m.result = Match.Result.notplayed;
+                }
+                _matches[i - 1] = m;
+                player1cell = player1cell.CellBelow();
+                player2cell = player2cell.CellBelow();
+            }
+        }
+
+        internal void Save(IXLCell coltop)
+        {
+            IXLCell col1 = coltop;
+            IXLCell col2 = coltop.CellRight();
+            col1.SetValue<string>("Matches");
+            col2.SetValue<int>(_matches.Length);
+            col1 = col1.CellBelow();
+            col1.SetValue<string>("Heat");
+            col2 = col2.CellBelow();
+            col2.SetValue<int>(_heat);
+            col1 = col1.CellBelow();
+            col2 = col2.CellBelow();
+            foreach (Match m in _matches)
+            {
+                col1.SetValue<string>(m.Item1.Name);
+                col2.SetValue<string>(m.Item2.Name);
+                if (m.result != Match.Result.notplayed)
+                {
+                    IXLCell wincell = m.result == Match.Result.firstw ? col1 : col2;
+                    wincell.Style.Fill.BackgroundColor = XLColor.AppleGreen;
+                }
+                col1 = col1.CellBelow();
+                col2 = col2.CellBelow();
+            }
         }
     
     
