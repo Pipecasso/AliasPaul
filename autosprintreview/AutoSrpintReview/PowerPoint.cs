@@ -234,7 +234,7 @@ namespace AutoSrpintReview
         }
 
 
-        private Slide TeamSlideClone(int position)
+        private Slide TableSlideClone(int position)
         {
             //clone the slide
             Slide newSlide = (Slide)_firstTableSlide.Slide.CloneNode(true);
@@ -257,7 +257,8 @@ namespace AutoSrpintReview
             uint newSlideIdVal = slideIdCollection.Max(x => x.Id.Value) + 1;
 
             SlidePart newSlidePart = _presentationPart.AddNewPart<SlidePart>();
-            newSlide.Save(newSlidePart);
+            newSlidePart.Slide = newSlide;
+           // newSlide.Save(newSlidePart);
 
             SlideId newSlideId = slideIdList.InsertAfter(new SlideId(), thatsourman);
             newSlideId.Id = newSlideIdVal;
@@ -322,7 +323,7 @@ namespace AutoSrpintReview
             int colCount = tableRowLast.Descendants<TableCell>().Count();
 
             bool first = true;
-            foreach (BacklogItem backlogItem in _backlogItems)
+            foreach (BacklogItem backlogItem in backlogItems)
             {
                 if (first)
                 {
@@ -366,9 +367,34 @@ namespace AutoSrpintReview
             }
         }
 
-        private void AddTableSlide(IEnumerable<BacklogItem> backlogItems,int index)
+  
+        private IEnumerable<IEnumerable<BacklogItem>> DivvyUp(IEnumerable<BacklogItem> backlogItems,int itemcount)
         {
-
+            int totalslides;
+            int lastslide;
+            bool allslidessame = backlogItems.Count() % itemcount == 0;
+            BacklogItem[] itemArray = backlogItems.ToArray();
+            totalslides = Math.DivRem(backlogItems.Count(), itemcount, out lastslide);
+            BacklogItem[][] itemstogo = new BacklogItem[allslidessame ? totalslides : totalslides+1][];
+            for (int i=0;i<backlogItems.Count();i++)
+            {
+                int slidenum;
+                int itemnum;
+                slidenum = Math.DivRem(i, itemcount, out itemnum);
+                if (itemnum == 0)
+                {
+                    if (!allslidessame && slidenum == backlogItems.Count() - 1)
+                    {
+                        itemstogo[slidenum] = new BacklogItem[lastslide];
+                    }
+                    else
+                    {
+                        itemstogo[slidenum] = new BacklogItem[itemcount];
+                    }
+                }
+                itemstogo[slidenum][itemnum] = itemArray[i];
+            }
+            return itemstogo;
         }
     
         public void MakeIt()
@@ -471,17 +497,34 @@ namespace AutoSrpintReview
                 AddBullets(demoshape, demos);
             }
 
-
-            //PopulateTableSide(backlogItems,_firstTableSlide.Slide);
-
-              IEnumerable<PowerPointBacklogItem> inProgressItems = _backlogItems.Where(x => !x.Done);
-              IEnumerable<PowerPointBacklogItem> screenshotItems = _backlogItems.Where(x => x.solo);
-       
-          
-         
+            IEnumerable<PowerPointBacklogItem> inProgressItems = _backlogItems.Where(x => !x.Done);
+            IEnumerable<PowerPointBacklogItem> screenshotItems = _backlogItems.Where(x => x.solo);
+            IEnumerable<PowerPointBacklogItem> tableitems = _backlogItems.Where(x => (x.Done && !x.solo));
+            IEnumerable<IEnumerable<BacklogItem>> slideItems = DivvyUp(tableitems, 3);
             
-            
-           
+            foreach (BacklogItem backlogItem in  screenshotItems)
+            {
+
+            }
+
+            int pos = screenshotItems.Count() + 4;
+            foreach(IEnumerable<BacklogItem> slides in slideItems)
+            {
+                Slide tableSlide = TableSlideClone(pos);
+                PopulateTableSide(slides, tableSlide);
+                pos++;
+            }
+
+
+            foreach (BacklogItem backlogItem in inProgressItems)
+            {
+
+            }
+        }
+
+        public void SaveIt(string path)
+        {
+            _presentationDocument.SaveAs(path);
         }
     }
 }

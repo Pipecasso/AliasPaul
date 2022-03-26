@@ -17,13 +17,7 @@ namespace AutoSrpintReview
             string templatepath = args[1];
 
             AutoSprintReview autoSprintReview = new AutoSprintReview(document, templatepath,"Marauders", @"\\ingrnet\eu\RUN\Users\Marauders\Sprint Review\Screenshots\");
-            autoSprintReview.MakeIt();
-
-         
-
-           
-
-           
+            autoSprintReview.MakeIt("arse.pptx");
         }
     }
 }

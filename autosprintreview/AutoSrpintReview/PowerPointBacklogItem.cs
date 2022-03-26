@@ -27,7 +27,7 @@ namespace AutoSrpintReview
         {
             get
             {
-                return ImagePath == string.Empty;
+                return ImagePath != string.Empty;
             }
         }
     }

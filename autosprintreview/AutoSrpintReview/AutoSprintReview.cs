@@ -135,7 +135,7 @@ namespace AutoSrpintReview
             return actionstring;
         }
 
-        public void MakeIt()
+        public void MakeIt(string path)
         {
             const string baseURI = "https://dev.azure.com/hexagonPPMCOL/PPM/_boards/board/t/";
             PowerpointBacklogItems powerPointBacklogItems = new PowerpointBacklogItems(_backlogItems);
@@ -162,8 +162,11 @@ namespace AutoSrpintReview
                 powerPoint.AddBulletText(PowerPoint.BulletCat.Demo, "Anti Gravitiy Machine");
                 powerPoint.AddBulletText(PowerPoint.BulletCat.Demo, "Runcornshire Cheese");
                 powerPoint.MakeIt();
+                powerPoint.SaveIt(path);
             }
         }
+
+        
 
 
     }
