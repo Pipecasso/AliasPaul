@@ -1,28 +1,37 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Mvvm.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 using System.Windows.Input;
-using WpfApp1.Commands;
 using WpfApp1.Model;
+using System.Windows.Forms;
 
 namespace WpfApp1.ViewModel
 {
-    internal class WorldCupViewModel
+    public class WorldCupViewModel
     {
         private WorldCupModel _worldCupModel;
         private ICommand _reloadommand;
         
-        internal WorldCupViewModel()
+        public WorldCupViewModel()
         {
             _worldCupModel = new WorldCupModel();
-            _reloadommand = new ReloadCommand();
-       
+            _reloadommand = new RelayCommand(GLKJP);
         }
 
-        internal ICommand ReloadCommand
+        public void GLKJP()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                _worldCupModel.Reload(ofd.FileName, "");
+            }
+        }
+        public ICommand ReloadCommand
         {
             get => _reloadommand;
         }

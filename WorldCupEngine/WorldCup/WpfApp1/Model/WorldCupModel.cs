@@ -18,6 +18,8 @@ namespace WpfApp1.Model
             _tournament = new Tournament(_contestents);
         }
 
+       
+
     
     
     }

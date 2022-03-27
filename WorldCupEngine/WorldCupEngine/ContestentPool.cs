@@ -15,7 +15,7 @@ namespace WorldCupEngine
         {
             XLWorkbook wb = new XLWorkbook(openxmlpath);
             IXLWorksheet ws = wb.Worksheets.Where(x => x.Name == sheetname).FirstOrDefault();
-         
+            if (ws == null) ws = wb.Worksheets.First();
             foreach (IXLRow row in ws.Rows())
             {
                 Contestent contestent = new Contestent();
