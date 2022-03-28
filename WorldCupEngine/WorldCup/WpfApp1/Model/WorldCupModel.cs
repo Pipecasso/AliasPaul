@@ -17,7 +17,9 @@ namespace WpfApp1.Model
             _contestents = new ContestentPool(path,sheet);
             _tournament = new Tournament(_contestents);
         }
-
+        
+        internal Tournament Tournament { get => _tournament; }
+        internal Round CurrentRound { get => _tournament.CurrentRound; }
        
 
     

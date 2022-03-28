@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using WpfApp1.Model;
 using System.Windows.Forms;
+using WorldCupEngine;
 
 namespace WpfApp1.ViewModel
 {
@@ -19,10 +20,10 @@ namespace WpfApp1.ViewModel
         public WorldCupViewModel()
         {
             _worldCupModel = new WorldCupModel();
-            _reloadommand = new RelayCommand(GLKJP);
+            _reloadommand = new RelayCommand(NewContestents);
         }
 
-        public void GLKJP()
+        public void NewContestents()
         {
             OpenFileDialog ofd = new OpenFileDialog();
             ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
@@ -34,6 +35,11 @@ namespace WpfApp1.ViewModel
         public ICommand ReloadCommand
         {
             get => _reloadommand;
+        }
+
+        public IEnumerable<Match> Matches
+        {
+            get => _worldCupModel.CurrentRound.AllMatches;
         }
 
       
