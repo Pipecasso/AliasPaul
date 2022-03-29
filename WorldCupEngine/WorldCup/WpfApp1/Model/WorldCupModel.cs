@@ -11,11 +11,11 @@ namespace WpfApp1.Model
     {
         private ContestentPool _contestents;
         private Tournament _tournament;
-
-        internal void Reload(string path,string sheet)
+     
+        internal void Reload(string path,string sheet,int totalrounds = 5)
         {
             _contestents = new ContestentPool(path,sheet);
-            _tournament = new Tournament(_contestents);
+            _tournament = new Tournament(_contestents,totalrounds,false);
         }
         
         internal Tournament Tournament { get => _tournament; }

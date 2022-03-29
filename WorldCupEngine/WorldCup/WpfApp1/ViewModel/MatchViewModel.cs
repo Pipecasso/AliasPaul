@@ -16,13 +16,8 @@ namespace WpfApp1.ViewModel
             _match = match;
         }
 
-        public MatchViewModel()
-        {
-
-        }
-
-        public string Contestent1 { get => _match.Item1.Name; }
-        public string Contestent2 { get => _match.Item2.Name; }
+        public string Contestent1 { get => _match==null ? string.Empty : _match.Item1.Name; }
+        public string Contestent2 { get => _match==null ? string.Empty : _match.Item2.Name; }
 
     }
 }

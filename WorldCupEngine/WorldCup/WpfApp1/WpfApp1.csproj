@@ -85,31 +85,30 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="TournamentRound.xaml.cs">
-      <DependentUpon>TournamentRound.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ViewModel\MatchViewModel.cs" />
     <Compile Include="ViewModel\WorldCupViewModel.cs" />
+    <Compile Include="View\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MatchControl.xaml.cs">
       <DependentUpon>MatchControl.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Compile Include="View\RoundControl.xaml.cs">
+      <DependentUpon>RoundControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="TournamentRound.xaml">
+    <Page Include="View\MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MatchControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\RoundControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
