@@ -273,7 +273,7 @@ namespace AutoSrpintReview
 
         private enum ColumnType { unset, id, description, points }
 
-        private void AddColumn(BacklogItem backlogItem,ColumnType columnType,TableRow tableRow)
+        private void AddColumn(BacklogItem backlogItem,ColumnType columnType,TableRow tableRow,Slide slide)
         {
             BodyProperties commonBodyProperties = new BodyProperties();
             ListStyle commonListStyle = new ListStyle();
@@ -298,7 +298,13 @@ namespace AutoSrpintReview
             D.Text text = new D.Text();
             text.Text = textval;
 
-
+            if (columnType == ColumnType.id)
+            {
+                HyperlinkOnClick hyperlinkOnClick = new HyperlinkOnClick();
+                commonRunProperties.Append(hyperlinkOnClick);
+                MakeHyperLink(hyperlinkOnClick, slide, textval);
+            }
+          
             run.Append(commonRunProperties);
             run.Append(text);
 
@@ -312,8 +318,15 @@ namespace AutoSrpintReview
             tableCell.Append(commonTableProperties);
 
             tableRow.Append(tableCell);
+        }
 
-
+        private void MakeHyperLink(HyperlinkOnClick hyperlinkOnClick,Slide slide,string textval)
+        {
+            string hyperlikid = $"rId{slide.SlidePart.HyperlinkRelationships.Count() + 1}";
+            hyperlinkOnClick.Id = hyperlikid;
+            string newuri = $"{_linkbase}/{textval}";
+            Uri uriID = new Uri(newuri, UriKind.Absolute);
+            slide.SlidePart.AddHyperlinkRelationship(uriID, true, hyperlikid);
         }
 
         private void PopulateTableSide(IEnumerable<BacklogItem> backlogItems, Slide slide)
@@ -321,7 +334,6 @@ namespace AutoSrpintReview
             Table table = slide.Descendants<Table>().First();
             TableRow tableRowLast = slide.Descendants<TableRow>().Last();
             int colCount = tableRowLast.Descendants<TableCell>().Count();
-
             bool first = true;
             foreach (BacklogItem backlogItem in backlogItems)
             {
@@ -333,16 +345,12 @@ namespace AutoSrpintReview
                     D.Text id = runlink.Descendants<D.Text>().First();
                     id.Text = backlogItem.ID;
                     HyperlinkOnClick hyperlinkOnClick = runlink.RunProperties.Descendants<HyperlinkOnClick>().First();
-                    string hyperlikid = hyperlinkOnClick.Id;
-                    HyperlinkRelationship hlr = slide.SlidePart.HyperlinkRelationships.Where(x => x.Id == hyperlinkOnClick.Id).FirstOrDefault();
-                    if (hlr != null)
-                    {
-                        string newuri = $"{_linkbase}/{backlogItem.ID}";
-                        Uri uriID = new Uri(newuri, UriKind.Absolute);
-                        slide.SlidePart.DeleteReferenceRelationship(hlr);
-                        slide.SlidePart.AddHyperlinkRelationship(uriID, true, hyperlikid);
-                    }
 
+                    string hyperlikid = $"rId{slide.SlidePart.HyperlinkRelationships.Count() + 1}";
+                    hyperlinkOnClick.Id = hyperlikid;
+                    string newuri = $"{_linkbase}/{backlogItem.ID}";
+                    Uri uriID = new Uri(newuri, UriKind.Absolute);
+                    slide.SlidePart.AddHyperlinkRelationship(uriID, true, hyperlikid);
 
                     Run runtitle = cells[1].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
                     D.Text title = runtitle.Descendants<D.Text>().First();
@@ -359,9 +367,9 @@ namespace AutoSrpintReview
                     TableRow tableRow = new TableRow();
                     tableRow.Height = tableRowLast.Height;
 
-                    AddColumn(backlogItem, ColumnType.id, tableRow);
-                    AddColumn(backlogItem, ColumnType.description, tableRow);
-                    AddColumn(backlogItem, ColumnType.points, tableRow);
+                    AddColumn(backlogItem, ColumnType.id, tableRow,slide);
+                    AddColumn(backlogItem, ColumnType.description, tableRow,slide);
+                    AddColumn(backlogItem, ColumnType.points, tableRow,slide);
                     table.Append(tableRow);
                 }
             }
@@ -383,7 +391,7 @@ namespace AutoSrpintReview
                 slidenum = Math.DivRem(i, itemcount, out itemnum);
                 if (itemnum == 0)
                 {
-                    if (!allslidessame && slidenum == backlogItems.Count() - 1)
+                    if (!allslidessame && slidenum == totalslides)
                     {
                         itemstogo[slidenum] = new BacklogItem[lastslide];
                     }
