@@ -11,15 +11,17 @@ using System.Windows.Forms;
 using WorldCupEngine;
 using WpfApp1.View;
 
+
 namespace WpfApp1.ViewModel
 {
-    public class WorldCupViewModel
+    public class WorldCupViewModel 
     {
         private WorldCupModel _worldCupModel;
         private ICommand _reloadommand;
         private Dictionary<Round, List<MatchControl>> _RoundControls;
 
-
+        public event EventHandler Doit;
+        
         public WorldCupViewModel()
         {
             _worldCupModel = new WorldCupModel();
@@ -45,12 +47,15 @@ namespace WpfApp1.ViewModel
                 FirstControl.Add(matchControl);
             }
             _RoundControls.Add(_worldCupModel.CurrentRound,FirstControl);
-            //now tell our dude he's got controls.
+            TournamentTrigger = !TournamentTrigger;
+            
         }
         public ICommand ReloadCommand
         {
             get => _reloadommand;
         }
+
+        public bool TournamentTrigger { get; set; }
 
         public IEnumerable<MatchControl> CurrentControls { get => _RoundControls[_worldCupModel.CurrentRound]; }
         
