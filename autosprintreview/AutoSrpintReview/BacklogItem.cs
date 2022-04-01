@@ -12,14 +12,16 @@ namespace AutoSrpintReview
         private List<string> _tags;
         
         public enum state {unset,approved,commited,nnew,done };
+        public enum workitemtype { unset,productbi,bug};
         
         public string ID { get; set; }
         public string Title { get; set; }
         public state State { get; set; }
         public int Points { get; set;}
         public List<string> Tags { get => _tags; }
-
-       public BacklogItem()
+        public workitemtype WorkItemType { get; set; }
+        
+        public BacklogItem()
         {
             _tags = new List<string>();
         }
@@ -52,6 +54,7 @@ namespace AutoSrpintReview
             Title = backlogItem.Title;
             State = backlogItem.State;
             Points = backlogItem.Points;
+            WorkItemType = backlogItem.WorkItemType;
         }
     }
 }

@@ -271,19 +271,25 @@ namespace AutoSrpintReview
         }
 
 
-        private enum ColumnType { unset, id, description, points }
+        private enum ColumnType { unset, id, description, points,work_item_type }
 
-        private void AddColumn(BacklogItem backlogItem,ColumnType columnType,TableRow tableRow,Slide slide)
+        private void AddColumn(BacklogItem backlogItem,ColumnType columnType,TableRow tableRow,Slide slide,TableCell benchmark)
         {
-            BodyProperties commonBodyProperties = new BodyProperties();
-            ListStyle commonListStyle = new ListStyle();
-            EndParagraphRunProperties commonEndRunProperties = new EndParagraphRunProperties() { Language = "en-GB", Dirty = false };
-            TableCellProperties commonTableProperties = new TableCellProperties();
-            RunProperties commonRunProperties = new RunProperties() { Language = "en-US", Dirty = false, SmartTagClean = false };
+            TableCell benchclone = (TableCell)benchmark.Clone();
 
-            TableCell tableCell = new TableCell();
-            D.TextBody textBody = new D.TextBody();
-            Paragraph paragraph = new Paragraph();
+            /*  BodyProperties commonBodyProperties = new BodyProperties();
+              ListStyle commonListStyle = new ListStyle();
+              EndParagraphRunProperties commonEndRunProperties = new EndParagraphRunProperties() { Language = "en-GB", Dirty = false };
+              TableCellProperties commonTableProperties = bmTableCellProperties == null ? new TableCellProperties() : bmTableCellProperties;
+              RunProperties commonRunProperties = new RunProperties() { Language = "en-US", Dirty = false, SmartTagClean = false };
+
+              TableCell tableCell = new TableCell();
+              D.TextBody textBody = new D.TextBody();
+              Paragraph paragraph = new Paragraph();*/
+
+            Run myRun = benchclone.Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+            D.Text runtext = myRun.Descendants<D.Text>().First();
+            //runtext.Text = backlogItem.WorkItemType == BacklogItem.workitemtype.bug ? "Bug" : "Product Backlog Item";
 
             string textval = string.Empty;
             switch (columnType)
@@ -291,33 +297,18 @@ namespace AutoSrpintReview
                 case ColumnType.id:textval = backlogItem.ID;break;
                 case ColumnType.description:textval = backlogItem.Title;break;
                 case ColumnType.points:textval = backlogItem.Points.ToString();break;
-
+                case ColumnType.work_item_type:textval = backlogItem.WorkItemType == BacklogItem.workitemtype.bug ? "Bug" : "Product Backlog Item";break;
             }
 
-            Run run = new Run();
-            D.Text text = new D.Text();
-            text.Text = textval;
+            runtext.Text = textval;
 
             if (columnType == ColumnType.id)
             {
-                HyperlinkOnClick hyperlinkOnClick = new HyperlinkOnClick();
-                commonRunProperties.Append(hyperlinkOnClick);
+                HyperlinkOnClick hyperlinkOnClick = myRun.RunProperties.Descendants<HyperlinkOnClick>().First();
                 MakeHyperLink(hyperlinkOnClick, slide, textval);
             }
           
-            run.Append(commonRunProperties);
-            run.Append(text);
-
-            paragraph.Append(run);
-            paragraph.Append(commonEndRunProperties);
-            textBody.Append(commonBodyProperties);
-            textBody.Append(commonListStyle);
-            textBody.Append(paragraph);
-
-            tableCell.Append(textBody);
-            tableCell.Append(commonTableProperties);
-
-            tableRow.Append(tableCell);
+            tableRow.Append(benchclone);
         }
 
         private void MakeHyperLink(HyperlinkOnClick hyperlinkOnClick,Slide slide,string textval)
@@ -329,47 +320,65 @@ namespace AutoSrpintReview
             slide.SlidePart.AddHyperlinkRelationship(uriID, true, hyperlikid);
         }
 
+        private void RepopulateRow(Slide slide,BacklogItem backlogItem)
+        {
+            Table table = slide.Descendants<Table>().First();
+            TableRow tableRowLast = slide.Descendants<TableRow>().Last();
+            TableCell[] cells = tableRowLast.Descendants<TableCell>().ToArray();
+
+            Run runWIT = cells[0].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+            D.Text wit = runWIT.Descendants<D.Text>().First();
+            wit.Text = backlogItem.WorkItemType == BacklogItem.workitemtype.bug ? "Bug" : "Product Backlog Item";
+
+            Run runlink = cells[1].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+            D.Text id = runlink.Descendants<D.Text>().First();
+            id.Text = backlogItem.ID;
+            HyperlinkOnClick hyperlinkOnClick = runlink.RunProperties.Descendants<HyperlinkOnClick>().First();
+
+            string hyperlikid = $"rId{slide.SlidePart.HyperlinkRelationships.Count() + 1}";
+            hyperlinkOnClick.Id = hyperlikid;
+            string newuri = $"{_linkbase}/{backlogItem.ID}";
+            Uri uriID = new Uri(newuri, UriKind.Absolute);
+            slide.SlidePart.AddHyperlinkRelationship(uriID, true, hyperlikid);
+
+            Run runtitle = cells[2].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+            D.Text title = runtitle.Descendants<D.Text>().First();
+            title.Text = backlogItem.Title;
+
+            Run runpoints = cells[3].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+            D.Text points = runpoints.Descendants<D.Text>().First();
+            points.Text = backlogItem.Points.ToString();
+
+        }
+
+        private void PopulateImageSlide(Slide slide, PowerPointBacklogItem powerPointBacklogItem)
+        {
+            RepopulateRow(slide, powerPointBacklogItem);
+        }
+
         private void PopulateTableSide(IEnumerable<BacklogItem> backlogItems, Slide slide)
         {
             Table table = slide.Descendants<Table>().First();
             TableRow tableRowLast = slide.Descendants<TableRow>().Last();
-            int colCount = tableRowLast.Descendants<TableCell>().Count();
             bool first = true;
+            IEnumerable<TableCell> tableCells = tableRowLast.Descendants<TableCell>();
+            TableCell[] tableCellBenchmarks = tableCells.ToArray();
             foreach (BacklogItem backlogItem in backlogItems)
             {
                 if (first)
                 {
-                    TableCell[] cells = tableRowLast.Descendants<TableCell>().ToArray();
-
-                    Run runlink = cells[0].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
-                    D.Text id = runlink.Descendants<D.Text>().First();
-                    id.Text = backlogItem.ID;
-                    HyperlinkOnClick hyperlinkOnClick = runlink.RunProperties.Descendants<HyperlinkOnClick>().First();
-
-                    string hyperlikid = $"rId{slide.SlidePart.HyperlinkRelationships.Count() + 1}";
-                    hyperlinkOnClick.Id = hyperlikid;
-                    string newuri = $"{_linkbase}/{backlogItem.ID}";
-                    Uri uriID = new Uri(newuri, UriKind.Absolute);
-                    slide.SlidePart.AddHyperlinkRelationship(uriID, true, hyperlikid);
-
-                    Run runtitle = cells[1].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
-                    D.Text title = runtitle.Descendants<D.Text>().First();
-                    title.Text = backlogItem.Title;
-
-
-                    Run runpoints = cells[2].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
-                    D.Text points = runpoints.Descendants<D.Text>().First();
-                    points.Text = backlogItem.Points.ToString();
+                    RepopulateRow(slide, backlogItem);
                     first = false;
                 }
                 else
                 {
-                    TableRow tableRow = new TableRow();
+                   TableRow tableRow = new TableRow();
                     tableRow.Height = tableRowLast.Height;
-
-                    AddColumn(backlogItem, ColumnType.id, tableRow,slide);
-                    AddColumn(backlogItem, ColumnType.description, tableRow,slide);
-                    AddColumn(backlogItem, ColumnType.points, tableRow,slide);
+                    
+                    AddColumn(backlogItem, ColumnType.work_item_type, tableRow, slide, tableCellBenchmarks[0]);
+                    AddColumn(backlogItem, ColumnType.id, tableRow,slide, tableCellBenchmarks[1]);
+                    AddColumn(backlogItem, ColumnType.description, tableRow,slide, tableCellBenchmarks[2]);
+                    AddColumn(backlogItem, ColumnType.points, tableRow,slide, tableCellBenchmarks[3]);
                     table.Append(tableRow);
                 }
             }
@@ -404,6 +413,7 @@ namespace AutoSrpintReview
             }
             return itemstogo;
         }
+
     
         public void MakeIt()
         {
@@ -510,11 +520,6 @@ namespace AutoSrpintReview
             IEnumerable<PowerPointBacklogItem> tableitems = _backlogItems.Where(x => (x.Done && !x.solo));
             IEnumerable<IEnumerable<BacklogItem>> slideItems = DivvyUp(tableitems, 3);
             
-            foreach (BacklogItem backlogItem in  screenshotItems)
-            {
-
-            }
-
             int pos = screenshotItems.Count() + 4;
             foreach(IEnumerable<BacklogItem> slides in slideItems)
             {
@@ -523,9 +528,10 @@ namespace AutoSrpintReview
                 pos++;
             }
 
-
-            foreach (BacklogItem backlogItem in inProgressItems)
+            foreach(PowerPointBacklogItem powerPointBacklogItem in screenshotItems)
             {
+                Slide imageSlide = TableSlideClone(slideItems.Count());
+                PopulateImageSlide(imageSlide,powerPointBacklogItem);
 
             }
         }

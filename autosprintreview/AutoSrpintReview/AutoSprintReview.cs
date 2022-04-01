@@ -31,6 +31,7 @@ namespace AutoSrpintReview
                 x.Tags.Add(tag);
             }
         };
+        private Action<BacklogItem, string> ActionWorkItemType = (x, y) => x.WorkItemType = StringToWIT(y);
 
         private static BacklogItem.state StringToState(string sstate)
         {
@@ -43,6 +44,18 @@ namespace AutoSrpintReview
                 case "New": statetogo = BacklogItem.state.nnew; break;
             }
             return statetogo;
+        }
+
+        private static BacklogItem.workitemtype StringToWIT(string wit)
+        {
+            BacklogItem.workitemtype statetogo = BacklogItem.workitemtype.unset;
+            switch (wit)
+            {
+                case "Product Backlog Item": statetogo = BacklogItem.workitemtype.productbi;break;
+                case "Bug": statetogo = BacklogItem.workitemtype.bug;break;
+            }
+            return statetogo;
+
         }
 
         private static string CellIndex(Cell c, uint rowindex)
@@ -112,7 +125,7 @@ namespace AutoSrpintReview
             ActionState(backlogItem, GetActionString("State", row));
             ActionPoints(backlogItem, GetActionString("Effort", row));
             ActionTags(backlogItem, GetActionString("Tags", row));
-
+            ActionWorkItemType(backlogItem, GetActionString("Work Item Type", row));
 
             _backlogItems.Add(backlogItem);
            
@@ -165,9 +178,5 @@ namespace AutoSrpintReview
                 powerPoint.SaveIt(path);
             }
         }
-
-        
-
-
     }
 }
