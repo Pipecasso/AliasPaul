@@ -5,14 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using WorldCupEngine;
+using System.Windows.Forms;
 
 namespace WpfApp1.View
 {
@@ -26,11 +19,19 @@ namespace WpfApp1.View
             InitializeComponent();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public void ShowMatches(IEnumerable<MatchControl> matchControls)
         {
            FirstRoundControl.DeployMatchControl(matchControls);
+        }
+
+        public void NewTournament_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                 WorldCupVm.NewContestents(ofd.FileName);
+            }
         }
     }
 }

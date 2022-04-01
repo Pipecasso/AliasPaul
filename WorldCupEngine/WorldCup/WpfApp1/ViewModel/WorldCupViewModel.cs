@@ -19,25 +19,16 @@ namespace WpfApp1.ViewModel
         private WorldCupModel _worldCupModel;
         private ICommand _reloadommand;
         private Dictionary<Round, List<MatchControl>> _RoundControls;
-
-        public event EventHandler Doit;
-        
+   
         public WorldCupViewModel()
         {
             _worldCupModel = new WorldCupModel();
-            _reloadommand = new RelayCommand(NewContestents);
             _RoundControls = new Dictionary<Round, List<MatchControl>>();
         }
 
-        public void NewContestents()
+        public void NewContestents(string path)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                _worldCupModel.Reload(ofd.FileName, "");
-            }
-
+            _worldCupModel.Reload(path, "");
             List<MatchControl> FirstControl = new List<MatchControl>();
             foreach (Match m in _worldCupModel.CurrentRound.AllMatches)
             {
@@ -47,7 +38,7 @@ namespace WpfApp1.ViewModel
                 FirstControl.Add(matchControl);
             }
             _RoundControls.Add(_worldCupModel.CurrentRound,FirstControl);
-            TournamentTrigger = !TournamentTrigger;
+          
             
         }
         public ICommand ReloadCommand
@@ -55,7 +46,7 @@ namespace WpfApp1.ViewModel
             get => _reloadommand;
         }
 
-        public bool TournamentTrigger { get; set; }
+      
 
         public IEnumerable<MatchControl> CurrentControls { get => _RoundControls[_worldCupModel.CurrentRound]; }
         

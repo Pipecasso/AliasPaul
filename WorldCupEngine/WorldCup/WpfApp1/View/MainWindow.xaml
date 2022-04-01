@@ -10,18 +10,6 @@
     <Window.DataContext>
         <vm:WorldCupViewModel x:Name="WorldCupVm"></vm:WorldCupViewModel>
     </Window.DataContext>
-    <Window.Style>
-        <Style TargetType="Window">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding TournamentTrigger}" Value="True">
-                    <Setter Property="Visibility" Value="Hidden"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding IsHidden}" Value="False">
-                    <Setter Property="Visibility" Value="Visible"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </Window.Style>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -30,7 +18,7 @@
             <RowDefinition Height="6*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Column="0" Grid.Row="1" Command="{Binding ReloadCommand}">New Tournament</Button>
+        <Button Grid.Column="0" Grid.Row="1" Click="NewTournament_Click">New Tournament</Button>
         <local:RoundControl x:Name="FirstRoundControl" Grid.Column="0" Grid.Row="0"></local:RoundControl>
     </Grid>
 </Window>
