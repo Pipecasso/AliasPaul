@@ -13,11 +13,12 @@ namespace AutoSrpintReview
     {
         static void Main(string[] args)
         {
-            string document = args[0];
-            string templatepath = args[1];
+            string config = args[0];
+            string outtpath = args[1];
+            SR_Config sR_Config = new SR_Config(config);
 
-            AutoSprintReview autoSprintReview = new AutoSprintReview(document, templatepath,"Marauders", @"\\ingrnet\eu\RUN\Users\Marauders\Sprint Review\Screenshots\");
-            autoSprintReview.MakeIt("arse.pptx");
+           AutoSprintReview autoSprintReview = new AutoSprintReview(sR_Config);
+            autoSprintReview.MakeIt(outtpath);
         }
     }
 }

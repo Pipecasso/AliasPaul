@@ -30,6 +30,7 @@ namespace AutoSrpintReview
         private SlidePart _demoSplide;
         private SlidePart _firstTableSlide;
 
+
         public string TeamName { get; set; }
         public string TeamDescription { get; set; }
         public string LogoPath { get; set; }
@@ -50,7 +51,7 @@ namespace AutoSrpintReview
 
         public PowerPoint(PowerpointBacklogItems backlogItems, string templatepath, string outputdir, string itearion)
         {
-
+         
             _backlogItems = backlogItems;
             _BulletText = new List<Tuple<BulletCat, string>>();
 
@@ -152,13 +153,14 @@ namespace AutoSrpintReview
 
         private void AddPicture(string path,SlidePart slidepart,string name)
         {
-            ImagePart LogoPart = slidepart.AddImagePart(ImagePartType.Png);
-            using (FileStream stream = File.OpenRead(LogoPath))
+            string ext = System.IO.Path.GetExtension(path);
+            ImagePart LogoPart = slidepart.AddImagePart(ext == ".png" ? ImagePartType.Png : ImagePartType.Jpeg );
+            using (FileStream stream = File.OpenRead(path))
             {
                 LogoPart.FeedData(stream);
             }
 
-            ShapeTree shapeTree = _teamSlide.Slide.Descendants<DocumentFormat.OpenXml.Presentation.ShapeTree>().First();
+            ShapeTree shapeTree = slidepart.Slide.Descendants<DocumentFormat.OpenXml.Presentation.ShapeTree>().First();
 
             P.Picture picture = new P.Picture();
             P.NonVisualPictureProperties nonVisualPictureProperties = new P.NonVisualPictureProperties();
@@ -238,8 +240,7 @@ namespace AutoSrpintReview
         {
             //clone the slide
             Slide newSlide = (Slide)_firstTableSlide.Slide.CloneNode(true);
-
-
+       
             SlideIdList slideIdList = _presentationPart.Presentation.SlideIdList;
             IEnumerable<SlideId> slideIdCollection = slideIdList.ChildElements.Cast<SlideId>();
 
@@ -354,6 +355,14 @@ namespace AutoSrpintReview
         private void PopulateImageSlide(Slide slide, PowerPointBacklogItem powerPointBacklogItem)
         {
             RepopulateRow(slide, powerPointBacklogItem);
+
+            string[] imagefilesjpg = Directory.GetFiles(powerPointBacklogItem.ImagePath, "*.jpg");
+            string[] imagefilespng = Directory.GetFiles(powerPointBacklogItem.ImagePath, "*.png");
+            IEnumerable<string> imagefiles = imagefilesjpg.Concat(imagefilespng);
+
+            string ext = System.IO.Path.GetExtension(imagefiles.First());
+            ImagePartType ipt = ext == ".jpg" ? ImagePartType.Jpeg : ImagePartType.Png;
+            AddPicture(imagefiles.First(), slide.SlidePart, powerPointBacklogItem.ID); 
         }
 
         private void PopulateTableSide(IEnumerable<BacklogItem> backlogItems, Slide slide)
@@ -417,7 +426,77 @@ namespace AutoSrpintReview
     
         public void MakeIt()
         {
-            List<string> Expressions = new List<string>();
+            //replace
+            Substitute();
+
+            //logo
+            if (File.Exists(LogoPath))
+            {
+                AddPicture(LogoPath, _teamSlide,"TeamLogo");
+            }
+   
+            IEnumerable<string> goals = _BulletText.Where(x => x.Item1 == BulletCat.SprintGoal).Select(y => y.Item2);
+            IEnumerable<string> demos = _BulletText.Where(x => x.Item1 == BulletCat.Demo).Select(y => y.Item2);
+            ShapeTree shapeTree = _goalSlide.Slide.Descendants<ShapeTree>().FirstOrDefault();
+            P.Shape goalshape = ShapeFinder("5", _goalSlide);
+            AddBullets(goalshape, goals);
+            if (demos.Any())
+            {
+                P.Shape demoshape = ShapeFinder("5", _demoSplide);
+                AddBullets(demoshape, demos);
+            }
+
+            IEnumerable<PowerPointBacklogItem> inProgressItems = _backlogItems.Where(x => !x.Done);
+            IEnumerable<PowerPointBacklogItem> screenshotItems = _backlogItems.Where(x => x.solo);
+            IEnumerable<PowerPointBacklogItem> tableitems = _backlogItems.Where(x => (x.Done && !x.solo));
+            IEnumerable<IEnumerable<BacklogItem>> slideItems = DivvyUp(tableitems, 3);
+            
+            int pos = screenshotItems.Count() + 4;
+            foreach(IEnumerable<BacklogItem> slides in slideItems)
+            {
+                Slide tableSlide = TableSlideClone(pos++);
+                PopulateTableSide(slides, tableSlide);
+            }
+
+            foreach(PowerPointBacklogItem powerPointBacklogItem in screenshotItems)
+            {
+                Slide imageSlide = TableSlideClone(pos++);
+                PopulateImageSlide(imageSlide,powerPointBacklogItem);
+            }
+
+            if (inProgressItems.Any())
+            {
+                Slide notdoneslide = TableSlideClone(pos++);
+                PopulateTableSide(inProgressItems,notdoneslide);
+                AppendSlideTitle(notdoneslide," - InProgress");
+
+
+            }
+
+            //remove table slide
+            SlideId tableId = GetSlideId(_firstTableSlide.Slide);
+            _presentationPart.Presentation.SlideIdList.RemoveChild(tableId);
+            _presentationPart.DeletePart(_firstTableSlide);
+
+        }
+
+        private void AppendSlideTitle(Slide slide,string appendage)
+        {
+            foreach (Paragraph p in slide.Descendants<Paragraph>())
+            {
+                D.Text tntext = p.Descendants<D.Text>().Where(x => x.Text.Contains(TeamName)).FirstOrDefault();
+                if (tntext!=null)
+                {
+                    string appended = $"{tntext.Text}{appendage}";
+                    tntext.Text = appended;
+                    break;
+                }
+            }
+        }
+
+
+        private void Substitute()
+        {
             IEnumerable<D.Text> texts = new List<D.Text>();
             Presentation presentation = _presentationPart.Presentation;
             OpenXmlElementList slideIds = presentation.SlideIdList.ChildElements;
@@ -428,22 +507,24 @@ namespace AutoSrpintReview
                 Slide slide = slideTitlePart.Slide;
                 IEnumerable<Paragraph> paragraphs = slide.Descendants<Paragraph>();
                 foreach (Paragraph paragraph in paragraphs)
-                { 
+                {
                     IEnumerable<D.Text> temptexts = texts.Concat(paragraph.Descendants<D.Text>());
                     texts = temptexts;
-                }  
+                }
             }
+
             makeitstatus status = makeitstatus.neutral;
 
             string bigpowerpointstring = string.Empty;
+            Dictionary<string, List<D.Text>> replacements = new Dictionary<string, List<D.Text>>();
             Dictionary<int, D.Text> strindex = new Dictionary<int, D.Text>();
             int tick = 0;
-            Dictionary<string, List<D.Text> > replacements = new Dictionary<string, List<D.Text>>();
+           
             foreach (D.Text text in texts)
             {
                 bigpowerpointstring += text.Text;
                 int tock = tick + text.Text.Length;
-                for (int i=tick;i<tock;i++)
+                for (int i = tick; i < tock; i++)
                 {
                     strindex.Add(i, text);
                 }
@@ -474,19 +555,19 @@ namespace AutoSrpintReview
                             List<D.Text> newlist = new List<D.Text>() { strindex[index + 1] };
                             replacements.Add(replacement, newlist);
                         }
-                      
+
                         index = index2;
                         status = makeitstatus.neutral;
                         break;
                 }
-                if (index>-1) BracketList.Add(strindex[index]);
+                if (index > -1) BracketList.Add(strindex[index]);
 
             } while (index > -1);
 
-            foreach (KeyValuePair<string,List<D.Text>> kvp in replacements)
+            foreach (KeyValuePair<string, List<D.Text>> kvp in replacements)
             {
                 string final = subit(kvp.Key);
-                foreach(D.Text text in kvp.Value)
+                foreach (D.Text text in kvp.Value)
                 {
                     text.Text = text.Text.Replace(kvp.Key, final);
                 }
@@ -494,46 +575,24 @@ namespace AutoSrpintReview
 
             foreach (D.Text text in BracketList)
             {
-                text.Text = text.Text.Replace("[",string.Empty);
+                text.Text = text.Text.Replace("[", string.Empty);
                 text.Text = text.Text.Replace("]", string.Empty);
             }
+        }
 
-            //logo
-            if (File.Exists(LogoPath))
+        private SlideId GetSlideId(Slide slide)
+        {
+            SlideId togo = null;
+            foreach (SlideId slideId in this._presentationPart.Presentation.SlideIdList)
             {
-                AddPicture(LogoPath, _teamSlide,"TeamLogo");
+                SlidePart candidate = (SlidePart)_presentationPart.GetPartById(slideId.RelationshipId.Value);
+                if (candidate.Slide == slide)
+                {
+                    togo = slideId;
+                    break;
+                }
             }
-   
-            IEnumerable<string> goals = _BulletText.Where(x => x.Item1 == BulletCat.SprintGoal).Select(y => y.Item2);
-            IEnumerable<string> demos = _BulletText.Where(x => x.Item1 == BulletCat.Demo).Select(y => y.Item2);
-            ShapeTree shapeTree = _goalSlide.Slide.Descendants<ShapeTree>().FirstOrDefault();
-            P.Shape goalshape = ShapeFinder("5", _goalSlide);
-            AddBullets(goalshape, goals);
-            if (demos.Any())
-            {
-                P.Shape demoshape = ShapeFinder("5", _demoSplide);
-                AddBullets(demoshape, demos);
-            }
-
-            IEnumerable<PowerPointBacklogItem> inProgressItems = _backlogItems.Where(x => !x.Done);
-            IEnumerable<PowerPointBacklogItem> screenshotItems = _backlogItems.Where(x => x.solo);
-            IEnumerable<PowerPointBacklogItem> tableitems = _backlogItems.Where(x => (x.Done && !x.solo));
-            IEnumerable<IEnumerable<BacklogItem>> slideItems = DivvyUp(tableitems, 3);
-            
-            int pos = screenshotItems.Count() + 4;
-            foreach(IEnumerable<BacklogItem> slides in slideItems)
-            {
-                Slide tableSlide = TableSlideClone(pos);
-                PopulateTableSide(slides, tableSlide);
-                pos++;
-            }
-
-            foreach(PowerPointBacklogItem powerPointBacklogItem in screenshotItems)
-            {
-                Slide imageSlide = TableSlideClone(slideItems.Count());
-                PopulateImageSlide(imageSlide,powerPointBacklogItem);
-
-            }
+            return togo;
         }
 
         public void SaveIt(string path)

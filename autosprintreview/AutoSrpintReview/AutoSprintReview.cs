@@ -14,9 +14,8 @@ namespace AutoSrpintReview
         private List<BacklogItem> _backlogItems;
         private Dictionary<string, string> _columnIndexMap;
         private string[] _sharedStrings;
-        private string _powertemplate;
-        private string _teamName;
-        private string _screenshotsPath;
+        private SR_Config _Config;
+  
 
         private Action<BacklogItem, string> ActionID = (x, y) => x.ID = y;
         private Action<BacklogItem, string> ActionTitle = (x, y) => x.Title = y;
@@ -67,14 +66,13 @@ namespace AutoSrpintReview
 
          
 
-        public AutoSprintReview(string xlsprint,string powertemplate,string teamname,string screenshotpath)
+        public AutoSprintReview(SR_Config sR_Config)
         {
+            _Config = sR_Config;
             _backlogItems = new List<BacklogItem>();
-            _powertemplate = powertemplate;
-            _teamName = teamname;
-            _screenshotsPath = screenshotpath;
+       
 
-            using (SpreadsheetDocument sr_doc = SpreadsheetDocument.Open(xlsprint, false))
+            using (SpreadsheetDocument sr_doc = SpreadsheetDocument.Open(sR_Config.BacklogPath, false))
             {
                 Workbook workbook = sr_doc.WorkbookPart.Workbook;
                 Worksheet worksheet = null;
@@ -154,8 +152,8 @@ namespace AutoSrpintReview
             PowerpointBacklogItems powerPointBacklogItems = new PowerpointBacklogItems(_backlogItems);
             foreach(PowerPointBacklogItem backlogItem in powerPointBacklogItems)
             {
-                string link = $"{baseURI}{_teamName}/Backlog%20items/?workitem={backlogItem.ID}";
-                string potential_imageloc = $@"{_screenshotsPath}\\{backlogItem.ID}";
+                string link = $"{baseURI}{_Config.TeamName}/Backlog%20items/?workitem={backlogItem.ID}";
+                string potential_imageloc = $@"{_Config.ScreenshotPath}\\{backlogItem.ID}";
                 backlogItem.IDLink = link;
                 if (Directory.Exists(potential_imageloc) && Directory.GetFiles(potential_imageloc).Any())
                 {
@@ -163,17 +161,22 @@ namespace AutoSrpintReview
                 }
             }
             
-            using (PowerPoint powerPoint = new PowerPoint(powerPointBacklogItems, _powertemplate, @"C:\SR", "2"))
+            using (PowerPoint powerPoint = new PowerPoint(powerPointBacklogItems, _Config.TemplatePath, Path.GetTempPath(), _Config.Interation))
             {
-                powerPoint.TeamName = _teamName;
-                powerPoint.TeamDescription = "Isogen Futures";
-                powerPoint.Date = DateTime.Now;
-                powerPoint.LogoPath = @"C:\SR\mammap.jpg";
-                powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "Discover the meaning of life");
-                powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "Invent a new type of cheese");
-                powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, "World Peace");
-                powerPoint.AddBulletText(PowerPoint.BulletCat.Demo, "Anti Gravitiy Machine");
-                powerPoint.AddBulletText(PowerPoint.BulletCat.Demo, "Runcornshire Cheese");
+                powerPoint.TeamName = _Config.TeamName;
+                powerPoint.TeamDescription = _Config.TeamDescription;
+                powerPoint.Date = _Config.Date;
+                powerPoint.LogoPath = _Config.LogoPath;
+                foreach (string goal in _Config.Goals)
+                {
+                    powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, goal);
+                }
+              
+                foreach (string demo in _Config.Demos)
+                {
+                    powerPoint.AddBulletText(PowerPoint.BulletCat.Demo, demo);
+                }
+          
                 powerPoint.MakeIt();
                 powerPoint.SaveIt(path);
             }
