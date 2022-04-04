@@ -17,7 +17,7 @@ namespace WpfApp1.ViewModel
     public class WorldCupViewModel 
     {
         private WorldCupModel _worldCupModel;
-        private ICommand _reloadommand;
+    
         private Dictionary<Round, List<MatchControl>> _RoundControls;
    
         public WorldCupViewModel()
@@ -37,16 +37,10 @@ namespace WpfApp1.ViewModel
                 matchControl.DataContext = matchViewModel;
                 FirstControl.Add(matchControl);
             }
-            _RoundControls.Add(_worldCupModel.CurrentRound,FirstControl);
-          
-            
-        }
-        public ICommand ReloadCommand
-        {
-            get => _reloadommand;
+            _RoundControls.Add(_worldCupModel.CurrentRound, FirstControl);
         }
 
-      
+    
 
         public IEnumerable<MatchControl> CurrentControls { get => _RoundControls[_worldCupModel.CurrentRound]; }
         

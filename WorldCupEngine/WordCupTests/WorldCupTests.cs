@@ -227,7 +227,6 @@ namespace WordCupTests
 
             contestents.Export("CelebsPS.xlsx", "Sheet1", true);
 
-
             ContestentPool cpCheck = new ContestentPool("CelebsPS.xlsx", "Sheet1", false);
             Assert.AreEqual(106, cpCheck.Count);
             Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
@@ -243,6 +242,57 @@ namespace WordCupTests
 
         }
 
+        [TestMethod]
+        public void MixUp()
+        {
+            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            Tournament tournament = new Tournament(contestents, 5, false);
+            Round round1 = tournament.CurrentRound;
+            Match[] r1matches = round1.AllMatches.ToArray();
+            PlayMatch(r1matches[0], Random);
+            PlayMatch(r1matches[10], Random);
+            PlayMatch(r1matches[3], Random);
+            PlayMatch(r1matches[9], Random);
+            PlayMatch(r1matches[2], Random);
+            PlayMatch(r1matches[7], Random);
+            PlayMatch(r1matches[1], Random);
+            PlayMatch(r1matches[14], Random);
+            PlayMatch(r1matches[15], Random);
+            PlayMatch(r1matches[4], Random);
+            PlayMatch(r1matches[12], Random);
+            PlayMatch(r1matches[5], Random);
+            PlayMatch(r1matches[6], Random);
+            PlayMatch(r1matches[11], Random);
+            PlayMatch(r1matches[8], Random);
+            PlayMatch(r1matches[13], Random);
+            Assert.AreEqual(0, round1.AllMatches.Where(x => x.result == Match.Result.notplayed).Count());
+            Round round2 = tournament.NextRound();
+            Match[] r2matches = round2.AllMatches.ToArray();
+            PlayMatch(r2matches[0], Random);
+            PlayMatch(r2matches[3], Random);
+            PlayMatch(r2matches[2], Random);
+            PlayMatch(r2matches[1], Random);
+            PlayMatch(r2matches[4], Random);
+            PlayMatch(r2matches[7], Random);
+            PlayMatch(r2matches[6], Random);
+            PlayMatch(r2matches[5], Random);
+            Assert.AreEqual(0, round2.AllMatches.Where(x => x.result == Match.Result.notplayed).Count());
+            Round round3 = tournament.NextRound();
+            Match[] r3matches = round3.AllMatches.ToArray();
+            PlayMatch(r3matches[0], Random);
+
+            tournament.Save("PausedTournament3.xlsx");
+            Tournament loadedTournament = new Tournament(contestents);
+            loadedTournament.Load("PausedTournament3.xlsx");
+            Round currentround = loadedTournament.CurrentRound;
+            Match[] currentMatches = currentround.AllMatches.ToArray();
+            Assert.IsFalse(currentMatches[0].result == Match.Result.notplayed);
+            PlayMatch(currentMatches[2], Random);
+            PlayMatch(currentMatches[3], Random);
+            PlayMatch(currentMatches[1], Random);
+            Assert.AreEqual(0, currentround.AllMatches.Where(x => x.result == Match.Result.notplayed).Count());
+
+        }
 
         static void PlayRandomTournamemt(Tournament t)
         {

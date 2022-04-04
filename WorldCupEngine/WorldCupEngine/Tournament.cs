@@ -78,6 +78,41 @@ namespace WorldCupEngine
             }
         }
 
+        public Round NextRound()
+        {
+            IEnumerable<Contestent> Winners = CurrentRound.AllMatches.Select(x => x.Winner());
+            IEnumerable<Contestent> Losers = CurrentRound.AllMatches.Select(x => x.Loser());
+            foreach (Contestent winner in Winners)
+            {
+                winner.IncWin();
+            }
+            foreach (Contestent loser in Losers)
+            {
+                loser.IncLoss();
+                if (_round > 1)
+                {
+                    int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 2)));
+                    loser.AddPoints(points);
+                }
+            }
+
+            Round nextRound = _Rounds[_round].Next(_facup);
+            if (nextRound == null)
+            {
+                Round final_round = _Rounds[_round];
+                Match final = final_round.AllMatches.Single<Match>();
+                final.Winner().TournamentWin();
+                int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 1)));
+                final.Winner().AddPoints(points);
+            }
+            else
+            {
+                _round++;
+                _Rounds.Add(_round, nextRound);
+            }
+            return nextRound;
+        }
+
         public Match NextMatch()
         {
             Match current = null;
@@ -87,37 +122,8 @@ namespace WorldCupEngine
             }
             else
             {
-                IEnumerable<Contestent> Winners = CurrentRound.AllMatches.Select(x => x.Winner());
-                IEnumerable<Contestent> Losers = CurrentRound.AllMatches.Select(x => x.Loser());
-                foreach (Contestent winner in Winners)
-                {
-                    winner.IncWin();
-                }
-                foreach (Contestent loser in Losers)
-                {
-                    loser.IncLoss();
-                    if (_round > 1)
-                    {
-                        int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 2)));
-                        loser.AddPoints(points);
-                    }   
-                }
-                
-                Round nextRound = _Rounds[_round].Next(_facup);
-                if (nextRound == null)
-                {
-                    Round final_round = _Rounds[_round];
-                    Match final = final_round.AllMatches.Single<Match>();
-                    final.Winner().TournamentWin();
-                    int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 1)));
-                    final.Winner().AddPoints(points);
-                }
-                else 
-                {
-                    _round++;
-                    _Rounds.Add(_round, nextRound);
-                    current = nextRound.CurrentMatch;
-                }
+                Round nextRound = NextRound();
+                if (nextRound!=null) { current = nextRound.CurrentMatch; }
             }
             return current; 
         }
@@ -169,8 +175,5 @@ namespace WorldCupEngine
                 coltop = coltop.CellRight().CellRight();
             }
         }
-        
-       
-    
     }
 }

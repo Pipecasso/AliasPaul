@@ -19,5 +19,7 @@ namespace WpfApp1.ViewModel
         public string Contestent1 { get => _match==null ? string.Empty : _match.Item1.Name; }
         public string Contestent2 { get => _match==null ? string.Empty : _match.Item2.Name; }
 
+        public bool NotPlayed { get => _match.result == Match.Result.notplayed; }
+
     }
 }

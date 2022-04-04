@@ -31,6 +31,7 @@ namespace WpfApp1.View
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                  WorldCupVm.NewContestents(ofd.FileName);
+                FirstRoundControl.DeployMatchControl(WorldCupVm.CurrentControls);
             }
         }
     }
