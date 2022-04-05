@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <AutoSprintReview>
   <Sprint Iteration="4" Date="06/04/2022" NextDate="04/05/2022" Screenshots="\\ingrnet\eu\RUN\Users\Marauders\Sprint Review\Screenshots\"></Sprint>
   <Team Name="Marauders" Description="IsogenFuture" Logo="\\ingrnet\eu\RUN\Users\Marauders\logo\mammap.jpg"></Team>
@@ -8,6 +8,6 @@
     <Goal>Add remaining IR UX features</Goal>
   </Goals>
   <Demos>
-    <Demo>R UX : Implement expression editor preview </Demo>
+    <Demo>IR UX : Implement expression editor preview </Demo>
   </Demos>
 </AutoSprintReview>

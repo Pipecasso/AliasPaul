@@ -17,7 +17,7 @@ namespace AutoSrpintReview
             string outtpath = args[1];
             SR_Config sR_Config = new SR_Config(config);
 
-           AutoSprintReview autoSprintReview = new AutoSprintReview(sR_Config);
+            AutoSprintReview autoSprintReview = new AutoSprintReview(sR_Config);
             autoSprintReview.MakeIt(outtpath);
         }
     }

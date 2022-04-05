@@ -80,7 +80,7 @@ namespace AutoSrpintReview
         public string TeamName { get => _teamname; }
         public string TeamDescription { get => _teamdescription; }
         public DateTime Date { get => _date; }
-        public DateTime DataNext { get => _datenext; }
+        public DateTime DateNext { get => _datenext; }
         public string LogoPath { get => _logopath; }
         public string BacklogPath { get => _backlogpath; }
         public string BurndownPath { get => _burndowpath; }

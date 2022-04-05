@@ -27,7 +27,7 @@ namespace AutoSrpintReview
             string[] tags = y.Split(';');
             foreach (string tag in tags)
             {
-                x.Tags.Add(tag);
+                x.Tags.Add(tag.Trim());
             }
         };
         private Action<BacklogItem, string> ActionWorkItemType = (x, y) => x.WorkItemType = StringToWIT(y);
@@ -63,8 +63,6 @@ namespace AutoSrpintReview
             int i = cellref.IndexOf(rowindex.ToString());
             return cellref.Substring(0, i);
         }
-
-         
 
         public AutoSprintReview(SR_Config sR_Config)
         {
@@ -166,7 +164,9 @@ namespace AutoSrpintReview
                 powerPoint.TeamName = _Config.TeamName;
                 powerPoint.TeamDescription = _Config.TeamDescription;
                 powerPoint.Date = _Config.Date;
+                powerPoint.NextDate = _Config.DateNext;
                 powerPoint.LogoPath = _Config.LogoPath;
+                powerPoint.BurnPath = _Config.BurndownPath;
                 foreach (string goal in _Config.Goals)
                 {
                     powerPoint.AddBulletText(PowerPoint.BulletCat.SprintGoal, goal);

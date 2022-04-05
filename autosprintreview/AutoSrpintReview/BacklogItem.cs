@@ -47,6 +47,14 @@ namespace AutoSrpintReview
             }
         }
 
+        public bool Support
+        {
+            get
+            {
+                return _tags.Contains("Support");
+            }
+        }
+
         protected void CopyFrom(BacklogItem backlogItem)
         {
             _tags = backlogItem._tags;

@@ -29,13 +29,16 @@ namespace AutoSrpintReview
         private SlidePart _goalSlide;
         private SlidePart _demoSplide;
         private SlidePart _firstTableSlide;
+        private SlidePart _burndownSlide;
 
 
         public string TeamName { get; set; }
         public string TeamDescription { get; set; }
         public string LogoPath { get; set; }
         public DateTime Date { get; set; }
-     
+        public DateTime NextDate { get; set; }
+        public string BurnPath { get; set; }    
+
         public string Iteration { get => _iteration; }
         public Dictionary<string, Func<PowerPoint, string>> _replacemap;
 
@@ -73,22 +76,37 @@ namespace AutoSrpintReview
             Func<PowerPoint, string> TeamNameF = x => x.TeamName;
             Func<PowerPoint, string> TeamDescriptionF = x => x.TeamDescription;
             Func<PowerPoint, string> SRDate = x => x.Date.ToLongDateString();
+            Func<PowerPoint, string> SRNextDate = x => x.NextDate.ToLongDateString();
             Func<PowerPoint, string> Iteration = x => x.Iteration;
+            Func<PowerPoint, string> EstimatedPoints = x => x._backlogItems.OriginalPoints().ToString();
+            Func<PowerPoint, string> ActualVelocity = x => x._backlogItems.DonePoints().ToString();
+            Func<PowerPoint, string> Support = x => x._backlogItems.Where(y => y.Support).Sum(z => z.Points).ToString();
+            Func<PowerPoint, string> ScopeCreep = x => x._backlogItems.AdditionalItems().ToString();
+            Func<PowerPoint, string> NotDone = x => x._backlogItems.NotDonePoints().ToString();
+            
+         
             _replacemap.Add("SR.TeamName", TeamNameF);
             _replacemap.Add("SR.TeamDescription", TeamDescriptionF);
             _replacemap.Add("SR.Date", SRDate);
             _replacemap.Add("SR.Iteration", Iteration);
+            _replacemap.Add("SR.NextDate", SRNextDate);
+            _replacemap.Add("SR.EP", EstimatedPoints);
+            _replacemap.Add("SR.AV", ActualVelocity);
+            _replacemap.Add("SR.SU", Support);
+            _replacemap.Add("SR.SC", ScopeCreep);
+            _replacemap.Add("SR.IP", NotDone);
 
             StringValue teamSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId3").First();
             StringValue goalSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId4").First();
             StringValue demoSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId5").First();
             StringValue tableSideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId6").First();
+            StringValue burnSlideID = _presentationPart.Presentation.SlideIdList.ChildElements.Select(x => (x as SlideId).RelationshipId).Where(y => y == "rId7").First();
 
             _teamSlide = (SlidePart)_presentationPart.GetPartById(teamSlideID);
             _goalSlide = (SlidePart)_presentationPart.GetPartById(goalSlideID);
             _demoSplide = (SlidePart)_presentationPart.GetPartById(demoSlideID);
             _firstTableSlide = (SlidePart)_presentationPart.GetPartById(tableSideID);
-
+            _burndownSlide = (SlidePart)_presentationPart.GetPartById(burnSlideID);
         }
 
         public void AddBulletText(BulletCat bulletCat, string text)
@@ -347,6 +365,17 @@ namespace AutoSrpintReview
             title.Text = backlogItem.Title;
 
             Run runpoints = cells[3].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
+            if (backlogItem.AddedDuringSprint)
+            {
+                RunProperties runProperties = runpoints.Descendants<RunProperties>().FirstOrDefault();
+                if (runProperties!= null)
+                {
+                    SolidFill solidFill = runProperties.Descendants<SolidFill>().FirstOrDefault();
+                    RgbColorModelHex rgbColorModelHex = new RgbColorModelHex();
+                    rgbColorModelHex.Val = (HexBinaryValue)"DF751D";
+                    solidFill.RgbColorModelHex = rgbColorModelHex;
+                }   
+            }
             D.Text points = runpoints.Descendants<D.Text>().First();
             points.Text = backlogItem.Points.ToString();
 
@@ -450,8 +479,8 @@ namespace AutoSrpintReview
             IEnumerable<PowerPointBacklogItem> screenshotItems = _backlogItems.Where(x => x.solo);
             IEnumerable<PowerPointBacklogItem> tableitems = _backlogItems.Where(x => (x.Done && !x.solo));
             IEnumerable<IEnumerable<BacklogItem>> slideItems = DivvyUp(tableitems, 3);
-            
-            int pos = screenshotItems.Count() + 4;
+
+            int pos = 4;
             foreach(IEnumerable<BacklogItem> slides in slideItems)
             {
                 Slide tableSlide = TableSlideClone(pos++);
@@ -469,9 +498,9 @@ namespace AutoSrpintReview
                 Slide notdoneslide = TableSlideClone(pos++);
                 PopulateTableSide(inProgressItems,notdoneslide);
                 AppendSlideTitle(notdoneslide," - InProgress");
-
-
             }
+
+            AddPicture(BurnPath, _burndownSlide, "BurnDown");
 
             //remove table slide
             SlideId tableId = GetSlideId(_firstTableSlide.Slide);
@@ -599,6 +628,8 @@ namespace AutoSrpintReview
         {
             _presentationDocument.SaveAs(path);
         }
+
+       
     }
 }
 
