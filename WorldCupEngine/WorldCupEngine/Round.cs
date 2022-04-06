@@ -157,16 +157,14 @@ namespace WorldCupEngine
                 Contestent c1 = cpool.Single(x => x.Name == player1);
                 Contestent c2 = cpool.Single(x => x.Name == player2);
                 Match m = new Match(c1, c2);
-                if (i<=_heat)
+
+                if (player1cell.Style.Fill.BackgroundColor == XLColor.AppleGreen)
                 {
-                    if (player1cell.Style.Fill.BackgroundColor == XLColor.AppleGreen)
-                    {
-                        m.result = Match.Result.firstw;
-                    }
-                    else
-                    {
-                        m.result = Match.Result.secondw;
-                    }
+                    m.result = Match.Result.firstw;
+                }
+                else if (player2cell.Style.Fill.BackgroundColor == XLColor.AppleGreen)
+                {
+                    m.result = Match.Result.secondw;
                 }
                 else
                 {

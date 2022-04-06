@@ -280,6 +280,7 @@ namespace WordCupTests
             Round round3 = tournament.NextRound();
             Match[] r3matches = round3.AllMatches.ToArray();
             PlayMatch(r3matches[0], Random);
+            PlayMatch(r3matches[2], Random);
 
             tournament.Save("PausedTournament3.xlsx");
             Tournament loadedTournament = new Tournament(contestents);
@@ -287,10 +288,20 @@ namespace WordCupTests
             Round currentround = loadedTournament.CurrentRound;
             Match[] currentMatches = currentround.AllMatches.ToArray();
             Assert.IsFalse(currentMatches[0].result == Match.Result.notplayed);
-            PlayMatch(currentMatches[2], Random);
+            Assert.IsTrue(currentMatches[1].result == Match.Result.notplayed);
+            Assert.IsFalse(currentMatches[2].result == Match.Result.notplayed);
+            Assert.IsTrue(currentMatches[3].result == Match.Result.notplayed);
             PlayMatch(currentMatches[3], Random);
             PlayMatch(currentMatches[1], Random);
-            Assert.AreEqual(0, currentround.AllMatches.Where(x => x.result == Match.Result.notplayed).Count());
+            Round round4 = tournament.NextRound();
+            Match[] r4Matches = currentround.AllMatches.ToArray();
+            PlayMatch(currentMatches[0], Random);
+            PlayMatch(currentMatches[1], Random);
+            Round final = tournament.NextRound();
+            Match finalm = final.AllMatches.First();
+            PlayMatch(finalm, Random);
+            Assert.IsNull(tournament.NextRound());
+
 
         }
 
@@ -317,7 +328,8 @@ namespace WordCupTests
         static bool Random(Match m)
         {
             Random r = new Random();
-            return r.Next(1, 3) == 1;
+            int randy = r.Next(100);
+            return randy < 50;
         }
     }
 }
