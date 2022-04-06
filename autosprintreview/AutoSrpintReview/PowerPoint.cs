@@ -292,24 +292,13 @@ namespace AutoSrpintReview
 
         private enum ColumnType { unset, id, description, points,work_item_type }
 
-        private void AddColumn(BacklogItem backlogItem,ColumnType columnType,TableRow tableRow,Slide slide,TableCell benchmark)
+        private Run AddColumn(BacklogItem backlogItem,ColumnType columnType,TableRow tableRow,Slide slide,TableCell benchmark)
         {
             TableCell benchclone = (TableCell)benchmark.Clone();
 
-            /*  BodyProperties commonBodyProperties = new BodyProperties();
-              ListStyle commonListStyle = new ListStyle();
-              EndParagraphRunProperties commonEndRunProperties = new EndParagraphRunProperties() { Language = "en-GB", Dirty = false };
-              TableCellProperties commonTableProperties = bmTableCellProperties == null ? new TableCellProperties() : bmTableCellProperties;
-              RunProperties commonRunProperties = new RunProperties() { Language = "en-US", Dirty = false, SmartTagClean = false };
-
-              TableCell tableCell = new TableCell();
-              D.TextBody textBody = new D.TextBody();
-              Paragraph paragraph = new Paragraph();*/
-
             Run myRun = benchclone.Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
             D.Text runtext = myRun.Descendants<D.Text>().First();
-            //runtext.Text = backlogItem.WorkItemType == BacklogItem.workitemtype.bug ? "Bug" : "Product Backlog Item";
-
+        
             string textval = string.Empty;
             switch (columnType)
             {
@@ -328,6 +317,7 @@ namespace AutoSrpintReview
             }
           
             tableRow.Append(benchclone);
+            return myRun;
         }
 
         private void MakeHyperLink(HyperlinkOnClick hyperlinkOnClick,Slide slide,string textval)
@@ -367,18 +357,23 @@ namespace AutoSrpintReview
             Run runpoints = cells[3].Descendants<D.TextBody>().First().Descendants<Paragraph>().First().Descendants<Run>().First();
             if (backlogItem.AddedDuringSprint)
             {
-                RunProperties runProperties = runpoints.Descendants<RunProperties>().FirstOrDefault();
-                if (runProperties!= null)
-                {
-                    SolidFill solidFill = runProperties.Descendants<SolidFill>().FirstOrDefault();
-                    RgbColorModelHex rgbColorModelHex = new RgbColorModelHex();
-                    rgbColorModelHex.Val = (HexBinaryValue)"DF751D";
-                    solidFill.RgbColorModelHex = rgbColorModelHex;
-                }   
+                AddColourToRun(runpoints, (HexBinaryValue)"DF751D");
             }
             D.Text points = runpoints.Descendants<D.Text>().First();
             points.Text = backlogItem.Points.ToString();
+           
+        }
 
+        private void AddColourToRun(Run r,HexBinaryValue hexBinaryValue)
+        {
+            RunProperties runProperties = r.Descendants<RunProperties>().FirstOrDefault();
+            if (runProperties != null)
+            {
+                SolidFill solidFill = runProperties.Descendants<SolidFill>().FirstOrDefault();
+                RgbColorModelHex rgbColorModelHex = new RgbColorModelHex();
+                rgbColorModelHex.Val = hexBinaryValue;
+                solidFill.RgbColorModelHex = rgbColorModelHex;
+            }
         }
 
         private void PopulateImageSlide(Slide slide, PowerPointBacklogItem powerPointBacklogItem)
@@ -416,7 +411,11 @@ namespace AutoSrpintReview
                     AddColumn(backlogItem, ColumnType.work_item_type, tableRow, slide, tableCellBenchmarks[0]);
                     AddColumn(backlogItem, ColumnType.id, tableRow,slide, tableCellBenchmarks[1]);
                     AddColumn(backlogItem, ColumnType.description, tableRow,slide, tableCellBenchmarks[2]);
-                    AddColumn(backlogItem, ColumnType.points, tableRow,slide, tableCellBenchmarks[3]);
+                    Run point_run = AddColumn(backlogItem, ColumnType.points, tableRow,slide, tableCellBenchmarks[3]);
+                    if (backlogItem.AddedDuringSprint)
+                    {
+                        AddColourToRun(point_run, (HexBinaryValue)"DF751D");
+                    }
                     table.Append(tableRow);
                 }
             }
