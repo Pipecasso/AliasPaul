@@ -19,7 +19,7 @@ namespace WpfApp1.Model
         }
         
         internal Tournament Tournament { get => _tournament; }
-        internal Round CurrentRound { get => _tournament.CurrentRound; }
+        internal Round CurrentRound { get => _tournament==null ? null : _tournament.CurrentRound; }
        
 
     

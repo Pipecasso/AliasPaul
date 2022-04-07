@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Forms;
 
 namespace WpfApp1.View
@@ -19,9 +20,11 @@ namespace WpfApp1.View
             InitializeComponent();
         }
 
-        public void ShowMatches(IEnumerable<MatchControl> matchControls)
+        private void ShowMatches()
         {
-           FirstRoundControl.DeployMatchControl(matchControls);
+           _stackPanel.Children.Clear();
+            foreach (MatchControl matchControl in WorldCupVm.CurrentControls)
+            { _stackPanel.Children.Add(matchControl); }
         }
 
         public void NewTournament_Click(object sender, RoutedEventArgs e)
@@ -31,8 +34,8 @@ namespace WpfApp1.View
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                  WorldCupVm.NewContestents(ofd.FileName);
-                FirstRoundControl.DeployMatchControl(WorldCupVm.CurrentControls);
             }
+            ShowMatches();
         }
     }
 }

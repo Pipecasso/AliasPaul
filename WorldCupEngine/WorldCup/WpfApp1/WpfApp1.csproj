@@ -85,17 +85,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\MatchResultConverter.cs" />
     <Compile Include="ViewModel\MatchViewModel.cs" />
-    <Compile Include="ViewModel\RoundCountrolViewModel.cs" />
     <Compile Include="ViewModel\WorldCupViewModel.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MatchControl.xaml.cs">
       <DependentUpon>MatchControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\RoundControl.xaml.cs">
-      <DependentUpon>RoundControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -106,10 +103,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\MatchControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\RoundControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

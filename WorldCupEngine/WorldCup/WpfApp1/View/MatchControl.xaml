@@ -5,9 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp1.View"
              xmlns:vm="clr-namespace:WpfApp1.ViewModel"
+             xmlns:cv="clr-namespace:WpfApp1.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cv:MatchResultConverter x:Key="mrc"/>
+    </UserControl.Resources>
     <Grid>
+       
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
             <ColumnDefinition Width="2*"/>
@@ -17,10 +22,10 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <TextBlock Grid.Column="0" Text="{Binding Contestent1}"></TextBlock>
-        <RadioButton  Grid.Column="1"></RadioButton>
+        <RadioButton  Grid.Column="1" Command="{Binding RadioCommand}" CommandParameter="radio_1"></RadioButton>
         <TextBlock Grid.Column="2" Text="v"></TextBlock>
         <TextBlock  Grid.Column="3" Text="{Binding Contestent2}"></TextBlock>
-        <RadioButton  Grid.Column="4"></RadioButton>
-        <Button Grid.Column="5" IsEnabled="{Binding NotPlayed}">Play</Button>
+        <RadioButton  Grid.Column="4" Command="{Binding RadioCommand}" CommandParameter="radio_2"></RadioButton>
+        <Button Grid.Column="5" Command="{Binding PlayCommand}">Play</Button>
     </Grid>
 </UserControl>

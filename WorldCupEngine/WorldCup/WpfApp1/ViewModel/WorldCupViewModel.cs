@@ -40,7 +40,13 @@ namespace WpfApp1.ViewModel
             _RoundControls.Add(_worldCupModel.CurrentRound, FirstControl);
         }
 
-    
+        public bool RoundComplete
+        {
+            get
+            {
+                return _worldCupModel.CurrentRound!=null && _worldCupModel.CurrentRound.AllMatches.All(x => x.result != Match.Result.notplayed);
+            }
+        }
 
         public IEnumerable<MatchControl> CurrentControls { get => _RoundControls[_worldCupModel.CurrentRound]; }
         

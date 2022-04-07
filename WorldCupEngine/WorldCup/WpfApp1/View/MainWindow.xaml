@@ -13,12 +13,15 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Button Grid.Column="0" Grid.Row="1" Click="NewTournament_Click">New Tournament</Button>
-        <local:RoundControl x:Name="FirstRoundControl" Grid.Column="0" Grid.Row="0"></local:RoundControl>
+        <StackPanel Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" x:Name="_stackPanel"/>
+        <Button Grid.Column="0" Grid.Row="1" IsEnabled="{Binding RoundComplete}">Next Round</Button>
+        <Button Grid.Column="0" Grid.Row="2" Click="NewTournament_Click">New Tournament</Button>
     </Grid>
 </Window>

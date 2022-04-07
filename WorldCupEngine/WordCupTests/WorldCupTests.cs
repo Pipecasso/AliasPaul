@@ -267,6 +267,7 @@ namespace WordCupTests
             PlayMatch(r1matches[13], Random);
             Assert.AreEqual(0, round1.AllMatches.Where(x => x.result == Match.Result.notplayed).Count());
             Round round2 = tournament.NextRound();
+            Assert.AreEqual(round2, tournament.CurrentRound);
             Match[] r2matches = round2.AllMatches.ToArray();
             PlayMatch(r2matches[0], Random);
             PlayMatch(r2matches[3], Random);
@@ -278,6 +279,7 @@ namespace WordCupTests
             PlayMatch(r2matches[5], Random);
             Assert.AreEqual(0, round2.AllMatches.Where(x => x.result == Match.Result.notplayed).Count());
             Round round3 = tournament.NextRound();
+            Assert.AreEqual(round3, tournament.CurrentRound);
             Match[] r3matches = round3.AllMatches.ToArray();
             PlayMatch(r3matches[0], Random);
             PlayMatch(r3matches[2], Random);
@@ -293,17 +295,32 @@ namespace WordCupTests
             Assert.IsTrue(currentMatches[3].result == Match.Result.notplayed);
             PlayMatch(currentMatches[3], Random);
             PlayMatch(currentMatches[1], Random);
-            Round round4 = tournament.NextRound();
-            Match[] r4Matches = currentround.AllMatches.ToArray();
-            PlayMatch(currentMatches[0], Random);
-            PlayMatch(currentMatches[1], Random);
-            Round final = tournament.NextRound();
+            Round round4 = loadedTournament.NextRound();
+            Assert.AreEqual(round4, loadedTournament.CurrentRound);
+            Match[] r4Matches = round4.AllMatches.ToArray();
+            PlayMatch(r4Matches[0], Random);
+            PlayMatch(r4Matches[1], Random);
+            Round final = loadedTournament.NextRound();
+            Assert.AreEqual(final, loadedTournament.CurrentRound);
             Match finalm = final.AllMatches.First();
             PlayMatch(finalm, Random);
-            Assert.IsNull(tournament.NextRound());
+            Assert.IsNull(loadedTournament.NextRound());
 
+            Assert.AreEqual(106, contestents.Count);
+            Assert.IsNotNull(contestents.Where(x => x.TournementWins == 1).Single());
+            Assert.AreEqual(105, contestents.Where(x => x.TournementWins == 0).Count());
 
+            Assert.AreEqual(32, contestents.Where(x => x.Tornaments == 1).Count());
+            Assert.AreEqual(74, contestents.Where(x => x.Tornaments == 0).Count());
+
+            Assert.AreEqual(48, contestents.Sum(x => x.Points));
+
+            Assert.AreEqual(31, contestents.Sum(x => x.Wins));
+            Assert.AreEqual(31, contestents.Sum(x => x.Losses));
         }
+
+        
+
 
         static void PlayRandomTournamemt(Tournament t)
         {
