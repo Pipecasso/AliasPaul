@@ -12,7 +12,7 @@ using System.IO;
 
 namespace WordCupTests
 {
-    [DeploymentItem("..\\..\\..\\Celebs.xlsx")]
+    [DeploymentItem("..\\..\\..\\NewCelebs.xlsx")]
 
     [TestClass]
     public class WorldCupTests
@@ -20,7 +20,7 @@ namespace WordCupTests
         [TestMethod]
         public void ContestentPoolNew()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            ContestentPool contestents = new ContestentPool("NewCelebs.xlsx", "Sheet1");
             Assert.AreEqual(106, contestents.Count);
             Assert.IsTrue(contestents.All(x => x.Tornaments == 0));
             Assert.IsTrue(contestents.All(x => x.Points == 0));
@@ -32,7 +32,7 @@ namespace WordCupTests
         [TestMethod]
         public void ContestFromNew()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            ContestentPool contestents = new ContestentPool("NewCelebs.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
             Assert.IsNotNull(tournament.Winner());
@@ -47,9 +47,9 @@ namespace WordCupTests
 
             Assert.AreEqual(31, contestents.Sum(x => x.Wins));
             Assert.AreEqual(31, contestents.Sum(x => x.Losses));
-            contestents.Export("Celebs2.xlsx","Tournament1",false);
+            contestents.Export("NewCelebs2.xlsx","Tournament1",true);
 
-            ContestentPool cpCheck = new ContestentPool("Celebs2.xlsx", "Tournament1",false);
+            ContestentPool cpCheck = new ContestentPool("Celebs2.xlsx", "Tournament1");
             Assert.AreEqual(106, cpCheck.Count);
             Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
             Assert.AreEqual(105, cpCheck.Where(x => x.TournementWins == 0).Count());
@@ -73,7 +73,7 @@ namespace WordCupTests
             PlayRandomTournamemt(tournament);
             contestents.Export("CelebsCFNO.xlsx", "Sheet1", true);
 
-            ContestentPool cpCheck = new ContestentPool("CelebsCFNO.xlsx", "Sheet1", false);
+            ContestentPool cpCheck = new ContestentPool("CelebsCFNO.xlsx", "Sheet1");
             Assert.AreEqual(106, cpCheck.Count);
             Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
             Assert.AreEqual(105, cpCheck.Where(x => x.TournementWins == 0).Count());
@@ -95,7 +95,7 @@ namespace WordCupTests
             Tournament tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
             contestents.Export("Celebs22.xlsx", "Tournament1", false);
-            contestents = new ContestentPool("Celebs22.xlsx", "Tournament1",false);
+            contestents = new ContestentPool("Celebs22.xlsx", "Tournament1");
             tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
             Assert.AreEqual(2, contestents.Sum(x => x.TournementWins));
@@ -227,7 +227,7 @@ namespace WordCupTests
 
             contestents.Export("CelebsPS.xlsx", "Sheet1", true);
 
-            ContestentPool cpCheck = new ContestentPool("CelebsPS.xlsx", "Sheet1", false);
+            ContestentPool cpCheck = new ContestentPool("CelebsPS.xlsx", "Sheet1");
             Assert.AreEqual(106, cpCheck.Count);
             Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
             Assert.AreEqual(105, cpCheck.Where(x => x.TournementWins == 0).Count());

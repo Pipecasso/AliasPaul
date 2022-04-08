@@ -11,16 +11,18 @@ namespace WorldCupEngine
 {
     public class ContestentPool : List<Contestent>
     {
-        public ContestentPool(string openxmlpath,string sheetname,bool firstrun = true)
+        private bool _firstrun;
+        public ContestentPool(string openxmlpath,string sheetname)
         {
             XLWorkbook wb = new XLWorkbook(openxmlpath);
             IXLWorksheet ws = wb.Worksheets.Where(x => x.Name == sheetname).FirstOrDefault();
             if (ws == null) ws = wb.Worksheets.First();
+            _firstrun = ws.ColumnsUsed().Count() == 1;
             foreach (IXLRow row in ws.Rows())
             {
                 Contestent contestent = new Contestent();
                 contestent.Name = row.Cell("A").GetString();
-                if (firstrun)
+                if (_firstrun)
                 {
                     contestent.Tornaments = 0;
                     contestent.TournementWins = 0;

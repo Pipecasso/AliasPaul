@@ -19,38 +19,66 @@ namespace WpfApp1.ViewModel
         private WorldCupModel _worldCupModel;
     
         private Dictionary<Round, List<MatchControl>> _RoundControls;
-   
+        private RelayCommand _RoundCompleteCommand;
+        private string _xlspath;
+    
         public WorldCupViewModel()
         {
             _worldCupModel = new WorldCupModel();
             _RoundControls = new Dictionary<Round, List<MatchControl>>();
+            _RoundCompleteCommand = new RelayCommand(NextRound,RoundComplete);
         }
 
-        public void NewContestents(string path)
+        private void MakeMatchControls()
         {
-            _worldCupModel.Reload(path, "");
             List<MatchControl> FirstControl = new List<MatchControl>();
             foreach (Match m in _worldCupModel.CurrentRound.AllMatches)
             {
                 MatchControl matchControl = new MatchControl();
-                MatchViewModel matchViewModel = new MatchViewModel(m);
+                MatchViewModel matchViewModel = new MatchViewModel(m, _RoundCompleteCommand);
                 matchControl.DataContext = matchViewModel;
                 FirstControl.Add(matchControl);
             }
             _RoundControls.Add(_worldCupModel.CurrentRound, FirstControl);
         }
 
-        public bool RoundComplete
+        public void NewContestents(string path)
         {
-            get
-            {
-                return _worldCupModel.CurrentRound!=null && _worldCupModel.CurrentRound.AllMatches.All(x => x.result != Match.Result.notplayed);
-            }
+            _xlspath = path;
+            _worldCupModel.Reload(path, "");
+            MakeMatchControls();
         }
 
-        public IEnumerable<MatchControl> CurrentControls { get => _RoundControls[_worldCupModel.CurrentRound]; }
-        
+        public bool RoundComplete()
+        {
+            return _worldCupModel.CurrentRound!=null && _worldCupModel.CurrentRound.AllMatches.All(x => x.result != Match.Result.notplayed);
+        }
 
-        
+        public void NextRound()
+        {
+            if (_worldCupModel.CurrentRound.IsFinal)
+            {
+                Contestent winner = _worldCupModel.Tournament.Winner();
+                MessageBox.Show($"Congratulations to {winner.Name}");
+                _worldCupModel.Tournament.NextRound();
+            }
+            else
+            {
+                _worldCupModel.Tournament.NextRound();
+                _RoundCompleteCommand.NotifyCanExecuteChanged();
+                MakeMatchControls();
+                RoundCompleteSignal.Invoke(this, new EventArgs());
+            }
+           
+        }
+
+        public ICommand NextRoundCommand { get => _RoundCompleteCommand; }
+
+        public IEnumerable<MatchControl> CurrentControls { get => _RoundControls[_worldCupModel.CurrentRound]; }
+
+        public EventHandler RoundCompleteSignal { get; set; }
+
+       
+
     }
 }

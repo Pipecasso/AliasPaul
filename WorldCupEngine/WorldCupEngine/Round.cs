@@ -141,6 +141,8 @@ namespace WorldCupEngine
             return contestents;
         }
 
+        public bool IsFinal { get => _matches.Count() == 1; }
+
         private void Load(IXLCell celltop,IEnumerable<Contestent> cpool)
         {
             IXLCell cellmatches = celltop.CellRight();

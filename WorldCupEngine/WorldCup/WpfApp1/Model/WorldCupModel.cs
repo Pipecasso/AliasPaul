@@ -18,6 +18,11 @@ namespace WpfApp1.Model
             _tournament = new Tournament(_contestents,totalrounds,false);
         }
         
+        void Save(string xlpath)
+        {
+            _tournament.Save(xlpath);
+        }
+        
         internal Tournament Tournament { get => _tournament; }
         internal Round CurrentRound { get => _tournament==null ? null : _tournament.CurrentRound; }
        

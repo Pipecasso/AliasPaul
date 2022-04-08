@@ -18,7 +18,16 @@ namespace WpfApp1.View
         public MainWindow()
         {
             InitializeComponent();
+            NextRound += MainWindow_NextRound;
+            WorldCupVm.RoundCompleteSignal = NextRound;
         }
+
+        private void MainWindow_NextRound(object sender, EventArgs e)
+        {
+            ShowMatches();
+        }
+
+        public event EventHandler NextRound;
 
         private void ShowMatches()
         {

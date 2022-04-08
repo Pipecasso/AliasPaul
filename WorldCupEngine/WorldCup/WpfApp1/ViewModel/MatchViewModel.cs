@@ -16,15 +16,18 @@ namespace WpfApp1.ViewModel
         private Match.Result _temp_result;
         private IRelayCommand _radioCommand;
         private IRelayCommand _playCommand;
-    
-        
+        private IRelayCommand _nextRoundCommand;
 
-        public MatchViewModel(Match match)
+
+
+        public MatchViewModel(Match match, IRelayCommand nextRoundCommand)
         {
             _match = match;
             _temp_result = Match.Result.notplayed;
             _radioCommand = new RelayCommand<Object>(ExecuteRadio, ToPlay);
             _playCommand = new RelayCommand(Play, InPlay);
+            _nextRoundCommand = nextRoundCommand;
+
         }
 
         public string Contestent1 { get => _match==null ? string.Empty : _match.Item1.Name; }
@@ -54,6 +57,7 @@ namespace WpfApp1.ViewModel
             _match.result = _temp_result;
             _playCommand.NotifyCanExecuteChanged();
             _radioCommand.NotifyCanExecuteChanged();
+            _nextRoundCommand.NotifyCanExecuteChanged();
         }
 
         private bool ToPlay(Object o)
