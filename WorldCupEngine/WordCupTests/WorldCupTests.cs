@@ -8,11 +8,10 @@ using WorldCupEngine;
 using System.IO;
 
 
-
-
 namespace WordCupTests
 {
     [DeploymentItem("..\\..\\..\\NewCelebs.xlsx")]
+
 
     [TestClass]
     public class WorldCupTests
@@ -29,6 +28,7 @@ namespace WordCupTests
             Assert.IsTrue(contestents.All(x => x.Wins == 0));
         }
 
+     
         [TestMethod]
         public void ContestFromNew()
         {
@@ -47,9 +47,9 @@ namespace WordCupTests
 
             Assert.AreEqual(31, contestents.Sum(x => x.Wins));
             Assert.AreEqual(31, contestents.Sum(x => x.Losses));
-            contestents.Export("NewCelebs2.xlsx","Tournament1",true);
+            contestents.Export("NewCelebs2.xlsx", "Tournament1", false);
 
-            ContestentPool cpCheck = new ContestentPool("Celebs2.xlsx", "Tournament1");
+            ContestentPool cpCheck = new ContestentPool("NewCelebs2.xlsx", "Tournament1");
             Assert.AreEqual(106, cpCheck.Count);
             Assert.IsNotNull(cpCheck.Where(x => x.TournementWins == 1).Single());
             Assert.AreEqual(105, cpCheck.Where(x => x.TournementWins == 0).Count());
@@ -67,7 +67,7 @@ namespace WordCupTests
         [TestMethod]
         public void ContestFromNewOverwrite()
         {
-            File.Copy("Celebs.xlsx", "CelebsCFNO.xlsx");
+            File.Copy("NewCelebs.xlsx", "CelebsCFNO.xlsx");
             ContestentPool contestents = new ContestentPool("CelebsCFNO.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
@@ -91,11 +91,12 @@ namespace WordCupTests
         [TestMethod]
         public void TwoTournaments()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            File.Copy("NewCelebs.xlsx", "NewCelebsTT.xlsx");
+            ContestentPool contestents = new ContestentPool("NewCelebsTT.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
-            contestents.Export("Celebs22.xlsx", "Tournament1", false);
-            contestents = new ContestentPool("Celebs22.xlsx", "Tournament1");
+            contestents.Export("NewCelebsTT.xlsx", "Tournament1", false);
+            contestents = new ContestentPool("NewCelebsTT.xlsx", "Tournament1");
             tournament = new Tournament(contestents, 5, false);
             PlayRandomTournamemt(tournament);
             Assert.AreEqual(2, contestents.Sum(x => x.TournementWins));
@@ -108,7 +109,7 @@ namespace WordCupTests
         [TestMethod]
         public void PlayOneRound()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            ContestentPool contestents = new ContestentPool("NewCelebs.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             Round firstRound = tournament.CurrentRound;
             while (tournament.CurrentRound == firstRound)
@@ -129,7 +130,7 @@ namespace WordCupTests
         [TestMethod]
         public void PauseTournament()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            ContestentPool contestents = new ContestentPool("NewCelebs.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             for (int i=0;i<20;i++)
             {
@@ -171,7 +172,7 @@ namespace WordCupTests
         [TestMethod]
         public void PauseTournamenEndRound()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            ContestentPool contestents = new ContestentPool("NewCelebs.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             for (int i = 0; i < 16; i++)
             {
@@ -205,7 +206,7 @@ namespace WordCupTests
         [TestMethod]
         public void PauseAndSave()
         {
-            File.Copy("Celebs.xlsx", "CelebsPS.xlsx");
+            File.Copy("NewCelebs.xlsx", "CelebsPS.xlsx");
             ContestentPool contestents = new ContestentPool("CelebsPS.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 6, false);
             for (int i = 0; i < 20; i++)
@@ -245,7 +246,7 @@ namespace WordCupTests
         [TestMethod]
         public void MixUp()
         {
-            ContestentPool contestents = new ContestentPool("Celebs.xlsx", "Sheet1");
+            ContestentPool contestents = new ContestentPool("NewCelebs.xlsx", "Sheet1");
             Tournament tournament = new Tournament(contestents, 5, false);
             Round round1 = tournament.CurrentRound;
             Match[] r1matches = round1.AllMatches.ToArray();
