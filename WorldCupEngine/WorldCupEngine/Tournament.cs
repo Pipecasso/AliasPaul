@@ -139,6 +139,36 @@ namespace WorldCupEngine
             return winner;
         }
 
+        public void Update(string path,string sheetname)
+        {
+            IXLWorkbook wb = new XLWorkbook(path);
+            if (sheetname == String.Empty) sheetname = _contestents.SheetName;
+            IXLWorksheet ws = wb.Worksheet(sheetname);
+            IXLColumn column = ws.ColumnsUsed().FirstOrDefault();
+            
+            foreach (Contestent contestent in _contestents)
+            {
+                IXLRow row = column.Cells().Where(x => x.GetString() == contestent.Name).First().WorksheetRow();
+                  
+                IXLCell picked = row.Cell("B");
+                picked.SetValue<int>(contestent.Tornaments);
+
+                IXLCell champion = row.Cell("C");
+                champion.SetValue<int>(contestent.TournementWins);
+
+                IXLCell wins = row.Cell("D");
+                wins.SetValue<int>(contestent.Wins);
+
+                IXLCell losses = row.Cell("E");
+                losses.SetValue<int>(contestent.Losses);
+
+                IXLCell points = row.Cell("F");
+                points.SetValue<int>(contestent.Points);
+
+            }
+            wb.Save();
+        }
+
         public void Save(string path)
         {
             IXLWorkbook workbook = new XLWorkbook();

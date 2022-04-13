@@ -42,7 +42,7 @@ namespace WorldCupRunner
                     sw.WriteLine($"They think its all over the winner was {t.Winner().Name}");
                 }
             }
-            cp.Export(@"C:\git\AliasPaul\WorldCupEngine\Celebs.xlsx", "Sheet1",true);
+          //  cp.Export(@"C:\git\AliasPaul\WorldCupEngine\Celebs.xlsx",true);
         }
 
         static void PlayMatch(Match m, Func<Match, bool> rules)

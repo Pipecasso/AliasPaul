@@ -12,14 +12,12 @@ namespace WpfApp1.Model
         private ContestentPool _contestents;
         private Tournament _tournament;
         private string _xlpath;
-        private string _sheet;
+        
      
-        internal void Reload(string path,string sheet,int totalrounds = 5)
+        internal void Reload(string path,int totalrounds = 5)
         {
-            _xlpath = path;
-            _sheet = sheet;
-            
-            _contestents = new ContestentPool(path,sheet);
+            _xlpath = path; 
+            _contestents = new ContestentPool(path,String.Empty);
             _tournament = new Tournament(_contestents,totalrounds,false);
         }
         
@@ -30,7 +28,7 @@ namespace WpfApp1.Model
 
         internal void SaveResult()
         {
-            _contestents.Export(_xlpath, _sheet, true);
+            _contestents.Export(_xlpath, true);
         }
         
         internal Tournament Tournament { get => _tournament; }

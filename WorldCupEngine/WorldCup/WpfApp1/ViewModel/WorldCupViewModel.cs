@@ -45,7 +45,7 @@ namespace WpfApp1.ViewModel
         public void NewContestents(string path)
         {
             _xlspath = path;
-            _worldCupModel.Reload(path, "");
+            _worldCupModel.Reload(path);
             MakeMatchControls();
         }
 
@@ -61,15 +61,17 @@ namespace WpfApp1.ViewModel
                 Contestent winner = _worldCupModel.Tournament.Winner();
                 MessageBox.Show($"Congratulations to {winner.Name}");
                 _worldCupModel.Tournament.NextRound();
+                _worldCupModel.SaveResult();
+                _RoundControls.Clear();
             }
             else
             {
                 _worldCupModel.Tournament.NextRound();
                 _RoundCompleteCommand.NotifyCanExecuteChanged();
                 MakeMatchControls();
-                RoundCompleteSignal.Invoke(this, new EventArgs());
             }
-           
+            RoundCompleteSignal.Invoke(this, new EventArgs());
+
         }
 
         public ICommand NextRoundCommand { get => _RoundCompleteCommand; }

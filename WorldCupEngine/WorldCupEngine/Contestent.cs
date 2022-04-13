@@ -9,7 +9,7 @@ namespace WorldCupEngine
         private int _tournaments;
         private int _wins;
         private int _losses;
-        private Dictionary<int, int> _results;
+        
         private int _tournamentwins;
 
         
@@ -28,7 +28,7 @@ namespace WorldCupEngine
             _wins = 0;
             _losses = 0;
             _tournamentwins = 0;
-            _results = new Dictionary<int, int>();
+          
         }
 
         public void AddPoints(int p) { _points += p; }
