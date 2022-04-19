@@ -64,27 +64,32 @@ namespace WordCupTests
             Assert.AreEqual(contestents - 1, checkcontestents.Sum(x => x.Wins));
             Assert.AreEqual(contestents - 1, checkcontestents.Sum(x => x.Losses));
 
-            for (int i=roundnumber;i>=1;i--)
+            Assert.AreEqual(contestents-1, checkcontestents.Where(x => x.Losses == 1).Count());
+            Assert.IsNotNull(checkcontestents.Where(x => x.Losses == 0 && x.Tornaments==1).SingleOrDefault());
+            Assert.AreEqual(noncontestents+1,checkcontestents.Where(x => x.Losses==0).Count());
+            Assert.AreEqual(contestents / 2, checkcontestents.Where(x => x.Wins == 0 && x.Tornaments == 1).Count());
+            Assert.AreEqual(contestents/2 + noncontestents,checkcontestents.Where(x=>x.Wins==0).Count());
+            Assert.IsNotNull(checkcontestents.Where(x => x.Wins == roundnumber).SingleOrDefault());
+
+            for (int i=1;i<roundnumber;i++)
             {
-                int winloss = roundnumber - i + 1;
-                int round_total = Convert.ToInt16(Math.Pow(2, i-1));
-                Assert.AreEqual(round_total, checkcontestents.Where(x => x.Wins == winloss).Count());
-                Assert.AreEqual(round_total, checkcontestents.Where(x => x.Losses == winloss).Count());
-                if (i>1 && i<roundnumber)
-                {
-                    int pointsinround = Convert.ToInt32(Math.Pow(2, i -2));
-                    int expectednumber = round_total / 2;
-                    Assert.AreEqual(expectednumber, checkcontestents.Where(x => x.Points == pointsinround).Count());
-                }
-                    
-             }
-            int expectedpoints = (roundnumber - 1) * contestents / 2 + contestents;
+                int iexpectedwins = Convert.ToInt32(Math.Pow(2, -(i+1)) * contestents);
+                Assert.AreEqual(iexpectedwins, checkcontestents.Where(x => x.Wins==i).Count()); 
+            }
+            int expectedpoints = (roundnumber + 1) * (contestents / 4);
             int expectedwinnerpoints = contestents / 2;
             int expectedfinalpoints = contestents / 4;
             Assert.IsNotNull(checkcontestents.Where(x => x.Points == expectedwinnerpoints).SingleOrDefault());
             Assert.IsNotNull(checkcontestents.Where(x => x.Points == expectedwinnerpoints).SingleOrDefault());
           
             Assert.AreEqual(expectedpoints, checkcontestents.Sum(x => x.Points));
+
+            for (int i = 1; i < roundnumber-1; i++)
+            {
+                int points = Convert.ToInt16(Math.Pow(2, i - 1));
+                int iexpectedpoints = System.Convert.ToInt16((double)expectedfinalpoints * Math.Pow(0.5, i - 1));
+                Assert.AreEqual(iexpectedpoints, checkcontestents.Where(x => x.Points==points).Count());
+            }
         }
 
 

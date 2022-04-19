@@ -12,20 +12,21 @@ namespace WorldCupEngine
 
         private int _round;
         private Dictionary<int, Round> _Rounds;
-        private ContestentPool _contestents;
+        private ContestentPool _allPlayers; 
      
 
         private bool _facup;
 
         public Tournament(ContestentPool contestentPool)
         {
-            _contestents = contestentPool;
+            _allPlayers = contestentPool;
             _Rounds = new Dictionary<int, Round>();
         }
 
         public Tournament(ContestentPool contestentPool, int numberofrounds, bool facup)
         {
             _round = 1;
+            _allPlayers = contestentPool;
             _facup = facup;
             Bag<Contestent> contestentBag = new Bag<Contestent>();
             contestentBag.Fill(contestentPool);
@@ -142,11 +143,11 @@ namespace WorldCupEngine
         public void Update(string path,string sheetname)
         {
             IXLWorkbook wb = new XLWorkbook(path);
-            if (sheetname == String.Empty) sheetname = _contestents.SheetName;
+            if (sheetname == String.Empty) sheetname = _allPlayers.SheetName;
             IXLWorksheet ws = wb.Worksheet(sheetname);
             IXLColumn column = ws.ColumnsUsed().FirstOrDefault();
             
-            foreach (Contestent contestent in _contestents)
+            foreach (Contestent contestent in Contestents)
             {
                 IXLRow row = column.Cells().Where(x => x.GetString() == contestent.Name).First().WorksheetRow();
                   
@@ -200,7 +201,7 @@ namespace WorldCupEngine
             IXLCell coltop = worksheet.Cell("A3");
             for (int i=0;i<_round;i++)
             {
-                Round r = new Round(i+1, coltop, _contestents);
+                Round r = new Round(i+1, coltop, _allPlayers);
                 _Rounds.Add(i+1, r);
                 coltop = coltop.CellRight().CellRight();
             }

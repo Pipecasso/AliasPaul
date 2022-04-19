@@ -41,7 +41,7 @@ namespace WorldCupEngine
             }
         }
         
-        public string SheetName { get => _sheetname; }
+        public string SheetName { get => _sheetname;}
 
      
     }
