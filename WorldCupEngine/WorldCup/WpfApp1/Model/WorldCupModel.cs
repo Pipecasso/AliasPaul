@@ -28,7 +28,7 @@ namespace WpfApp1.Model
 
         internal void SaveResult()
         {
-            _contestents.Export(_xlpath, true);
+            _tournament.Update(_xlpath, String.Empty);
         }
         
         internal Tournament Tournament { get => _tournament; }

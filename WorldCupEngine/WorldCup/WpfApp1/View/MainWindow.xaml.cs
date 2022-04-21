@@ -35,16 +35,5 @@ namespace WpfApp1.View
             foreach (MatchControl matchControl in WorldCupVm.CurrentControls)
             { _stackPanel.Children.Add(matchControl); }
         }
-
-        public void NewTournament_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                 WorldCupVm.NewContestents(ofd.FileName);
-            }
-            ShowMatches();
-        }
     }
 }

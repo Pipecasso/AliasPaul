@@ -20,6 +20,7 @@ namespace WpfApp1.ViewModel
     
         private Dictionary<Round, List<MatchControl>> _RoundControls;
         private RelayCommand _RoundCompleteCommand;
+        private RelayCommand _NewTournamentCommand;
         private string _xlspath;
     
         public WorldCupViewModel()
@@ -27,6 +28,7 @@ namespace WpfApp1.ViewModel
             _worldCupModel = new WorldCupModel();
             _RoundControls = new Dictionary<Round, List<MatchControl>>();
             _RoundCompleteCommand = new RelayCommand(NextRound,RoundComplete);
+            _NewTournamentCommand = new RelayCommand(NewTournament, CanHaveNewTournament);
         }
 
         private void MakeMatchControls()
@@ -42,6 +44,17 @@ namespace WpfApp1.ViewModel
             _RoundControls.Add(_worldCupModel.CurrentRound, FirstControl);
         }
 
+        public void NewTournament()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "xlsx files (*.xlsx)|*.xlsx";
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                NewContestents(ofd.FileName);
+            }
+            RoundCompleteSignal.Invoke(this, new EventArgs());
+        }
+
         public void NewContestents(string path)
         {
             _xlspath = path;
@@ -54,12 +67,18 @@ namespace WpfApp1.ViewModel
             return _worldCupModel.CurrentRound!=null && _worldCupModel.CurrentRound.AllMatches.All(x => x.result != Match.Result.notplayed);
         }
 
+        public bool CanHaveNewTournament()
+        {
+            return _worldCupModel.Tournament == null || _worldCupModel.Tournament.Winner() != null;
+        }
+
         public void NextRound()
         {
             if (_worldCupModel.CurrentRound.IsFinal)
             {
                 Contestent winner = _worldCupModel.Tournament.Winner();
-                MessageBox.Show($"Congratulations to {winner.Name}");
+                DialogResult dr =  MessageBox.Show($"Congratulations to {winner.Name}. Play again?","Game Over!",MessageBoxButtons.YesNo);
+                
                 _worldCupModel.Tournament.NextRound();
                 _worldCupModel.SaveResult();
                 _RoundControls.Clear();
@@ -76,7 +95,24 @@ namespace WpfApp1.ViewModel
 
         public ICommand NextRoundCommand { get => _RoundCompleteCommand; }
 
-        public IEnumerable<MatchControl> CurrentControls { get => _RoundControls[_worldCupModel.CurrentRound]; }
+        public IEnumerable<MatchControl> CurrentControls
+        {
+            get
+            {
+                IEnumerable<MatchControl> controls = null;
+                if (_worldCupModel.Tournament.Winner() != null)
+                {
+                    List<MatchControl> controls2 = new List<MatchControl>();
+                    controls = controls2;
+                }
+                else
+                {
+                    controls = _RoundControls[_worldCupModel.CurrentRound];
+                }
+                return controls;
+            }
+           
+        }
 
         public EventHandler RoundCompleteSignal { get; set; }
 
