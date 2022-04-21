@@ -48,8 +48,83 @@ namespace WordCupTests
             }
             t.Update("CelebsOT.xlsx", String.Empty);
             ContestentPool checkcontestents = new ContestentPool("CelebsOT.xlsx", string.Empty);
-            OneTournamentAssertions(checkcontestents,6);
+            OneTournamentAssertions(checkcontestents, 6);
+        }
 
+        [TestMethod]
+        public void OneTournamentWithSave()
+        {
+            Random random = new Random();
+            File.Copy("NewCelebs.xlsx", "CelebsOTWS.xlsx");
+            ContestentPool contestents = new ContestentPool("CelebsOTWS.xlsx", string.Empty);
+            Tournament t = new Tournament(contestents, 6, false);
+            Round r = t.CurrentRound;
+            int tock = 40;
+
+            while (tock > 0)
+            {
+                while (tock > 0 && r.AllMatches.Where(x => x.result == Match.Result.notplayed).Any())
+                {
+                    Match[] matcharray = r.AllMatches.Where(x => x.result == Match.Result.notplayed).ToArray();
+                    Match randmatch = matcharray[random.Next(matcharray.Length)];
+                    PlayMatch(randmatch, Alphatetic);
+                    tock--;
+                }
+                if (r.AllMatches.Where(x => x.result == Match.Result.notplayed).Any() == false)
+                {
+                    r = t.NextRound();
+                }
+            }
+            
+            t.Save("OTWS.xlsx");
+            Tournament t2 = new Tournament(contestents);
+            t2.Load("OTWS.xlsx");
+
+            r = t2.CurrentRound;
+            while (r != null)
+            {
+                while (r.AllMatches.Where(x => x.result == Match.Result.notplayed).Any())
+                {
+                    Match[] matcharray = r.AllMatches.Where(x => x.result == Match.Result.notplayed).ToArray();
+                    Match randmatch = matcharray[random.Next(matcharray.Length)];
+                    PlayMatch(randmatch, Alphatetic);
+                }
+                r = t2.NextRound();
+            }
+
+            t2.Update("CelebsOTWS.xlsx", String.Empty);
+            ContestentPool checkcontestents = new ContestentPool("CelebsOTWS.xlsx", string.Empty);
+            OneTournamentAssertions(checkcontestents, 6);
+
+         }
+
+        [TestMethod]
+        public void TwoTournaments()
+        {
+            Random random = new Random();
+            File.Copy("NewCelebs.xlsx", "CelebsTT.xlsx");
+            for (int i = 0; i < 2; i++)
+            {
+                ContestentPool contestents = new ContestentPool("CelebsTT.xlsx", string.Empty);
+                Tournament t = new Tournament(contestents, 5, false);
+                Round r = t.CurrentRound;
+                while (r != null)
+                {
+                    while (r.AllMatches.Where(x => x.result == Match.Result.notplayed).Any())
+                    {
+                        Match[] matcharray = r.AllMatches.Where(x => x.result == Match.Result.notplayed).ToArray();
+                        Match randmatch = matcharray[random.Next(matcharray.Length)];
+                        PlayMatch(randmatch, Alphatetic);
+                    }
+                    r = t.NextRound();
+                }
+                t.Update("CelebsTT.xlsx", String.Empty);
+            }
+            ContestentPool checkcontestents = new ContestentPool("CelebsTT.xlsx", string.Empty);
+            Assert.AreEqual(64, checkcontestents.Sum(x => x.Tornaments));
+            Assert.AreEqual(2, checkcontestents.Sum(x => x.TournementWins));
+            Assert.AreEqual(62,checkcontestents.Sum(x => x.Losses));
+            Assert.AreEqual(96, checkcontestents.Sum(x => x.Points));
         }
 
         private void OneTournamentAssertions(ContestentPool checkcontestents, int roundnumber)
