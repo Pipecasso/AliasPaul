@@ -53,6 +53,8 @@ namespace WpfApp1.ViewModel
                 NewContestents(ofd.FileName);
             }
             RoundCompleteSignal.Invoke(this, new EventArgs());
+            _RoundCompleteCommand.NotifyCanExecuteChanged();
+            _NewTournamentCommand.NotifyCanExecuteChanged();
         }
 
         public void NewContestents(string path)
@@ -78,10 +80,18 @@ namespace WpfApp1.ViewModel
             {
                 Contestent winner = _worldCupModel.Tournament.Winner();
                 DialogResult dr =  MessageBox.Show($"Congratulations to {winner.Name}. Play again?","Game Over!",MessageBoxButtons.YesNo);
-                
+               
                 _worldCupModel.Tournament.NextRound();
                 _worldCupModel.SaveResult();
                 _RoundControls.Clear();
+                if (dr == DialogResult.Yes)
+                {
+                    NewTournament();
+                }
+                else
+                {
+                
+                }
             }
             else
             {
@@ -94,6 +104,7 @@ namespace WpfApp1.ViewModel
         }
 
         public ICommand NextRoundCommand { get => _RoundCompleteCommand; }
+        public ICommand NewTournamentCommand { get => _NewTournamentCommand; }
 
         public IEnumerable<MatchControl> CurrentControls
         {

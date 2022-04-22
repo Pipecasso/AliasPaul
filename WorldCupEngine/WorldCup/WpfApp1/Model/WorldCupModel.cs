@@ -14,7 +14,7 @@ namespace WpfApp1.Model
         private string _xlpath;
         
      
-        internal void Reload(string path,int totalrounds = 5)
+        internal void Reload(string path,int totalrounds = 4)
         {
             _xlpath = path; 
             _contestents = new ContestentPool(path,String.Empty);
