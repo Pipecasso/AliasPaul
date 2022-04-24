@@ -19,14 +19,23 @@ namespace WpfApp1.View
         {
             InitializeComponent();
             NextRound += MainWindow_NextRound;
+            CloseDown += MainWindow_Close;
             WorldCupVm.RoundCompleteSignal = NextRound;
+            WorldCupVm.CloseSignal = CloseDown;
         }
+
+        private void MainWindow_Close(object  sender,EventArgs e)
+        {
+            this.Close();
+        }
+
 
         private void MainWindow_NextRound(object sender, EventArgs e)
         {
             ShowMatches();
         }
 
+        public event EventHandler CloseDown;
         public event EventHandler NextRound;
 
         private void ShowMatches()

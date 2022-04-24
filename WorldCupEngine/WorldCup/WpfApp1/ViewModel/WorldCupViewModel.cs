@@ -90,7 +90,7 @@ namespace WpfApp1.ViewModel
                 }
                 else
                 {
-                
+                    CloseSignal.Invoke(this, new EventArgs());
                 }
             }
             else
@@ -126,6 +126,7 @@ namespace WpfApp1.ViewModel
         }
 
         public EventHandler RoundCompleteSignal { get; set; }
+        public EventHandler CloseSignal { get; set; }   
 
        
 
