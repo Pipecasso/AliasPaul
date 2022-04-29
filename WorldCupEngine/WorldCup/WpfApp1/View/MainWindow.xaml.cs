@@ -29,7 +29,6 @@ namespace WpfApp1.View
             this.Close();
         }
 
-
         private void MainWindow_NextRound(object sender, EventArgs e)
         {
             ShowMatches();

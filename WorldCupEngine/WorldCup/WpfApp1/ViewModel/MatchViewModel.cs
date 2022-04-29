@@ -17,16 +17,17 @@ namespace WpfApp1.ViewModel
         private IRelayCommand _radioCommand;
         private IRelayCommand _playCommand;
         private IRelayCommand _nextRoundCommand;
+        private IRelayCommand _saveTournamentCommand;
 
 
-
-        public MatchViewModel(Match match, IRelayCommand nextRoundCommand)
+        public MatchViewModel(Match match, IRelayCommand nextRoundCommand,IRelayCommand saveTournamentCommand)
         {
             _match = match;
             _temp_result = Match.Result.notplayed;
             _radioCommand = new RelayCommand<Object>(ExecuteRadio, ToPlay);
             _playCommand = new RelayCommand(Play, InPlay);
             _nextRoundCommand = nextRoundCommand;
+            _saveTournamentCommand = saveTournamentCommand;
 
         }
 
@@ -58,6 +59,7 @@ namespace WpfApp1.ViewModel
             _playCommand.NotifyCanExecuteChanged();
             _radioCommand.NotifyCanExecuteChanged();
             _nextRoundCommand.NotifyCanExecuteChanged();
+            _saveTournamentCommand.NotifyCanExecuteChanged();
         }
 
         private bool ToPlay(Object o)

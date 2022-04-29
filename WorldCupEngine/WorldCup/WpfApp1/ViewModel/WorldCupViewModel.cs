@@ -21,6 +21,8 @@ namespace WpfApp1.ViewModel
         private Dictionary<Round, List<MatchControl>> _RoundControls;
         private RelayCommand _RoundCompleteCommand;
         private RelayCommand _NewTournamentCommand;
+        private RelayCommand _SaveTournamentCommand;
+        private RelayCommand _LoadTournamentCommand;
         private string _xlspath;
     
         public WorldCupViewModel()
@@ -29,6 +31,10 @@ namespace WpfApp1.ViewModel
             _RoundControls = new Dictionary<Round, List<MatchControl>>();
             _RoundCompleteCommand = new RelayCommand(NextRound,RoundComplete);
             _NewTournamentCommand = new RelayCommand(NewTournament, CanHaveNewTournament);
+            _SaveTournamentCommand = new RelayCommand(SaveTournament, CanSaveTournament);
+            _LoadTournamentCommand = new RelayCommand(LoadTournament, CanLoadTournament);
+
+
         }
 
         private void MakeMatchControls()
@@ -37,7 +43,7 @@ namespace WpfApp1.ViewModel
             foreach (Match m in _worldCupModel.CurrentRound.AllMatches)
             {
                 MatchControl matchControl = new MatchControl();
-                MatchViewModel matchViewModel = new MatchViewModel(m, _RoundCompleteCommand);
+                MatchViewModel matchViewModel = new MatchViewModel(m, _RoundCompleteCommand,_SaveTournamentCommand);
                 matchControl.DataContext = matchViewModel;
                 FirstControl.Add(matchControl);
             }
@@ -74,6 +80,57 @@ namespace WpfApp1.ViewModel
             return _worldCupModel.Tournament == null || _worldCupModel.Tournament.Winner() != null;
         }
 
+        public bool CanSaveTournament()
+        {
+            bool ret = false;
+            if (_worldCupModel.Tournament != null && _worldCupModel.Tournament.Winner() == null)
+            {
+                ret = _worldCupModel.CurrentRound.AllMatches.Where(x => x.result != Match.Result.notplayed).Any();
+            }
+            return ret;
+        }
+
+        public bool CanLoadTournament()
+        {
+            return _worldCupModel.Tournament == null || _worldCupModel.Tournament.Winner() != null;
+        }
+
+        public void SaveTournament()
+        { 
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "xlsx files (*.xlsx)|*.xlsx";
+            if (saveFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                _worldCupModel.Tournament.Save(saveFileDialog.FileName);
+            }
+        }
+
+        public void LoadTournament()
+        {
+            string tment = string.Empty;
+            string contestents = string.Empty;
+            MessageBox.Show("Contestents");
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "xlsx files (*.xlsx)|*.xlsx";
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                contestents = openFileDialog.FileName;
+            }
+
+            MessageBox.Show("Tournament");
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                tment = openFileDialog.FileName;
+            }
+            if (tment != string.Empty && contestents != string.Empty)
+            {
+                _worldCupModel.Load(tment, contestents);
+                MakeMatchControls();
+                RoundCompleteSignal.Invoke(this, new EventArgs());
+            }
+          
+        }
+
         public void NextRound()
         {
             if (_worldCupModel.CurrentRound.IsFinal)
@@ -100,11 +157,12 @@ namespace WpfApp1.ViewModel
                 MakeMatchControls();
             }
             RoundCompleteSignal.Invoke(this, new EventArgs());
-
         }
 
         public ICommand NextRoundCommand { get => _RoundCompleteCommand; }
         public ICommand NewTournamentCommand { get => _NewTournamentCommand; }
+        public ICommand SaveTournamentCommand { get=>_SaveTournamentCommand;}
+        public ICommand LoadTournamentCommand { get => _LoadTournamentCommand; }
 
         public IEnumerable<MatchControl> CurrentControls
         {

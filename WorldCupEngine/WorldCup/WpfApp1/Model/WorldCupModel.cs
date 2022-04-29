@@ -20,6 +20,14 @@ namespace WpfApp1.Model
             _contestents = new ContestentPool(path,String.Empty);
             _tournament = new Tournament(_contestents,totalrounds,false);
         }
+
+        internal void Load(string tournamentpath,string contestentpath)
+        {
+            _xlpath = contestentpath;
+            _contestents = new ContestentPool(contestentpath,String.Empty);
+            _tournament = new Tournament(_contestents);
+            _tournament.Load(tournamentpath);
+        }
         
         void Save(string xlpath)
         {
