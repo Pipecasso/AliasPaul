@@ -66,7 +66,7 @@ namespace WpfApp1.ViewModel
         public void NewContestents(string path)
         {
             _xlspath = path;
-            _worldCupModel.Reload(path);
+            _worldCupModel.Reload(path,NumberOfRounds);
             MakeMatchControls();
         }
 
@@ -185,6 +185,7 @@ namespace WpfApp1.ViewModel
 
         public EventHandler RoundCompleteSignal { get; set; }
         public EventHandler CloseSignal { get; set; }   
+        public int NumberOfRounds { get;set; }
 
        
 

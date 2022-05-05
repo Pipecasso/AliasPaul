@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
 
 namespace WpfApp1.View
 {
@@ -42,6 +41,13 @@ namespace WpfApp1.View
            _stackPanel.Children.Clear();
             foreach (MatchControl matchControl in WorldCupVm.CurrentControls)
             { _stackPanel.Children.Add(matchControl); }
+        }
+
+        private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ListBox listBox = sender as ListBox; 
+            ListBoxItem listBoxItem = listBox.SelectedItem as ListBoxItem;
+            WorldCupVm.NumberOfRounds = Convert.ToInt16(listBoxItem.Content);
         }
     }
 }
