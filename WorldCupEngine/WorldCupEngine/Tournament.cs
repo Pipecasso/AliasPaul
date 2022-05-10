@@ -23,12 +23,27 @@ namespace WorldCupEngine
             _Rounds = new Dictionary<int, Round>();
         }
 
+        public Tournament(ContestentPool contestentPool,int numberofrounds,bool facup,int seed)
+        {
+            _round = 1;
+            _allPlayers = contestentPool;
+            _facup = facup;
+            Bag<Contestent> contestentBag = new Bag<Contestent>();
+            contestentBag.Randy = new Random(seed);
+            Initialise(contestentBag, contestentPool, numberofrounds);
+        }
+
         public Tournament(ContestentPool contestentPool, int numberofrounds, bool facup)
         {
             _round = 1;
             _allPlayers = contestentPool;
             _facup = facup;
             Bag<Contestent> contestentBag = new Bag<Contestent>();
+            Initialise(contestentBag, contestentPool, numberofrounds);
+        }
+
+        private void Initialise(Bag<Contestent> contestentBag, ContestentPool contestentPool, int numberofrounds)
+        {
             contestentBag.Fill(contestentPool);
             _Rounds = new Dictionary<int, Round>();
             int contestent_total = Convert.ToInt32(Math.Pow(2, numberofrounds));

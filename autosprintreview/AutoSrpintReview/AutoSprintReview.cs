@@ -15,6 +15,7 @@ namespace AutoSrpintReview
         private Dictionary<string, string> _columnIndexMap;
         private string[] _sharedStrings;
         private SR_Config _Config;
+        private Dictionary<int, string> _milestones;
   
 
         private Action<BacklogItem, string> ActionID = (x, y) => x.ID = y;
@@ -30,6 +31,16 @@ namespace AutoSrpintReview
                 x.Tags.Add(tag.Trim());
             }
         };
+
+        private Action<BacklogItem, string> ActionJTSItem = (x, y) =>
+        {
+            int bitem = Convert.ToInt32(y);
+            string milestring = string.Empty;
+           
+            
+        };
+
+
         private Action<BacklogItem, string> ActionWorkItemType = (x, y) => x.WorkItemType = StringToWIT(y);
 
         private static BacklogItem.state StringToState(string sstate)
@@ -68,7 +79,49 @@ namespace AutoSrpintReview
         {
             _Config = sR_Config;
             _backlogItems = new List<BacklogItem>();
-       
+
+            _milestones = new Dictionary<int, string>();
+            _milestones.Add(1648, "Under Consideration");
+            _milestones.Add(1707, "Spoolgen WebAPI 3");
+            _milestones.Add(1706, "Spoolgen WebAPI 2 HF");
+            _milestones.Add(1697, "Spoolgen WebAPI 2");
+            _milestones.Add(1705, "Spoolgen 9.2 HF");
+            _milestones.Add(1703, "Spoolgen 9.2");
+            _milestones.Add(1702, "Spoolgen 2019 R1 HF");
+            _milestones.Add(1696, "Spoolgen 2019 R1");
+            _milestones.Add(1699, "Spoolgen 2019 HF");
+            _milestones.Add(1685, "Spoolgen 2019");
+            _milestones.Add(1689, "Spoolgen 2014 R1 SP1");
+            _milestones.Add(1692, "Spoolgen 10");
+            _milestones.Add(1687, "Publisher Next");
+            _milestones.Add(1684, "Production");
+            _milestones.Add(1683, "Next");
+            _milestones.Add(1694, "Isometrics 8");
+            _milestones.Add(1683, "Next");
+            _milestones.Add(1711, "Isometrics 7.2 HF");
+            _milestones.Add(1704, "Isometrics 7.2");
+            _milestones.Add(1695, "Isometrics 2019 R1");
+            _milestones.Add(1686, "Isometrics 2019");
+            _milestones.Add(1690, "Isomet 2014 R1 SP1");
+            _milestones.Add(1701, "Isogen Editions 10");
+            _milestones.Add(1708, "Isogen Edition 10 HF");
+            _milestones.Add(1700, "Isogen DB 2019 HF");
+            _milestones.Add(1693, "Isogen Database 2019");
+            _milestones.Add(1678, "2018");
+            _milestones.Add(1677, "2017");
+            _milestones.Add(1713, "2016 HF20");
+            _milestones.Add(1712, "2016 HF19");
+            _milestones.Add(1710, "2016 HF18");
+            _milestones.Add(1708, "2016 HF17");
+            _milestones.Add(1679, "2016 HF");
+            _milestones.Add(1674, "2016");
+            _milestones.Add(1672, "2014 SP1 HF");
+            _milestones.Add(1681, "2014 R1 SP1 HF");
+            _milestones.Add(1682, "2014 R1 SP1");
+            _milestones.Add(1676, "2014 R1 HF");
+            _milestones.Add(1670, "2014 R1");
+            _milestones.Add(1667, "2012 R2");
+            _milestones.Add(1698, "15.0");
 
             using (SpreadsheetDocument sr_doc = SpreadsheetDocument.Open(sR_Config.BacklogPath, false))
             {

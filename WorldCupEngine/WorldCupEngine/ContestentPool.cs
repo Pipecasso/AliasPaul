@@ -41,8 +41,16 @@ namespace WorldCupEngine
             }
         }
         
-        public string SheetName { get => _sheetname;}
+        public string SheetName { get => _sheetname; }
+        public Contestent this[string name]
+        {
+            get
+            {
+                return this.Where(x => x.Name == name).SingleOrDefault();      
+            }
+        }
 
-     
+
+
     }
 }

@@ -17,6 +17,12 @@ namespace WorldCupEngine
             _randy = new Random();
         }
 
+        public Random Randy
+        {
+            get { return _randy; }
+            set { _randy = value; }
+        }
+
         public void Fill(IEnumerable<T> things)
         {
             foreach (T t in things)
