@@ -53,7 +53,6 @@ namespace WorldCupEngine
                 for (int i = 0; i < contestent_total; i++)
                 {
                     Contestent contestent = contestentBag.Take();
-                    contestent.Picked();
                     contestents.Add(contestent);
                 }
 
@@ -96,30 +95,36 @@ namespace WorldCupEngine
 
         public Round NextRound()
         {
-            IEnumerable<Contestent> Winners = CurrentRound.AllMatches.Select(x => x.Winner());
-            IEnumerable<Contestent> Losers = CurrentRound.AllMatches.Select(x => x.Loser());
-            foreach (Contestent winner in Winners)
-            {
-                winner.IncWin();
-            }
-            foreach (Contestent loser in Losers)
-            {
-                loser.IncLoss();
-                if (_round > 1)
-                {
-                    int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 2)));
-                    loser.AddPoints(points);
-                }
-            }
-
             Round nextRound = _Rounds[_round].Next(_facup);
             if (nextRound == null)
             {
                 Round final_round = _Rounds[_round];
                 Match final = final_round.AllMatches.Single<Match>();
                 final.Winner().TournamentWin();
-                int points = Convert.ToInt32(Math.Pow(2, (double)(_round - 1)));
-                final.Winner().AddPoints(points);
+                int winner_points = Convert.ToInt32(Math.Pow(2, (double)(_round - 1)));
+                final.Winner().AddPoints(winner_points);
+                foreach (Contestent contestent in Contestents) contestent.Picked();
+                
+                foreach (KeyValuePair<int,Round> pair in _Rounds)
+                {
+                    int roundnum = pair.Key;
+                    Round current = pair.Value;
+                    IEnumerable<Contestent> Winners = current.AllMatches.Select(x => x.Winner());
+                    IEnumerable<Contestent> Losers = current.AllMatches.Select(x => x.Loser());
+                    foreach (Contestent winner in Winners)
+                    {
+                        winner.IncWin();
+                    }
+                    foreach (Contestent loser in Losers)
+                    {
+                        loser.IncLoss();
+                        if (_round > 1)
+                        {
+                            int points = Convert.ToInt32(Math.Pow(2, (double)(roundnum - 2)));
+                            loser.AddPoints(points);
+                        }
+                    }
+                }
             }
             else
             {
