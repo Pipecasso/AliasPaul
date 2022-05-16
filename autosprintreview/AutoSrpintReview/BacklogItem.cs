@@ -20,6 +20,7 @@ namespace AutoSrpintReview
         public int Points { get; set;}
         public List<string> Tags { get => _tags; }
         public workitemtype WorkItemType { get; set; }
+        public string Milestone { get; set; }
         
         public BacklogItem()
         {
