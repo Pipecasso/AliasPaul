@@ -34,9 +34,8 @@ namespace MathsFilter
         {
             double xoffset = -11;
             double yoffset = 17;
-            double scale = 0.1;
-            //string funky = $"f(x, y) = sin((x+{xoffset})/{scale}) + cos((y+{yoffset})/{scale}) ^ 3 * 250";
-       
+            double scale = 0.01;
+           
             Function xfunc = new Function($"f(x) = (x + {xoffset}) /{scale}");
             Function yfunc = new Function($"g(y) = (y + {yoffset}) /{scale}");
             bool xtest = xfunc.checkSyntax();
@@ -54,7 +53,7 @@ namespace MathsFilter
             ColumnDefinition columnDefinition = grid.ColumnDefinitions[column];
 
             //int range = Convert.ToInt16(columnDefinition.ActualWidth < rowDefinition.ActualHeight ? columnDefinition.ActualWidth : rowDefinition.ActualHeight);
-            int range = 348;
+            int range = 700;
             TransformMatrix tm = new TransformMatrix(range, 0);
             tm.Set(func);
 
@@ -75,6 +74,11 @@ namespace MathsFilter
             bi.EndInit();
 
             _bimage.Source = bi;   
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _MainWindowVm.GoCommand.NotifyCanExecuteChanged();
         }
     }
 }
