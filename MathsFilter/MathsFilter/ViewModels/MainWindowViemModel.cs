@@ -10,14 +10,31 @@ using MathsFilter.Models;
 
 namespace MathsFilter.ViewModels
 {
-    internal class MainWindowViemModel
+    internal class MainWindowViemModel : INotifyPropertyChanged
     {
         private RelayCommand _goCommand;
         private MathsFilterModel _model;
+        private string _funcString;
 
-        public string FuncString { get; set; }
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public IRelayCommand GoCommand { get { return _goCommand; } }
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public string FuncString
+        {
+            get { return _funcString; }
+            set { 
+                    _funcString = value;
+                    _model.SetFunctionString(_funcString);
+                    OnPropertyChanged(nameof(FuncString));
+                    _goCommand.NotifyCanExecuteChanged();
+                }
+        }
+
+        public ICommand GoCommand { get { return _goCommand; } }
                 
         public MainWindowViemModel()
         {
@@ -27,6 +44,7 @@ namespace MathsFilter.ViewModels
 
         private bool CanGo()
         {
+            bool result = _model.ValidFunction();
             return _model.ValidFunction();
         }
 

@@ -10,7 +10,7 @@ using System.IO;
 
 namespace MathsFilter.Models
 {
-    internal class MathsFilterModel
+    internal class MathsFilterModel 
     {
         private Function _mainFunction;
         private Function _xFunc;
@@ -19,6 +19,14 @@ namespace MathsFilter.Models
         private int _xoffset;
         private int _yoffset;
         private int _scale;
+
+        public MathsFilterModel()
+        {
+            _xoffset = 0;
+            _yoffset = 0;
+            _scale = 1; 
+            SetOffSetScaleFunctions();
+        }
     
         public int XOffset
         {
@@ -38,10 +46,20 @@ namespace MathsFilter.Models
             set { _scale = value; }
         }
 
-        public void SetFunctionString(string funky)
+        private void SetOffSetScaleFunctions()
         {
-            string allfunc = $"f(x,y)={funky}";
-            _mainFunction = new Function(allfunc);
+            string xFunc = $"f(x)=(x+{_xoffset})/{_scale}";
+            _xFunc = new Function(xFunc);
+            string yFunc = $"g(y)=(y+{_xoffset})/{_scale}";
+            _yFunc = new Function(yFunc);
+        }
+
+        public void SetFunctionString(string funky)
+        { 
+            string funkr = funky.Replace("x", "f(x)");
+            funkr = funkr.Replace("y", "g(y)");
+            string allfunc = $"h(x,y) = {funkr}";
+            _mainFunction = new Function(allfunc,_xFunc,_yFunc);
         }
 
         public bool ValidFunction()

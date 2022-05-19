@@ -29,56 +29,5 @@ namespace MathsFilter
         {
             InitializeComponent();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            double xoffset = -11;
-            double yoffset = 17;
-            double scale = 0.01;
-           
-            Function xfunc = new Function($"f(x) = (x + {xoffset}) /{scale}");
-            Function yfunc = new Function($"g(y) = (y + {yoffset}) /{scale}");
-            bool xtest = xfunc.checkSyntax();
-            bool ytest = yfunc.checkSyntax();
-            Function func = new Function("h(x,y) = f(x)^2 - g(y)^2",xfunc,yfunc);
-            bool functest = func.checkSyntax();
-           
-
-      
-
-            Grid grid = (Grid)_bimage.Parent;
-            int row = Grid.GetRow(_bimage);
-            int column = Grid.GetColumn(_bimage);
-            RowDefinition rowDefinition = grid.RowDefinitions[row];
-            ColumnDefinition columnDefinition = grid.ColumnDefinitions[column];
-
-            //int range = Convert.ToInt16(columnDefinition.ActualWidth < rowDefinition.ActualHeight ? columnDefinition.ActualWidth : rowDefinition.ActualHeight);
-            int range = 700;
-            TransformMatrix tm = new TransformMatrix(range, 0);
-            tm.Set(func);
-
-            int size = range * 2 + 1;
-            BitmapBox bitbox = new BitmapBox(System.Drawing.Color.Gray, size, size);
-            BitmapBox.OutOfBounds oob = BitmapBox.OutOfBounds.Rollover;
-            bitbox.ApplyMatrix(tm, size / 2, size / 2, BitmapBox.Colour.Red, oob);
-
-            bitbox.Save("Hello.bmp");
-          
-      
-            MemoryStream ms = new MemoryStream();
-            bitbox.bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-            ms.Position = 0;
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.StreamSource = ms;
-            bi.EndInit();
-
-            _bimage.Source = bi;   
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            _MainWindowVm.GoCommand.NotifyCanExecuteChanged();
-        }
     }
 }
