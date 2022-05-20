@@ -36,8 +36,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GeoFilter">
-      <HintPath>.\GeoFilter.dll</HintPath>
+    <Reference Include="GeoFilter, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\GeoGilter\bin\Debug\GeoFilter.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="MathParser.org-mXparser, Version=5.0.2.0, Culture=neutral, PublicKeyToken=0fbab7add73ed6e2, processorArchitecture=MSIL">
       <HintPath>..\packages\MathParser.org-mXparser.5.0.2\lib\net472\MathParser.org-mXparser.dll</HintPath>
@@ -100,7 +104,6 @@
     </Compile>
     <Compile Include="Models\MathsFilterModel.cs" />
     <Compile Include="ViewModels\MainWindowViemModel.cs" />
-    <Compile Include="Views\Class1.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

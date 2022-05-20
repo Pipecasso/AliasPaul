@@ -28,6 +28,12 @@ namespace MathsFilter
         public MainWindow()
         {
             InitializeComponent();
+            _MainWindowVm.Refresh += _MainWindowVm_Refresh;
+        }
+
+        private void _MainWindowVm_Refresh(object sender, EventArgs e)
+        {
+            _ProgressBar.UpdateLayout();
         }
     }
 }

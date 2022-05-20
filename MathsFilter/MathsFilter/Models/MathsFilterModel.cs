@@ -19,6 +19,7 @@ namespace MathsFilter.Models
         private int _xoffset;
         private int _yoffset;
         private int _scale;
+        private TransformMatrix _transformMatrix;
 
         public MathsFilterModel()
         {
@@ -46,6 +47,8 @@ namespace MathsFilter.Models
             set { _scale = value; }
         }
 
+        public Function MainFunction { get { return _mainFunction; } }
+
         private void SetOffSetScaleFunctions()
         {
             string xFunc = $"f(x)=(x+{_xoffset})/{_scale}";
@@ -71,14 +74,14 @@ namespace MathsFilter.Models
         {
             get { return _image; }
         }
-        public void Go()
+
+        public TransformMatrix TransformMatrix { get { return _transformMatrix; } }
+        public void InitialiseTransformMatrix(int range)
         {
+            _transformMatrix= new TransformMatrix(range, 0);
+           
 
-            int range = 700;
-            TransformMatrix tm = new TransformMatrix(range, 0);
-            tm.Set(_mainFunction);
-
-            int size = range * 2 + 1;
+            /* int size = range * 2 + 1;
             BitmapBox bitbox = new BitmapBox(System.Drawing.Color.Gray, size, size);
             BitmapBox.OutOfBounds oob = BitmapBox.OutOfBounds.Rollover;
             bitbox.ApplyMatrix(tm, size / 2, size / 2, BitmapBox.Colour.Red, oob);
@@ -91,7 +94,7 @@ namespace MathsFilter.Models
             _image = new BitmapImage();
             _image.BeginInit();
             _image.StreamSource = ms;
-            _image.EndInit();
+            _image.EndInit();*/
         }
     }
 }
