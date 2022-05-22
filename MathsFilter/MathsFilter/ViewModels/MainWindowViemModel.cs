@@ -14,14 +14,29 @@ namespace MathsFilter.ViewModels
     internal class MainWindowViemModel : INotifyPropertyChanged
     {
         private RelayCommand _goCommand;
+        private RelayCommand _analyseCommand;
         private MathsFilterModel _model;
         private string _funcString;
         private double _Progress;
+        private BackgroundWorker _worker;
+        private bool _isBusy;
+        private bool _hasCalculculated;
 
 
 
-        public event EventHandler Refresh;
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public MainWindowViemModel()
+        {
+            _model = new MathsFilterModel();
+            _goCommand = new RelayCommand(Go, CanGo);
+            _analyseCommand = new RelayCommand(AnalyseMatrix, MatrixSet);
+            _worker = new BackgroundWorker();
+            _isBusy = false;
+            _hasCalculculated = false;
+            _analyseCommand.NotifyCanExecuteChanged();
+            _worker.DoWork += _worker_DoWork;
+        }
 
         private void OnPropertyChanged(string propertyName)
         {
@@ -42,26 +57,44 @@ namespace MathsFilter.ViewModels
         }
 
         public ICommand GoCommand { get { return _goCommand; } }
+        public ICommand AnalyseCommand { get { return _analyseCommand;} }
 
-        public MainWindowViemModel()
-        {
-            _model = new MathsFilterModel();
-            _goCommand = new RelayCommand(Go, CanGo);
-        }
+       
 
 
 
         private bool CanGo()
         {
-            return _model.ValidFunction();
+            return _model.ValidFunction() && !_isBusy;
+        }
+
+        private bool MatrixSet()
+        {
+            return _hasCalculculated;
+        }
+
+        private void AnalyseMatrix()
+        {
+
         }
 
         private void Go()
         {
+            _hasCalculculated = false;
             _model.InitialiseTransformMatrix(700);
             _model.TransformMatrix.Pulse += TransformMatrix_Pulse;
-            _model.TransformMatrix.Set(_model.MainFunction);
+            _isBusy = true;
+            _goCommand?.NotifyCanExecuteChanged();
+            _worker.RunWorkerAsync();
 
+        }
+
+        private void _worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _model.TransformMatrix.Set(_model.MainFunction);
+            _isBusy = false;
+            _hasCalculculated = true;
+            _analyseCommand?.NotifyCanExecuteChanged();
         }
 
         private void TransformMatrix_Pulse(object sender, System.EventArgs e)
@@ -80,7 +113,7 @@ namespace MathsFilter.ViewModels
             {
                 _Progress = value;
                 OnPropertyChanged(nameof(Progress));
-                Refresh?.Invoke(this, EventArgs.Empty);
+               
             }
         }
     }
