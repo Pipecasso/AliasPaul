@@ -80,7 +80,6 @@ namespace MathsFilter.Models
         {
             _transformMatrix= new TransformMatrix(range, 0);
            
-
             /* int size = range * 2 + 1;
             BitmapBox bitbox = new BitmapBox(System.Drawing.Color.Gray, size, size);
             BitmapBox.OutOfBounds oob = BitmapBox.OutOfBounds.Rollover;
@@ -96,5 +95,25 @@ namespace MathsFilter.Models
             _image.StreamSource = ms;
             _image.EndInit();*/
         }
+
+        public void PaintImage()
+        {
+            int size = _transformMatrix.Dimension2;
+            BitmapBox bitbox = new BitmapBox(System.Drawing.Color.Gray, size, size);
+            BitmapBox.OutOfBounds oob = BitmapBox.OutOfBounds.Rollover;
+            // bitbox.ApplyMatrix(_transformMatrix, size / 2, size / 2, BitmapBox.Colour.Red, oob);
+            bitbox.ApplyMatrixAndFlatten(_transformMatrix, size / 2, size / 2, oob);
+            //bitbox.Save("Hello.bmp");
+
+            MemoryStream ms = new MemoryStream();
+            bitbox.bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            ms.Position = 0;
+            _image = new BitmapImage();
+            _image.BeginInit();
+            _image.StreamSource = ms;
+            _image.EndInit(); 
+        }
+
+     
     }
 }

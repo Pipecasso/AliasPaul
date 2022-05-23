@@ -8,6 +8,8 @@ using System.IO;
 using System.ComponentModel;
 using MathsFilter.Models;
 using System;
+using MathsFilter.Views;
+using System.Windows.Media.Imaging;
 
 namespace MathsFilter.ViewModels
 {
@@ -15,6 +17,7 @@ namespace MathsFilter.ViewModels
     {
         private RelayCommand _goCommand;
         private RelayCommand _analyseCommand;
+        private RelayCommand _showCommand;
         private MathsFilterModel _model;
         private string _funcString;
         private double _Progress;
@@ -22,18 +25,14 @@ namespace MathsFilter.ViewModels
         private bool _hasCalculculated;
         private bool _isBusy;
     
-
-
-
-
         public event PropertyChangedEventHandler PropertyChanged;
        
-
         public MainWindowViemModel()
         {
             _model = new MathsFilterModel();
             _goCommand = new RelayCommand(Go, CanGo);
             _analyseCommand = new RelayCommand(AnalyseMatrix, MatrixSet);
+            _showCommand = new RelayCommand(Show, MatrixSet);
             _worker = new BackgroundWorker();
             _hasCalculculated = false;
             _analyseCommand.NotifyCanExecuteChanged();
@@ -64,11 +63,8 @@ namespace MathsFilter.ViewModels
 
         public ICommand GoCommand { get { return _goCommand; } }
         public ICommand AnalyseCommand { get { return _analyseCommand;} }
-
+        public ICommand ShowCommand { get { return _showCommand; } }
        
-
-
-
         private bool CanGo()
         {
             return _model.ValidFunction() && !_isBusy;
@@ -82,7 +78,9 @@ namespace MathsFilter.ViewModels
         private void AnalyseMatrix()
         {
             AnalysisViewModel analysisViewModel = new AnalysisViewModel(_model.TransformMatrix);
-       
+            AnalysisWindow analysisWindow = new AnalysisWindow();
+            analysisWindow.DataContext = analysisViewModel;
+            analysisWindow.Show();
         }
 
       
@@ -94,8 +92,12 @@ namespace MathsFilter.ViewModels
             _isBusy = true;
             _goCommand?.NotifyCanExecuteChanged();
             _worker.RunWorkerAsync();
-            
+        }
 
+        private void Show()
+        {
+            _model.PaintImage();
+            OnPropertyChanged(nameof(Image));
         }
 
         private void _worker_DoWork(object sender, DoWorkEventArgs e)
@@ -109,6 +111,7 @@ namespace MathsFilter.ViewModels
             _hasCalculculated = true;
             _isBusy = false;
             _analyseCommand?.NotifyCanExecuteChanged();
+            _showCommand?.NotifyCanExecuteChanged();
         }
 
         private void TransformMatrix_Pulse(object sender, System.EventArgs e)
@@ -130,5 +133,7 @@ namespace MathsFilter.ViewModels
                
             }
         }
+
+        public BitmapImage Image { get { return _model.Image; } }
     }
 }

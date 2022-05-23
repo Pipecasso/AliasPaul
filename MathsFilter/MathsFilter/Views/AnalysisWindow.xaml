@@ -13,7 +13,7 @@
         <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatGreen}" Background="Green"></TextBlock>
         <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatBlue}" Background="Blue"></TextBlock>
         <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding OutOfBounds}"></TextBlock>
-        <Button>Ok</Button>
+        <Button Click="Button_Click">Ok</Button>
     </StackPanel>
 
 </Window>
