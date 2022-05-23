@@ -1,0 +1,19 @@
+﻿<Window x:Class="MathsFilter.Views.AnalysisWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MathsFilter.Views"
+         xmlns:vm="clr-namespace:MathsFilter.ViewModels"
+        mc:Ignorable="d"
+        Title="AnalysisWindow" Height="300" Width="300">
+    <StackPanel>
+        <TextBlock HorizontalAlignment="Center">Flat</TextBlock>
+        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatRed}" Background="Red"></TextBlock>
+        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatGreen}" Background="Green"></TextBlock>
+        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatBlue}" Background="Blue"></TextBlock>
+        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding OutOfBounds}"></TextBlock>
+        <Button>Ok</Button>
+    </StackPanel>
+
+</Window>

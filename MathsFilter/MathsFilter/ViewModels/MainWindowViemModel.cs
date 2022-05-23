@@ -19,12 +19,15 @@ namespace MathsFilter.ViewModels
         private string _funcString;
         private double _Progress;
         private BackgroundWorker _worker;
-        private bool _isBusy;
         private bool _hasCalculculated;
+        private bool _isBusy;
+    
+
 
 
 
         public event PropertyChangedEventHandler PropertyChanged;
+       
 
         public MainWindowViemModel()
         {
@@ -32,11 +35,14 @@ namespace MathsFilter.ViewModels
             _goCommand = new RelayCommand(Go, CanGo);
             _analyseCommand = new RelayCommand(AnalyseMatrix, MatrixSet);
             _worker = new BackgroundWorker();
-            _isBusy = false;
             _hasCalculculated = false;
             _analyseCommand.NotifyCanExecuteChanged();
             _worker.DoWork += _worker_DoWork;
+            _worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
+            _isBusy = false;
         }
+
+      
 
         private void OnPropertyChanged(string propertyName)
         {
@@ -75,9 +81,11 @@ namespace MathsFilter.ViewModels
 
         private void AnalyseMatrix()
         {
-
+            AnalysisViewModel analysisViewModel = new AnalysisViewModel(_model.TransformMatrix);
+       
         }
 
+      
         private void Go()
         {
             _hasCalculculated = false;
@@ -86,14 +94,20 @@ namespace MathsFilter.ViewModels
             _isBusy = true;
             _goCommand?.NotifyCanExecuteChanged();
             _worker.RunWorkerAsync();
+            
 
         }
 
         private void _worker_DoWork(object sender, DoWorkEventArgs e)
         {
             _model.TransformMatrix.Set(_model.MainFunction);
-            _isBusy = false;
+         
+        }
+
+        private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
             _hasCalculculated = true;
+            _isBusy = false;
             _analyseCommand?.NotifyCanExecuteChanged();
         }
 
