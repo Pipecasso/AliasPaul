@@ -18,7 +18,7 @@ namespace MathsFilter.Models
         private BitmapImage _image;
         private int _xoffset;
         private int _yoffset;
-        private int _scale;
+        private double _scale;
         private TransformMatrix _transformMatrix;
 
         public MathsFilterModel()
@@ -32,19 +32,19 @@ namespace MathsFilter.Models
         public int XOffset
         {
             get { return _xoffset; }
-            set { _xoffset = value; }
+            set { _xoffset = value; SetOffSetScaleFunctions(); }
         }
 
         public int YOffset
         {
             get { return _yoffset; }
-            set { _yoffset = value; }
+            set { _yoffset = value; SetOffSetScaleFunctions(); }
         }
 
-        public int Scale
+        public double Scale
         {
             get { return _scale; }
-            set { _scale = value; }
+            set { _scale = value; SetOffSetScaleFunctions(); }
         }
 
         public Function MainFunction { get { return _mainFunction; } }

@@ -24,6 +24,7 @@ namespace MathsFilter.ViewModels
         private BackgroundWorker _worker;
         private bool _hasCalculculated;
         private bool _isBusy;
+        
     
         public event PropertyChangedEventHandler PropertyChanged;
        
@@ -83,7 +84,38 @@ namespace MathsFilter.ViewModels
             analysisWindow.Show();
         }
 
-      
+        public int XOffset
+        {
+            get { return _model.XOffset; }
+            set
+            {
+                _model.XOffset = value;
+                OnPropertyChanged(nameof(XOffset));
+            }
+        }
+
+        public int YOffset
+        {
+            get { return _model.YOffset; }
+            set
+            {
+                _model.XOffset = value;
+                OnPropertyChanged(nameof(YOffset));
+            }
+        }
+
+        public double Scale
+        {
+            get { return _model.Scale; }
+            set
+            {
+                _model.Scale = value;
+                _model.SetFunctionString(_funcString);
+                OnPropertyChanged(nameof(Scale));
+                _goCommand?.NotifyCanExecuteChanged();
+            }
+        }
+
         private void Go()
         {
             _hasCalculculated = false;
