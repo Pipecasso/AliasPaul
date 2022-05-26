@@ -98,6 +98,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\FilterLens.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -111,6 +115,9 @@
     <Compile Include="ViewModels\MainWindowViemModel.cs" />
     <Compile Include="Views\AnalysisWindow.xaml.cs">
       <DependentUpon>AnalysisWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FilterLens.xaml.cs">
+      <DependentUpon>FilterLens.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
