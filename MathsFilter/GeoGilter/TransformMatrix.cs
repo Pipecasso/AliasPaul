@@ -19,16 +19,18 @@ namespace GeoFilter
         private double _minumum;
         private double _maximum;
         private double _mid = Convert.ToDouble(Int32.MaxValue) - 256;
-        
-     
+       
+
 
         private int _pulsegap;
+        private uint _gap;
 
         public event EventHandler<EventArgs> Pulse; 
 
         public TransformMatrix(int dimension, bool bIdendity = false)
         {
             _dimension = dimension;
+            _gap = 1;
             int arraydim = 2 * dimension + 1;
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
@@ -43,8 +45,9 @@ namespace GeoFilter
                         _Pixels[i, j] = i == j ? 1 : 0;
                     }
                 }
-
             }
+
+            mXparser.setDegreesMode();
         }
 
         public int Area
@@ -271,21 +274,21 @@ namespace GeoFilter
 
  
 
-        public void Set(Function f, bool bRadx = false, bool bRady = false)
+        public void Set(Function f)
         {
             double tiktok = 0;
             double total = Math.Pow(_dimension * 2 + 1, 2);
-
+            
             _minumum = Int32.MaxValue;
             _maximum = Int32.MinValue;
             Argument x = new Argument("x", 0);
             Argument y = new Argument("y", 0);
             for (int i = -_dimension; i <= _dimension; i++)
             {
-                x.setArgumentValue(bRadx ? i * Math.PI / 360 : i);
-                for (int j = -_dimension; j <= _dimension; j++)
+                x.setArgumentValue(i);
+                for (int j = -_dimension; j <= _dimension; j+=(int)_gap)
                 {
-                    y.setArgumentValue(bRady ? j * Math.PI / 360 : j);
+                    y.setArgumentValue(j);
                     double fval = f.calculate(x, y);
 
                     if (double.IsNaN(fval) || Math.Abs(fval) > _mid) fval = 0;
@@ -457,6 +460,12 @@ namespace GeoFilter
             blue = Convert.ToDouble(iblue) / area;
             outofrange = Convert.ToDouble(ioor) / area;
             Debug.Assert(Math.Abs(red + green + blue + outofrange - 1) < 1e-6);
+        }
+
+        public uint Gap
+        {
+            get { return _gap; }
+            set { _gap = value; }
         }
     }
 

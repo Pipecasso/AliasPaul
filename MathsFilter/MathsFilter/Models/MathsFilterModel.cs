@@ -19,13 +19,15 @@ namespace MathsFilter.Models
         private int _xoffset;
         private int _yoffset;
         private double _scale;
+
         private TransformMatrix _transformMatrix;
+        private BitmapBox _box;
 
         public MathsFilterModel()
         {
             _xoffset = 0;
             _yoffset = 0;
-            _scale = 1; 
+            _scale = 1;
             SetOffSetScaleFunctions();
         }
     
@@ -46,6 +48,8 @@ namespace MathsFilter.Models
             get { return _scale; }
             set { _scale = value; SetOffSetScaleFunctions(); }
         }
+
+      
 
         public Function MainFunction { get { return _mainFunction; } }
 
@@ -76,42 +80,33 @@ namespace MathsFilter.Models
         }
 
         public TransformMatrix TransformMatrix { get { return _transformMatrix; } }
-        public void InitialiseTransformMatrix(int range)
+        public void InitialiseTransformMatrix(int range,uint gap)
         {
             _transformMatrix= new TransformMatrix(range, 0);
-           
-            /* int size = range * 2 + 1;
-            BitmapBox bitbox = new BitmapBox(System.Drawing.Color.Gray, size, size);
-            BitmapBox.OutOfBounds oob = BitmapBox.OutOfBounds.Rollover;
-            bitbox.ApplyMatrix(tm, size / 2, size / 2, BitmapBox.Colour.Red, oob);
-
-            bitbox.Save("Hello.bmp");
-
-            MemoryStream ms = new MemoryStream();
-            bitbox.bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-            ms.Position = 0;
-            _image = new BitmapImage();
-            _image.BeginInit();
-            _image.StreamSource = ms;
-            _image.EndInit();*/
+            _transformMatrix.Gap = gap;
         }
 
         public void PaintImage()
         {
             int size = _transformMatrix.Dimension2;
-            BitmapBox bitbox = new BitmapBox(System.Drawing.Color.Gray, size, size);
+            _box = new BitmapBox(System.Drawing.Color.Gray, size, size);
             BitmapBox.OutOfBounds oob = BitmapBox.OutOfBounds.Rollover;
             // bitbox.ApplyMatrix(_transformMatrix, size / 2, size / 2, BitmapBox.Colour.Red, oob);
-            bitbox.ApplyMatrixAndFlatten(_transformMatrix, size / 2, size / 2, oob);
+            _box.ApplyMatrixAndFlatten(_transformMatrix, size / 2, size / 2, oob);
             //bitbox.Save("Hello.bmp");
 
             MemoryStream ms = new MemoryStream();
-            bitbox.bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            _box.bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
             ms.Position = 0;
             _image = new BitmapImage();
             _image.BeginInit();
             _image.StreamSource = ms;
             _image.EndInit(); 
+        }
+
+        public void SaveBox(string path)
+        {
+            _box.bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Bmp);
         }
 
      

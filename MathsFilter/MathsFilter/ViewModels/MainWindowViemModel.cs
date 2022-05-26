@@ -10,6 +10,7 @@ using MathsFilter.Models;
 using System;
 using MathsFilter.Views;
 using System.Windows.Media.Imaging;
+using System.Windows.Forms;
 
 namespace MathsFilter.ViewModels
 {
@@ -18,28 +19,36 @@ namespace MathsFilter.ViewModels
         private RelayCommand _goCommand;
         private RelayCommand _analyseCommand;
         private RelayCommand _showCommand;
+        private RelayCommand _saveCommand;
         private MathsFilterModel _model;
         private string _funcString;
         private double _Progress;
         private BackgroundWorker _worker;
         private bool _hasCalculculated;
         private bool _isBusy;
-        
-    
+        private bool _painted;
+        private int _range;
+        uint _gap;
+
+
         public event PropertyChangedEventHandler PropertyChanged;
        
         public MainWindowViemModel()
         {
+            _range = 1000;
+            _gap = 1;
             _model = new MathsFilterModel();
             _goCommand = new RelayCommand(Go, CanGo);
             _analyseCommand = new RelayCommand(AnalyseMatrix, MatrixSet);
             _showCommand = new RelayCommand(Show, MatrixSet);
+            _saveCommand = new RelayCommand(Save, CanSave);
             _worker = new BackgroundWorker();
             _hasCalculculated = false;
             _analyseCommand.NotifyCanExecuteChanged();
             _worker.DoWork += _worker_DoWork;
             _worker.RunWorkerCompleted += _worker_RunWorkerCompleted;
             _isBusy = false;
+            _painted = false;
         }
 
       
@@ -65,6 +74,8 @@ namespace MathsFilter.ViewModels
         public ICommand GoCommand { get { return _goCommand; } }
         public ICommand AnalyseCommand { get { return _analyseCommand;} }
         public ICommand ShowCommand { get { return _showCommand; } }
+
+        public ICommand SaveCommand { get { return _saveCommand; } }    
        
         private bool CanGo()
         {
@@ -90,7 +101,9 @@ namespace MathsFilter.ViewModels
             set
             {
                 _model.XOffset = value;
+                _model.SetFunctionString(_funcString);
                 OnPropertyChanged(nameof(XOffset));
+                _goCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -99,8 +112,10 @@ namespace MathsFilter.ViewModels
             get { return _model.YOffset; }
             set
             {
-                _model.XOffset = value;
+                _model.YOffset = value;    
+                _model.SetFunctionString(_funcString);
                 OnPropertyChanged(nameof(YOffset));
+                _goCommand?.NotifyCanExecuteChanged();
             }
         }
 
@@ -116,13 +131,28 @@ namespace MathsFilter.ViewModels
             }
         }
 
+        public int Range
+        {
+            get { return _range; }
+            set { _range = value; OnPropertyChanged(nameof(Range)); }
+        }
+
+        public uint Gap
+        {
+            get { return _gap; }
+            set { _gap = value; OnPropertyChanged(nameof(Gap)); }
+        }
+
+
         private void Go()
         {
             _hasCalculculated = false;
-            _model.InitialiseTransformMatrix(700);
+            _painted = false;
+            _model.InitialiseTransformMatrix(_range,_gap);
             _model.TransformMatrix.Pulse += TransformMatrix_Pulse;
             _isBusy = true;
             _goCommand?.NotifyCanExecuteChanged();
+            _saveCommand?.NotifyCanExecuteChanged();
             _worker.RunWorkerAsync();
         }
 
@@ -130,12 +160,28 @@ namespace MathsFilter.ViewModels
         {
             _model.PaintImage();
             OnPropertyChanged(nameof(Image));
+            _painted = true;
+            _saveCommand.NotifyCanExecuteChanged();
+        }
+
+        private void Save()
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "bmp files (*.bmp)|*.bmp";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                _model.SaveBox(saveFileDialog.FileName);
+            }
+        }
+
+        private bool CanSave()
+        {
+            return _painted;
         }
 
         private void _worker_DoWork(object sender, DoWorkEventArgs e)
         {
             _model.TransformMatrix.Set(_model.MainFunction);
-         
         }
 
         private void _worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

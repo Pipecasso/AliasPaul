@@ -19,11 +19,17 @@ namespace MathsFilter.ViewModels
             FlatGreen = g*100;
             FlatBlue = b*100;
             OutOfBounds = o*100;
+            Maximum = transformMatrix.maximum;
+            Minimum = transformMatrix.minimum;
         }
         
         public double FlatRed { get; private set; }
         public double FlatGreen { get; private set; }   
         public double FlatBlue { get; private set; }
         public double OutOfBounds { get; private set; }
+
+        public double Maximum { get; private set; }
+
+        public double Minimum { get; private set; }
     }
 }
