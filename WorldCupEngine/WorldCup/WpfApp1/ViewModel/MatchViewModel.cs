@@ -31,8 +31,8 @@ namespace WpfApp1.ViewModel
 
         }
 
-        public string Contestent1 { get => _match==null ? string.Empty : _match.Item1.Name; }
-        public string Contestent2 { get => _match==null ? string.Empty : _match.Item2.Name; }
+        public string Contestent1 { get => _match==null ? string.Empty : $"{_match.Item1.Seeding} {_match.Item1.Name}"; }
+        public string Contestent2 { get => _match == null ? string.Empty : $"{_match.Item2.Seeding} {_match.Item2.Name}"; }
 
         public Match.Result CurrentScore 
         {

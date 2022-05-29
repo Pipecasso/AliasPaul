@@ -9,13 +9,13 @@ namespace WorldCupEngine
 {
     public class Tournament
     {
-
+        public enum Format { standard,facup,seeded};
         private int _round;
         private Dictionary<int, Round> _Rounds;
         private ContestentPool _allPlayers; 
      
 
-        private bool _facup;
+        private Format _format;
 
         public Tournament(ContestentPool contestentPool)
         {
@@ -23,21 +23,21 @@ namespace WorldCupEngine
             _Rounds = new Dictionary<int, Round>();
         }
 
-        public Tournament(ContestentPool contestentPool,int numberofrounds,bool facup,int seed)
+        public Tournament(ContestentPool contestentPool,int numberofrounds,Format format,int seed)
         {
             _round = 1;
             _allPlayers = contestentPool;
-            _facup = facup;
+            _format = format;
             Bag<Contestent> contestentBag = new Bag<Contestent>();
             contestentBag.Randy = new Random(seed);
             Initialise(contestentBag, contestentPool, numberofrounds);
         }
 
-        public Tournament(ContestentPool contestentPool, int numberofrounds, bool facup)
+        public Tournament(ContestentPool contestentPool, int numberofrounds, Format format)
         {
             _round = 1;
             _allPlayers = contestentPool;
-            _facup = facup;
+            _format= format;
             Bag<Contestent> contestentBag = new Bag<Contestent>();
             Initialise(contestentBag, contestentPool, numberofrounds);
         }
@@ -56,7 +56,14 @@ namespace WorldCupEngine
                     contestents.Add(contestent);
                 }
 
-                Round round1 = new Round(contestents);
+                Round round1 = null;
+                if (_format == Format.seeded)
+                {
+                }
+                else
+                {
+                    round1 = new Round(contestents);
+                }
                 _Rounds.Add(1, round1);
             }
         }
@@ -95,7 +102,7 @@ namespace WorldCupEngine
 
         public Round NextRound()
         {
-            Round nextRound = _Rounds[_round].Next(_facup);
+            Round nextRound = _Rounds[_round].Next(_format == Format.facup);
             if (nextRound == null)
             {
                 Round final_round = _Rounds[_round];

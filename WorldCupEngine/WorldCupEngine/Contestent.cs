@@ -36,6 +36,8 @@ namespace WorldCupEngine
         public void IncLoss() { _losses++; }
         public void Picked() { _tournaments++; }
         public void TournamentWin() { _tournamentwins++; }
+
+        public uint Seeding { get; set; }
         
     
     }

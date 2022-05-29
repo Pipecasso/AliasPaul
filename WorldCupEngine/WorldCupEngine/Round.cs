@@ -19,11 +19,25 @@ namespace WorldCupEngine
             Load(cell, contestent_pool);
         }
 
-        public Round(IEnumerable<Contestent> initialContestents)
+        public Round(IEnumerable<Contestent> initialContestents,bool seeded = false)
         {
             _number = 1;
             _heat = 0;
-         
+
+            IEnumerable<Contestent> sortedContestent_pool = initialContestents.OrderByDescending(x => x.Points).ThenBy(x => x.TournementWins).ThenBy(x => x.Wins);
+            uint seed = 1;
+            foreach (Contestent contestent in sortedContestent_pool)
+            {
+                contestent.Seeding = seed++;
+            }
+
+            if (seeded)
+            {
+               
+                IEnumerable<Contestent> seeds = sortedContestent_pool.Where(x => x.Seeding <= initialContestents.Count() / 2);
+                IEnumerable<Contestent> qualifiers = sortedContestent_pool.Where(x => x.Seeding > initialContestents.Count() / 2);
+            }
+
             int matchcount = initialContestents.Count() / 2;
             _matches = new Match[matchcount];
             IEnumerable<Match> matches = MatchMaker(initialContestents, false);
@@ -98,7 +112,6 @@ namespace WorldCupEngine
             else
             {
                 IEnumerator<Contestent> contestentenum = contestents.GetEnumerator();
-                //contestentenum.Reset();
                 bool keegoing = true;
                 matches = new List<Match>();
                 while (keegoing)

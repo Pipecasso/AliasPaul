@@ -18,7 +18,7 @@ namespace WpfApp1.Model
         {
             _xlpath = path; 
             _contestents = new ContestentPool(path,String.Empty);
-            _tournament = new Tournament(_contestents,totalrounds,false);
+            _tournament = new Tournament(_contestents,totalrounds,Tournament.Format.standard);
         }
 
         internal void Load(string tournamentpath,string contestentpath)
