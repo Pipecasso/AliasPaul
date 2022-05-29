@@ -34,7 +34,7 @@
         <Button Grid.Column="0" Grid.Row="1" Command="{Binding AnalyseCommand}">Analyse</Button>
         <Button Grid.Column="1" Grid.Row="1" Command="{Binding ShowCommand}">Show</Button>
         <Border Grid.Column="2" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="7" BorderBrush="Moccasin" BorderThickness="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <Image Source="{Binding Image,UpdateSourceTrigger=PropertyChanged}"></Image>
+            <Image Source="{Binding Image,UpdateSourceTrigger=PropertyChanged}" MouseDown="Image_MouseDown"></Image>
         </Border>
         <v:FilterLens Grid.Column="2" Grid.ColumnSpan="1" Grid.Row="1" Grid.RowSpan="7" CrossFraction="0.1"></v:FilterLens>
         <TextBlock Grid.Column="0" Grid.Row="2" Text="XOffset" HorizontalAlignment="Center"></TextBlock>

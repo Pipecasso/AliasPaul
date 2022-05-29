@@ -35,5 +35,10 @@ namespace MathsFilter
         {
             _ProgressBar.UpdateLayout();
         }
+
+        private void Image_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+  
+        }
     }
 }
