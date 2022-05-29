@@ -60,6 +60,7 @@
     <Compile Include="PixelBag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PulseArgs.cs" />
+    <Compile Include="SortedMultiDictionary.cs" />
     <Compile Include="TransformMatrix.cs" />
     <Compile Include="VectorBox.cs" />
     <Compile Include="VectorFunction.cs" />
