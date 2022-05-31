@@ -4,13 +4,14 @@ using Microsoft.Toolkit.Mvvm.Input;
 using System.Windows.Input;
 using System.Drawing;
 using System.IO;
-
+using System.Linq;
 using System.ComponentModel;
 using MathsFilter.Models;
 using System;
 using MathsFilter.Views;
 using System.Windows.Media.Imaging;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace MathsFilter.ViewModels
 {
@@ -154,9 +155,13 @@ namespace MathsFilter.ViewModels
             _goCommand?.NotifyCanExecuteChanged();
             _saveCommand?.NotifyCanExecuteChanged();
             _worker.RunWorkerAsync();
+         
+
+
+
         }
 
-        private void Show()
+    private void Show()
         {
             _model.PaintImage();
             OnPropertyChanged(nameof(Image));
@@ -190,6 +195,14 @@ namespace MathsFilter.ViewModels
             _isBusy = false;
             _analyseCommand?.NotifyCanExecuteChanged();
             _showCommand?.NotifyCanExecuteChanged();
+
+            IEnumerable<int> under = _model.TransformMatrix.SortedValues.Where(x => x < 0);
+            IEnumerable<int> over = _model.TransformMatrix.SortedValues.Where(x => x >= 16777216);
+            IEnumerable<int> inrange = _model.TransformMatrix.SortedValues.Where(x => x >= 0 && x < 16777216);
+          
+           
+            
+        
         }
 
         private void TransformMatrix_Pulse(object sender, System.EventArgs e)

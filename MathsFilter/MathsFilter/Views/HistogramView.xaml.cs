@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using GeoFilter;
 
 namespace MathsFilter.Views
 {
@@ -24,5 +25,10 @@ namespace MathsFilter.Views
         {
             InitializeComponent();
         }
+
+        public TransformMatrix TransformMatrix { get; set; }
+    
+     
+    
     }
 }

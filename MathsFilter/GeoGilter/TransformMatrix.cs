@@ -20,8 +20,7 @@ namespace GeoFilter
         private double _maximum;
         private double _mid = Convert.ToDouble(Int32.MaxValue) - 256;
 
-        private SortedMultiDictionary<double, Tuple<int, int>> _sortedMap;
-      
+        private SortedMultiList<int> _sortedValues;
     
         private int _pulsegap;
         private uint _gap;
@@ -36,7 +35,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
-            _sortedMap = new SortedMultiDictionary<double, Tuple<int, int>>();
+            _sortedValues = new SortedMultiList<int>();
 
             if (bIdendity)
             {
@@ -63,6 +62,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
+            _sortedValues = new SortedMultiList<int>();
 
             for (int i = 0; i < dimension; i++)
             {
@@ -274,8 +274,6 @@ namespace GeoFilter
 
         }
 
- 
-
         public void Set(Function f)
         {
             double tiktok = 0;
@@ -305,7 +303,8 @@ namespace GeoFilter
                     }
 
                     _Pixels[i + _dimension, _dimension - j] = fval;
-                    _sortedMap.Add(fval, new Tuple<int, int>(i, j));
+                    int sortedVal = System.Convert.ToInt32(Math.Floor(fval + 0.5));
+                    _sortedValues.Add(sortedVal);
                     tiktok++;
                     
                     if ( (tiktok % _pulsegap) == 0)
@@ -470,6 +469,8 @@ namespace GeoFilter
             get { return _gap; }
             set { _gap = value; }
         }
+
+        public SortedMultiList<int> SortedValues => _sortedValues;
     }
 
    

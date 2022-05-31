@@ -109,6 +109,8 @@ namespace MathsFilter.Models
             _box.bitmap.Save(path, System.Drawing.Imaging.ImageFormat.Bmp);
         }
 
+        
+
      
     }
 }
