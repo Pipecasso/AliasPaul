@@ -196,10 +196,8 @@ namespace MathsFilter.ViewModels
             _analyseCommand?.NotifyCanExecuteChanged();
             _showCommand?.NotifyCanExecuteChanged();
 
-            IEnumerable<int> under = _model.TransformMatrix.SortedValues.Where(x => x < 0);
-            IEnumerable<int> over = _model.TransformMatrix.SortedValues.Where(x => x >= 16777216);
-            IEnumerable<int> inrange = _model.TransformMatrix.SortedValues.Where(x => x >= 0 && x < 16777216);
-          
+            ChunkyIntList chunks = _model.TransformMatrix.SortedValues;
+            
            
             
         

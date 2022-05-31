@@ -20,7 +20,7 @@ namespace GeoFilter
         private double _maximum;
         private double _mid = Convert.ToDouble(Int32.MaxValue) - 256;
 
-        private SortedMultiList<int> _sortedValues;
+        private ChunkyIntList _sortedValues;
     
         private int _pulsegap;
         private uint _gap;
@@ -35,7 +35,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
-            _sortedValues = new SortedMultiList<int>();
+            _sortedValues = new ChunkyIntList(0, 256 * 256 * 256,1000);
 
             if (bIdendity)
             {
@@ -62,7 +62,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
-            _sortedValues = new SortedMultiList<int>();
+            _sortedValues = new ChunkyIntList(0,256*256*256,1024);
 
             for (int i = 0; i < dimension; i++)
             {
@@ -470,7 +470,7 @@ namespace GeoFilter
             set { _gap = value; }
         }
 
-        public SortedMultiList<int> SortedValues => _sortedValues;
+        public ChunkyIntList SortedValues => _sortedValues;
     }
 
    
