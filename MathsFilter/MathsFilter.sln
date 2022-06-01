@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathsFilter", "MathsFilter\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoFilter", "GeoGilter\GeoFilter.csproj", "{622D0FCA-3EAD-4C67-853B-24A6395B4BBA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTests", "GeoTests\GeoTests.csproj", "{386A3C73-AD55-4F3B-9D01-0A75209145A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{622D0FCA-3EAD-4C67-853B-24A6395B4BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{622D0FCA-3EAD-4C67-853B-24A6395B4BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{622D0FCA-3EAD-4C67-853B-24A6395B4BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{386A3C73-AD55-4F3B-9D01-0A75209145A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{386A3C73-AD55-4F3B-9D01-0A75209145A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{386A3C73-AD55-4F3B-9D01-0A75209145A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{386A3C73-AD55-4F3B-9D01-0A75209145A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

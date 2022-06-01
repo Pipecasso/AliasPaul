@@ -197,10 +197,6 @@ namespace MathsFilter.ViewModels
             _showCommand?.NotifyCanExecuteChanged();
 
             ChunkyIntList chunks = _model.TransformMatrix.SortedValues;
-            
-           
-            
-        
         }
 
         private void TransformMatrix_Pulse(object sender, System.EventArgs e)

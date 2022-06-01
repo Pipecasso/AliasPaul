@@ -41,17 +41,14 @@ namespace GeoFilter
                     chunkup++;
                     rem--;
                 }
+                if (i==chunktotal-1)
+                {
+                    chunkup++;
+                }
                 Chunk chunk = new Chunk(chunklow, chunkup);
-                chunklow = chunkup + 1;
+                chunklow = chunkup;
                 _chunks.Add(chunk, 0);
-                /*  for (int j=chunk.Item1;j<=chunk.Item2;j++)
-                  {
-                      _chunkcache.Add(j, chunk);
-                  }*/
-
             }
-
-
         }
 
         public uint Under { get => _under; }
@@ -105,13 +102,14 @@ namespace GeoFilter
             }
             else
             {
-                chunk = _chunks.Keys.Where(x => x.Item1 <= val && x.Item2 >= val).Single();
+                chunk = _chunks.Keys.Where(x => x.Item1 <= val && x.Item2 > val).Single();
                 _chunkcache.Add(val, chunk);
             }
             return chunk;
         }
 
         public Dictionary<Chunk,int> Chunks {get=>_chunks;}
+
 
     }
 }
