@@ -34,7 +34,7 @@ namespace WordCupTests
             Random random = new Random();
             File.Copy("NewCelebs.xlsx", "CelebsOT.xlsx");
             ContestentPool contestents = new ContestentPool("CelebsOT.xlsx",string.Empty);
-            Tournament t = new Tournament(contestents, 6, false);
+            Tournament t = new Tournament(contestents, 6, Tournament.Format.standard);
             Round r = t.CurrentRound;
             while (r != null)
             {
@@ -57,7 +57,7 @@ namespace WordCupTests
             Random random = new Random();
             File.Copy("NewCelebs.xlsx", "CelebsOTWS.xlsx");
             ContestentPool contestents = new ContestentPool("CelebsOTWS.xlsx", string.Empty);
-            Tournament t = new Tournament(contestents, 6, false);
+            Tournament t = new Tournament(contestents, 6, Tournament.Format.standard);
             Round r = t.CurrentRound;
             int tock = 40;
 
@@ -104,7 +104,7 @@ namespace WordCupTests
             Random random = new Random();
             File.Copy("NewCelebs.xlsx", "CelebsOTWS2p.xlsx");
             ContestentPool contestents = new ContestentPool("CelebsOTWS2p.xlsx", string.Empty);
-            Tournament t = new Tournament(contestents, 6, false);
+            Tournament t = new Tournament(contestents, 6, Tournament.Format.standard);
             Round r = t.CurrentRound;
             int tock = 40;
 
@@ -154,7 +154,7 @@ namespace WordCupTests
             for (int i = 0; i < 2; i++)
             {
                 ContestentPool contestents = new ContestentPool("CelebsTT.xlsx", string.Empty);
-                Tournament t = new Tournament(contestents, 5, false);
+                Tournament t = new Tournament(contestents, 5, Tournament.Format.standard);
                 Round r = t.CurrentRound;
                 while (r != null)
                 {
@@ -182,7 +182,7 @@ namespace WordCupTests
             File.Copy("NewCelebs.xlsx", "CelebsTT2.xlsx");
          
             ContestentPool contestents = new ContestentPool("CelebsTT2.xlsx", string.Empty);
-            Tournament t = new Tournament(contestents, 5, false,721);
+            Tournament t = new Tournament(contestents, 5, Tournament.Format.standard, 721);
             IEnumerable<Contestent> t1contestents = t.Contestents;
             IEnumerable<Contestent> t2contestents = null;
             IEnumerable<string> luckynames = null;
@@ -206,7 +206,7 @@ namespace WordCupTests
 
             ContestentPool contestents2 = new ContestentPool("CelebsTT2.xlsx", string.Empty);
            
-            t2 = new Tournament(contestents2, 5, false,1432);
+            t2 = new Tournament(contestents2, 5, Tournament.Format.standard, 1432);
             t2contestents = t2.Contestents;
             luckynames = t1contestents.Select(x => x.Name).Intersect(t2contestents.Select(x => x.Name));
             

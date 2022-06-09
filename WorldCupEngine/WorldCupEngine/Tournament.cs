@@ -21,6 +21,7 @@ namespace WorldCupEngine
         {
             _allPlayers = contestentPool;
             _Rounds = new Dictionary<int, Round>();
+            _format = Format.standard;
         }
 
         public Tournament(ContestentPool contestentPool,int numberofrounds,Format format,int seed)
@@ -232,6 +233,12 @@ namespace WorldCupEngine
                 _Rounds.Add(i+1, r);
                 coltop = coltop.CellRight().CellRight();
             }
+        }
+
+        public Format RoundFormat
+        {   
+            get { return _format; }
+            set { _format = value; }
         }
     }
 }

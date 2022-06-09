@@ -17,12 +17,14 @@ namespace WpfApp1.ViewModel
     public class WorldCupViewModel 
     {
         private WorldCupModel _worldCupModel;
+        private Tournament.Format _format;
     
         private Dictionary<Round, List<MatchControl>> _RoundControls;
         private RelayCommand _RoundCompleteCommand;
         private RelayCommand _NewTournamentCommand;
         private RelayCommand _SaveTournamentCommand;
         private RelayCommand _LoadTournamentCommand;
+  
         private string _xlspath;
     
         public WorldCupViewModel()
@@ -33,7 +35,7 @@ namespace WpfApp1.ViewModel
             _NewTournamentCommand = new RelayCommand(NewTournament, CanHaveNewTournament);
             _SaveTournamentCommand = new RelayCommand(SaveTournament, CanSaveTournament);
             _LoadTournamentCommand = new RelayCommand(LoadTournament, CanLoadTournament);
-
+          
 
         }
 
@@ -66,7 +68,7 @@ namespace WpfApp1.ViewModel
         public void NewContestents(string path)
         {
             _xlspath = path;
-            _worldCupModel.Reload(path,NumberOfRounds);
+            _worldCupModel.Reload(path,_format,NumberOfRounds);
             MakeMatchControls();
         }
 
@@ -159,10 +161,13 @@ namespace WpfApp1.ViewModel
             RoundCompleteSignal.Invoke(this, new EventArgs());
         }
 
+   
+
         public ICommand NextRoundCommand { get => _RoundCompleteCommand; }
         public ICommand NewTournamentCommand { get => _NewTournamentCommand; }
         public ICommand SaveTournamentCommand { get=>_SaveTournamentCommand;}
         public ICommand LoadTournamentCommand { get => _LoadTournamentCommand; }
+   
 
         public IEnumerable<MatchControl> CurrentControls
         {
@@ -186,6 +191,18 @@ namespace WpfApp1.ViewModel
         public EventHandler RoundCompleteSignal { get; set; }
         public EventHandler CloseSignal { get; set; }   
         public int NumberOfRounds { get;set; }
+
+        public Tournament.Format Format
+        {
+            get
+            {
+                return _format;
+            }
+            set
+            {
+                _format = value;
+            }
+        }
 
        
 

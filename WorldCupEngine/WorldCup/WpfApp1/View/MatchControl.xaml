@@ -5,14 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:WpfApp1.View"
              xmlns:vm="clr-namespace:WpfApp1.ViewModel"
-             xmlns:cv="clr-namespace:WpfApp1.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
-        <cv:MatchResultConverter x:Key="mrc"/>
-    </UserControl.Resources>
     <Grid>
-       
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"/>
             <ColumnDefinition Width="2*"/>

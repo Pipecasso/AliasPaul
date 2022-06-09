@@ -17,7 +17,7 @@ namespace WorldCupRunner
 
             for (int i = 0; i < 10; i++)
             {
-                Tournament t = new Tournament(cp, 5, false);
+                Tournament t = new Tournament(cp, 5, Tournament.Format.standard);
                 using (StreamWriter sw = new StreamWriter("pwc.txt"))
                 {
                     int cround = 0;

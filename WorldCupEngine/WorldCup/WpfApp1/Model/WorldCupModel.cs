@@ -14,11 +14,11 @@ namespace WpfApp1.Model
         private string _xlpath;
         
      
-        internal void Reload(string path,int totalrounds = 4)
+        internal void Reload(string path,Tournament.Format format,int totalrounds)
         {
             _xlpath = path; 
             _contestents = new ContestentPool(path,String.Empty);
-            _tournament = new Tournament(_contestents,totalrounds,Tournament.Format.standard);
+            _tournament = new Tournament(_contestents,totalrounds,format);
         }
 
         internal void Load(string tournamentpath,string contestentpath)
