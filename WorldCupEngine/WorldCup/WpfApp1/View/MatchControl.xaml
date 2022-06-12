@@ -16,10 +16,10 @@
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Column="0" Text="{Binding Contestent1}"></TextBlock>
+        <TextBlock Grid.Column="0" Text="{Binding Contestent1}" Foreground="{Binding Brush1}"></TextBlock>
         <RadioButton  Grid.Column="1" Command="{Binding RadioCommand}" CommandParameter="radio_1"></RadioButton>
         <TextBlock Grid.Column="2" Text="v"></TextBlock>
-        <TextBlock  Grid.Column="3" Text="{Binding Contestent2}"></TextBlock>
+        <TextBlock  Grid.Column="3" Text="{Binding Contestent2}" Foreground="{Binding Brush2}"></TextBlock>
         <RadioButton  Grid.Column="4" Command="{Binding RadioCommand}" CommandParameter="radio_2"></RadioButton>
         <Button Grid.Column="5" Command="{Binding PlayCommand}">Play</Button>
     </Grid>

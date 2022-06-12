@@ -17,25 +17,12 @@ namespace WorldCupEngine
         {
             _number = number;
             Load(cell, contestent_pool);
-            if (_number == 1)
-            {
-                Seed(GetContestents());
-            }
         }
 
-        public Round(IEnumerable<Contestent> initialContestents,bool seeded = false)
+        public Round(IEnumerable<Contestent> initialContestents)
         {
             _number = 1;
             _heat = 0;
-
-
-            Seed(initialContestents);
-           /* if (seeded)
-            {
-               
-                IEnumerable<Contestent> seeds = sortedContestent_pool.Where(x => x.Seeding <= initialContestents.Count() / 2);
-                IEnumerable<Contestent> qualifiers = sortedContestent_pool.Where(x => x.Seeding > initialContestents.Count() / 2);
-            }*/
 
             int matchcount = initialContestents.Count() / 2;
             _matches = new Match[matchcount];
@@ -46,7 +33,20 @@ namespace WorldCupEngine
                 _matches[i] = m;
                 i++;
             }
+        }
 
+        public Round(IEnumerable<Contestent> seeds,IEnumerable<Contestent> qualifiers)
+        {
+            _number = 1;
+            _heat = 0;
+            Contestent[] qarray = qualifiers.ToArray();
+            int index = 0;
+            _matches = new Match[seeds.Count()];
+            foreach (Contestent con in seeds)
+            {
+                Match m = new Match(con, qarray[index]);
+                _matches[index++] = m;
+            }
         }
 
         public Round(int number,IEnumerable<Match> matches)
@@ -155,15 +155,7 @@ namespace WorldCupEngine
 
         public bool IsFinal { get => _matches.Count() == 1; }
 
-        private void Seed(IEnumerable<Contestent> contestents)
-        {
-            IEnumerable<Contestent> sortedContestent_pool = contestents.OrderByDescending(x => x.Points).ThenBy(x => x.TournementWins).ThenBy(x => x.Wins);
-            uint seed = 1;
-            foreach (Contestent contestent in sortedContestent_pool)
-            {
-                contestent.Seeding = seed++;
-            }
-        }
+     
             
      
         private void Load(IXLCell celltop,IEnumerable<Contestent> cpool)

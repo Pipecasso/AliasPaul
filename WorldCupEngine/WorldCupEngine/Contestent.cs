@@ -9,16 +9,16 @@ namespace WorldCupEngine
         private int _tournaments;
         private int _wins;
         private int _losses;
-        
+
         private int _tournamentwins;
 
-        
+
         public string Name { get; set; }
-  
+
         public int Points { get => _points; set { _points = value; } }
         public int Tornaments { get => _tournaments; set { _tournaments = value; } }
-        public int Wins { get => _wins;set { _wins = value; } }
-        public int Losses { get => _losses;set { _losses = value; } }
+        public int Wins { get => _wins; set { _wins = value; } }
+        public int Losses { get => _losses; set { _losses = value; } }
         public int TournementWins { get => _tournamentwins; set { _tournamentwins = value; } }
 
         public Contestent()
@@ -28,7 +28,7 @@ namespace WorldCupEngine
             _wins = 0;
             _losses = 0;
             _tournamentwins = 0;
-          
+
         }
 
         public void AddPoints(int p) { _points += p; }
@@ -38,6 +38,23 @@ namespace WorldCupEngine
         public void TournamentWin() { _tournamentwins++; }
 
         public uint Seeding { get; set; }
+
+        public double WinPercentage
+        {
+            get
+            {
+                double togo;
+                if (_tournaments==0)
+                {
+                    togo = 0;
+                }
+                else
+                {
+                    togo = (Convert.ToDouble(_wins)/Convert.ToDouble(_tournaments))*100; 
+                }
+                return togo;
+            }
+        }
         
     
     }

@@ -56,10 +56,30 @@ namespace WorldCupEngine
                     Contestent contestent = contestentBag.Take();
                     contestents.Add(contestent);
                 }
-
+                Seed(contestents);
                 Round round1 = null;
                 if (_format == Format.seeded)
                 {
+                    int half = Convert.ToInt32(Math.Pow(2, numberofrounds - 1));
+                    IEnumerable<Contestent> seededContestens = contestents.OrderBy(x => x.Seeding);
+                    IEnumerable<Contestent> tophalf = seededContestens.Take(half).Reverse();
+                    IEnumerable<Contestent> bottomhalf = contestents.Where(x => tophalf.All(y => y.Name != x.Name));
+                    List<Contestent> shuffletop = new List<Contestent>();
+                    int tick = 0;
+                    foreach (Contestent contestent in tophalf)
+                    {
+                        if ((tick%2)==0)
+                        {
+                            shuffletop.Insert(0, contestent);
+                        }
+                        else
+                        {
+                            shuffletop.Add(contestent);
+                        }
+                        tick++;
+                    }
+                    round1 = new Round(shuffletop,bottomhalf);
+                
                 }
                 else
                 {
@@ -220,6 +240,7 @@ namespace WorldCupEngine
 
         public void Load(string path)
         {
+            Seed(_allPlayers);
             IXLWorkbook workbook = new XLWorkbook(path);
             IXLWorksheet worksheet = workbook.Worksheet("Tournament");
             IXLCell totalrounds = worksheet.Cell("B1");
@@ -239,6 +260,16 @@ namespace WorldCupEngine
         {   
             get { return _format; }
             set { _format = value; }
+        }
+
+        private void Seed(IEnumerable<Contestent> contestents)
+        {
+            IEnumerable<Contestent> sortedContestent_pool = contestents.OrderByDescending(x => x.Points).ThenBy(x => x.TournementWins).ThenBy(x => x.WinPercentage).ThenBy(x => x.Wins).ThenBy(x => x.Name);
+            uint seed = 1;
+            foreach (Contestent contestent in sortedContestent_pool)
+            {
+                contestent.Seeding = seed++;
+            }
         }
     }
 }
