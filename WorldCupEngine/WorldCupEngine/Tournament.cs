@@ -9,11 +9,11 @@ namespace WorldCupEngine
 {
     public class Tournament
     {
-        public enum Format { standard,facup,seeded};
+        public enum Format { standard, facup, seeded };
         private int _round;
         private Dictionary<int, Round> _Rounds;
-        private ContestentPool _allPlayers; 
-     
+        private ContestentPool _allPlayers;
+
 
         private Format _format;
 
@@ -24,7 +24,7 @@ namespace WorldCupEngine
             _format = Format.standard;
         }
 
-        public Tournament(ContestentPool contestentPool,int numberofrounds,Format format,int seed)
+        public Tournament(ContestentPool contestentPool, int numberofrounds, Format format, int seed)
         {
             _round = 1;
             _allPlayers = contestentPool;
@@ -38,7 +38,7 @@ namespace WorldCupEngine
         {
             _round = 1;
             _allPlayers = contestentPool;
-            _format= format;
+            _format = format;
             Bag<Contestent> contestentBag = new Bag<Contestent>();
             Initialise(contestentBag, contestentPool, numberofrounds);
         }
@@ -62,24 +62,11 @@ namespace WorldCupEngine
                 {
                     int half = Convert.ToInt32(Math.Pow(2, numberofrounds - 1));
                     IEnumerable<Contestent> seededContestens = contestents.OrderBy(x => x.Seeding);
-                    IEnumerable<Contestent> tophalf = seededContestens.Take(half).Reverse();
+                    IEnumerable<Contestent> tophalf = seededContestens.Take(half);
                     IEnumerable<Contestent> bottomhalf = contestents.Where(x => tophalf.All(y => y.Name != x.Name));
-                    List<Contestent> shuffletop = new List<Contestent>();
-                    int tick = 0;
-                    foreach (Contestent contestent in tophalf)
-                    {
-                        if ((tick%2)==0)
-                        {
-                            shuffletop.Insert(0, contestent);
-                        }
-                        else
-                        {
-                            shuffletop.Add(contestent);
-                        }
-                        tick++;
-                    }
-                    round1 = new Round(shuffletop,bottomhalf);
-                
+                    IEnumerable<Contestent> shuffletop = SeedShuffle(tophalf);
+                    round1 = new Round(shuffletop, bottomhalf);
+
                 }
                 else
                 {
@@ -106,7 +93,7 @@ namespace WorldCupEngine
             }
         }
 
-        public IEnumerable<Contestent> Contestents  
+        public IEnumerable<Contestent> Contestents
         {
             get
             {
@@ -132,8 +119,8 @@ namespace WorldCupEngine
                 int winner_points = Convert.ToInt32(Math.Pow(2, (double)(_round - 1)));
                 final.Winner().AddPoints(winner_points);
                 foreach (Contestent contestent in Contestents) contestent.Picked();
-                
-                foreach (KeyValuePair<int,Round> pair in _Rounds)
+
+                foreach (KeyValuePair<int, Round> pair in _Rounds)
                 {
                     int roundnum = pair.Key;
                     Round current = pair.Value;
@@ -172,9 +159,9 @@ namespace WorldCupEngine
             else
             {
                 Round nextRound = NextRound();
-                if (nextRound!=null) { current = nextRound.CurrentMatch; }
+                if (nextRound != null) { current = nextRound.CurrentMatch; }
             }
-            return current; 
+            return current;
         }
 
         public Contestent Winner()
@@ -188,17 +175,17 @@ namespace WorldCupEngine
             return winner;
         }
 
-        public void Update(string path,string sheetname)
+        public void Update(string path, string sheetname)
         {
             IXLWorkbook wb = new XLWorkbook(path);
             if (sheetname == String.Empty) sheetname = _allPlayers.SheetName;
             IXLWorksheet ws = wb.Worksheet(sheetname);
             IXLColumn column = ws.ColumnsUsed().FirstOrDefault();
-            
+
             foreach (Contestent contestent in Contestents)
             {
                 IXLRow row = column.Cells().Where(x => x.GetString() == contestent.Name).First().WorksheetRow();
-                  
+
                 IXLCell picked = row.Cell("B");
                 picked.SetValue<int>(contestent.Tornaments);
 
@@ -222,12 +209,12 @@ namespace WorldCupEngine
         {
             IXLWorkbook workbook = new XLWorkbook();
             IXLWorksheet worksheet = workbook.AddWorksheet("Tournament");
-            IXLCell label=worksheet.Cell("A1");
+            IXLCell label = worksheet.Cell("A1");
             label.SetValue<string>("Rounds");
             IXLCell labelright = label.CellRight();
             labelright.SetValue<int>(_Rounds.Count);
             IXLCell coltop = worksheet.Cell("A2");
-            foreach (KeyValuePair<int,Round> kvp in _Rounds)
+            foreach (KeyValuePair<int, Round> kvp in _Rounds)
             {
                 Round round = kvp.Value;
                 coltop.SetValue<int>(kvp.Key);
@@ -248,16 +235,16 @@ namespace WorldCupEngine
             IXLCell labelright = worksheet.Cell("A2");
             int round = labelright.GetValue<int>();
             IXLCell coltop = worksheet.Cell("A3");
-            for (int i=0;i<_round;i++)
+            for (int i = 0; i < _round; i++)
             {
-                Round r = new Round(i+1, coltop, _allPlayers);
-                _Rounds.Add(i+1, r);
+                Round r = new Round(i + 1, coltop, _allPlayers);
+                _Rounds.Add(i + 1, r);
                 coltop = coltop.CellRight().CellRight();
             }
         }
 
         public Format RoundFormat
-        {   
+        {
             get { return _format; }
             set { _format = value; }
         }
@@ -270,6 +257,97 @@ namespace WorldCupEngine
             {
                 contestent.Seeding = seed++;
             }
+        }
+
+        List<int> SeedList(List<int> listin,bool b64)
+        {
+            List<int> togo;
+            if (b64)
+            {
+                togo = new List<int>() { listin[0] + 1, listin[1] - 1, listin[2] - 1, listin[3] + 1, listin[4] - 1, listin[5] + 1, listin[6] + 1, listin[7] - 1 };
+            }
+            else
+            {
+                togo = new List<int>() { listin[0] + 1, listin[1] - 1, listin[2] - 1, listin[3] + 1 };
+            }
+            return togo;
+        }
+
+        private IEnumerable<Contestent> SeedShuffle(IEnumerable<Contestent> contestents)
+        {
+
+            List<int> l1;
+            List<int> l2;
+            List<int> l3;
+            List<int> l4;
+
+            if (contestents.Count() == 32)
+            {
+                l1 = new List<int>() { 1, 32, 16, 17, 8, 25, 9, 24 };
+                l2 = SeedList(l1,true);
+                l3 = SeedList(l2, true);
+                l4 = SeedList(l3, true);
+            }
+            else
+            {
+                l1 = new List<int>() { 1, 16, 8, 9 };
+                l2 = SeedList(l1, false);
+                l3 = SeedList(l2, false);
+                l4 = SeedList(l3, false);
+            }
+
+            List<Contestent> seeds = new List<Contestent>();
+            Contestent[] carray = contestents.ToArray();
+            IEnumerable<int> tophalf = l1.Concat(l3.Reverse<int>());
+            IEnumerable<int> bottomhalf = (l2.Concat(l4.Reverse<int>())).Reverse();
+
+            IEnumerable<int> finalseeds = tophalf.Concat(bottomhalf);
+            foreach (int fs in finalseeds)
+            {
+                seeds.Add(carray[fs-1]);
+            }
+
+            /*Contestent[] conarray = contestents.ToArray();
+            Contestent[] seededconarray = new Contestent[conarray.Length];
+
+            int top = 0;
+            int bottom = contestents.Count() - 1;
+            int lowermid = contestents.Count() / 2;
+            int uppermid = lowermid - 1;
+            
+            for (int i = 0; i < conarray.Length/2;i++)
+            {
+                int j = conarray.Length - 1 - i;
+                Contestent c1 = conarray[i];
+                Contestent c2 = conarray[j];
+
+                switch (i % 4)
+                {
+                    case 0:
+                        //top
+                        seededconarray[top++] = c1;
+                        seededconarray[top++] = c2;
+                        break;
+                    case 1:
+                        //bottom
+                        seededconarray[bottom--] = c1;
+                        seededconarray[bottom--] = c2;
+                        break;
+                    case 2:
+                        //uppermid
+                        seededconarray[uppermid--] = c1;
+                        seededconarray[uppermid--] = c2;
+                        break;
+                    case 3:
+                        //lowermid
+                        seededconarray[lowermid++] = c1;
+                        seededconarray[lowermid++] = c2;
+                        break;                 
+                }
+            }
+        }*/
+            //return seededconarray;
+            return seeds;
         }
     }
 }

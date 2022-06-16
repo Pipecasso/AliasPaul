@@ -50,7 +50,7 @@ namespace WorldCupEngine
                 }
                 else
                 {
-                    togo = (Convert.ToDouble(_wins)/Convert.ToDouble(_tournaments))*100; 
+                    togo = (Convert.ToDouble(_wins) / Convert.ToDouble(_wins + _losses))*100; 
                 }
                 return togo;
             }
