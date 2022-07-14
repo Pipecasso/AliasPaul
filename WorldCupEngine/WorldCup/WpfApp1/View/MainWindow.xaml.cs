@@ -49,5 +49,7 @@ namespace WpfApp1.View
             ListBoxItem listBoxItem = listBox.SelectedItem as ListBoxItem;
             WorldCupVm.NumberOfRounds = Convert.ToInt16(listBoxItem.Content);
         }
+
+        
     }
 }

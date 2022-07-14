@@ -15,6 +15,7 @@ namespace WorldCupEngine
         private ContestentPool _allPlayers;
 
 
+
         private Format _format;
 
         public Tournament(ContestentPool contestentPool)
@@ -272,6 +273,7 @@ namespace WorldCupEngine
             }
             return togo;
         }
+
 
         private IEnumerable<Contestent> SeedShuffle(IEnumerable<Contestent> contestents)
         {

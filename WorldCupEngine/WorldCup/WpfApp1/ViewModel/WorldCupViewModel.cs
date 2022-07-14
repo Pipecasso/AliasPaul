@@ -10,14 +10,16 @@ using WpfApp1.Model;
 using System.Windows.Forms;
 using WorldCupEngine;
 using WpfApp1.View;
-
+using System.ComponentModel;
 
 namespace WpfApp1.ViewModel
 {
-    public class WorldCupViewModel 
+    public class WorldCupViewModel : INotifyPropertyChanged
     {
         private WorldCupModel _worldCupModel;
-        private Tournament.Format _format;
+        private Tournament.Format? _format;
+        private bool _randy;
+        private double _randomfactor;
     
         private Dictionary<Round, List<MatchControl>> _RoundControls;
         private RelayCommand _RoundCompleteCommand;
@@ -26,7 +28,9 @@ namespace WpfApp1.ViewModel
         private RelayCommand _LoadTournamentCommand;
   
         private string _xlspath;
-    
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public WorldCupViewModel()
         {
             _worldCupModel = new WorldCupModel();
@@ -35,6 +39,8 @@ namespace WpfApp1.ViewModel
             _NewTournamentCommand = new RelayCommand(NewTournament, CanHaveNewTournament);
             _SaveTournamentCommand = new RelayCommand(SaveTournament, CanSaveTournament);
             _LoadTournamentCommand = new RelayCommand(LoadTournament, CanLoadTournament);
+            _randomfactor = 10;
+            _randy = false;
           
 
         }
@@ -90,6 +96,11 @@ namespace WpfApp1.ViewModel
                 ret = _worldCupModel.CurrentRound.AllMatches.Where(x => x.result != Match.Result.notplayed).Any();
             }
             return ret;
+        }
+
+        private void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         public bool CanLoadTournament()
@@ -161,8 +172,6 @@ namespace WpfApp1.ViewModel
             RoundCompleteSignal.Invoke(this, new EventArgs());
         }
 
-   
-
         public ICommand NextRoundCommand { get => _RoundCompleteCommand; }
         public ICommand NewTournamentCommand { get => _NewTournamentCommand; }
         public ICommand SaveTournamentCommand { get=>_SaveTournamentCommand;}
@@ -192,7 +201,7 @@ namespace WpfApp1.ViewModel
         public EventHandler CloseSignal { get; set; }   
         public int NumberOfRounds { get;set; }
 
-        public Tournament.Format Format
+        public Tournament.Format? Format
         {
             get
             {
@@ -200,11 +209,43 @@ namespace WpfApp1.ViewModel
             }
             set
             {
-                _format = value;
+                if (value != null)
+                {
+                    _format = value;
+                }
             }
         }
 
-       
+        public bool Randy
+        {
+            get => _randy;
+            set
+            {
+                _randy = value;
+                OnPropertyChanged(nameof(Randy));
+                MatchViewModel.Randy = value;
+                MatchViewModel.RandomFactor = _randomfactor;
+            }
+        }
+
+        public double RandomFactor
+        {
+            get => _randomfactor;
+            set
+            {
+                _randomfactor = value;
+                OnPropertyChanged(nameof(RandomFactor));
+                MatchViewModel.RandomFactor = _randomfactor;
+                if (_worldCupModel.Tournament != null)
+                {
+                    foreach (MatchViewModel mvm in CurrentControls.Select(x => x.DataContext))
+                    {
+                        mvm.RandomChanged();
+                    }
+                }
+            }
+
+        }
 
     }
 }
