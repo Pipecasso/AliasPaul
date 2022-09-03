@@ -20,7 +20,7 @@ namespace MathsFilter.Models
         private int _yoffset;
         private double _scale;
 
-        private TransformMatrix _transformMatrix;
+        private HistoTransformMatrix _transformMatrix;
         private BitmapBox _box;
 
         public MathsFilterModel()
@@ -79,10 +79,10 @@ namespace MathsFilter.Models
             get { return _image; }
         }
 
-        public TransformMatrix TransformMatrix { get { return _transformMatrix; } }
+        public HistoTransformMatrix TransformMatrix { get { return _transformMatrix; } }
         public void InitialiseTransformMatrix(int range,uint gap)
         {
-            _transformMatrix= new TransformMatrix(range, 0);
+            _transformMatrix= new HistoTransformMatrix(range, 0);
             _transformMatrix.Gap = gap;
         }
 
@@ -90,7 +90,7 @@ namespace MathsFilter.Models
         {
             int size = _transformMatrix.Dimension2;
             _box = new BitmapBox(System.Drawing.Color.Gray, size, size);
-            BitmapBox.OutOfBounds oob = BitmapBox.OutOfBounds.Rollover;
+            OutOfBounds oob = OutOfBounds.Rollover;
             // bitbox.ApplyMatrix(_transformMatrix, size / 2, size / 2, BitmapBox.Colour.Red, oob);
             _box.ApplyMatrixAndFlatten(_transformMatrix, size / 2, size / 2, oob);
             //bitbox.Save("Hello.bmp");

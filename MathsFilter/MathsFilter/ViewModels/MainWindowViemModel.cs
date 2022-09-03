@@ -1,6 +1,5 @@
 ﻿using GeoFilter;
 using Microsoft.Toolkit.Mvvm.Input;
-
 using System.Windows.Input;
 using System.Drawing;
 using System.IO;
@@ -12,6 +11,7 @@ using MathsFilter.Views;
 using System.Windows.Media.Imaging;
 using System.Windows.Forms;
 using System.Collections.Generic;
+
 
 namespace MathsFilter.ViewModels
 {
@@ -196,7 +196,7 @@ namespace MathsFilter.ViewModels
             _analyseCommand?.NotifyCanExecuteChanged();
             _showCommand?.NotifyCanExecuteChanged();
 
-            ChunkyIntList chunks = _model.TransformMatrix.SortedValues;
+          
         }
 
         private void TransformMatrix_Pulse(object sender, System.EventArgs e)

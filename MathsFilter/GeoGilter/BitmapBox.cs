@@ -25,14 +25,7 @@ namespace GeoFilter
             Blue = 4
         }
 
-        public enum OutOfBounds
-        {
-            Reject,
-            Stop,
-            Rollover,
-            Bounce,
-            Normalise
-        }
+       
 
 
         public BitmapBox(string path)
@@ -129,6 +122,62 @@ namespace GeoFilter
 
         }
 
+        public int FinalCol2(int val,OutOfBounds oob)
+        {
+            const int uppoerbound = 16777216;
+            int output = 0;
+            if (val < 0 || val >= uppoerbound)
+            {
+                switch (oob)
+                {
+                    case OutOfBounds.Reject:
+                        output = 0;
+                        break;
+                    case OutOfBounds.Rollover:
+                        if (val >= uppoerbound)
+                        { 
+                            output = val % uppoerbound;
+                        }
+                        else 
+                        {
+                            int below = Math.Abs(val) % uppoerbound;
+                            output = uppoerbound - below - 1;
+                        }
+                        break;
+                    case OutOfBounds.Bounce:
+                        if (val >= uppoerbound)
+                        {
+                            int above = val % uppoerbound;
+                            output = uppoerbound - above;
+                        }
+                        else 
+                        {
+                            int below = Math.Abs(val) % uppoerbound;
+                            output = below;
+                        }
+                        break;
+                    case OutOfBounds.Stop:
+                        if (val >= uppoerbound)
+                        {
+                            output = uppoerbound-1;
+                        }
+                        else 
+                        {
+                            output = 0;
+                        }
+                        break;
+                    case OutOfBounds.Normalise:
+                        output = val;
+                        break;
+                }
+            }
+            else
+            {
+                output = val;
+            }
+            return output;
+        }
+
         private int FinalCol(int delta, int start, OutOfBounds oob,int upperbound)
         {
             int final = start + delta;
@@ -188,13 +237,25 @@ namespace GeoFilter
             {
                 for (int j = -m.Dimension; j <= m.Dimension; j++)
                 {
-                    Color c = _bitmap.GetPixel(x + i, y - j);
-                    int rgb = ToRGB(c);
-                    double delta = m[i + m.Dimension, m.Dimension - j];
-                    int idelta = 0;
-                    idelta = Convert.ToInt32(Math.Floor(delta + 0.5));
-                    int rbgfinal = FinalCol(idelta, rgb, oob, _rgbmax);
-                    Color cnew = FromRGB(rbgfinal);
+
+                    double rgb = m[i + m.Dimension, m.Dimension - j];
+                    int irgb = Convert.ToInt32(Math.Floor(rgb + 0.5));
+                    if (irgb < -16777216)
+                    {
+                        int absrgb = irgb * -1;
+                        int temprgb = absrgb & 16777216;
+                        irgb = 16777216 + temprgb;
+                    }
+                    else if (irgb < 0)
+                    {
+                        irgb = 16777216 + irgb;
+                    }
+                    else if (irgb >= 16777216)
+                    {
+                        irgb = irgb % 16777216;
+                    }
+                    
+                    Color cnew = FromRGB(irgb);
                     _bitmap.SetPixel(x + i, y - j, cnew);
                 }
             }
@@ -269,8 +330,6 @@ namespace GeoFilter
             double avgred = totalred / pixcount;
             double avggreen = totalgreen / pixcount;
             double blue = totalblue / pixcount;
-
-
 
         }
 

@@ -5,18 +5,40 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MathsFilter.Views"
          xmlns:vm="clr-namespace:MathsFilter.ViewModels"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="AnalysisWindow" Height="300" Width="300">
-    <StackPanel>
-        <TextBlock HorizontalAlignment="Center">Flat</TextBlock>
-        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatRed}" Background="Red"></TextBlock>
-        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatGreen}" Background="Green"></TextBlock>
-        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding FlatBlue}" Background="Blue"></TextBlock>
-        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding OutOfBounds}"></TextBlock>
-        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding Minimum}"></TextBlock>
-        <TextBlock HorizontalAlignment="Center" Height="25" Text="{Binding Maximum}"></TextBlock>
-
-        <Button Click="Button_Click">Ok</Button>
-    </StackPanel>
-
+ 
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="6*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Too Low"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Too High"></TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="In Range"></TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Minimum"></TextBlock>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Maximum"></TextBlock>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Colour Count"></TextBlock>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding TooLow}"></TextBlock>
+            <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding TooHigh}"></TextBlock>
+            <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding InRange}"></TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Minimum}"></TextBlock>
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{Binding Maximum}"></TextBlock>
+            <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding ColourCount}"></TextBlock>
+        <lvc:CartesianChart Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Series="{Binding SeriesCollection}" />
+        <Button Grid.Row ="7" Click="Button_Click">Ok</Button>
+    </Grid>
+       
+  
 </Window>

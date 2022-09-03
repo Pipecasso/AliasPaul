@@ -10,8 +10,82 @@ using System.Diagnostics;
 
 namespace GeoFilter
 {
+    public enum OutOfBounds
+    {
+        Reject,
+        Stop,
+        Rollover,
+        Bounce,
+        Normalise
+    }
+
     public class ColourVector : DenseVector
     {
+
+        public ColourVector(int val,OutOfBounds oob) : base(new double[3])
+        {
+            const int uppoerbound = 16777216;
+            int output = 0;
+            if (val < 0 || val >= uppoerbound)
+            {
+                switch (oob)
+                {
+                    case OutOfBounds.Reject:
+                        output = 0;
+                        break;
+                    case OutOfBounds.Rollover:
+                        if (val >= uppoerbound)
+                        {
+                            output = val % uppoerbound;
+                        }
+                        else
+                        {
+                            int below = Math.Abs(val) % uppoerbound;
+                            output = uppoerbound - below - 1;
+                        }
+                        break;
+                    case OutOfBounds.Bounce:
+                        if (val >= uppoerbound)
+                        {
+                            int above = val % uppoerbound;
+                            output = uppoerbound - above;
+                        }
+                        else
+                        {
+                            int below = Math.Abs(val) % uppoerbound;
+                            output = below;
+                        }
+                        break;
+                    case OutOfBounds.Stop:
+                        if (val >= uppoerbound)
+                        {
+                            output = uppoerbound - 1;
+                        }
+                        else
+                        {
+                            output = 0;
+                        }
+                        break;
+                    case OutOfBounds.Normalise:
+                        output = val;
+                        break;
+                }
+            }
+            else
+            {
+                output = val;
+            }
+
+            int b = output / 65536;
+            int rg = output % 65536;
+            int g = rg / 256;
+            int r = rg % 256;
+
+            this[0] = r;
+            this[1] = g;
+            this[2] = b;
+
+        }
 
         public ColourVector(Color c) : base(new double[3] { c.R,c.G,c.B})
         {
@@ -133,6 +207,26 @@ namespace GeoFilter
             {
                 this[2] = value;
             }
+        }
+
+        public int IRed
+        {
+            get => Convert.ToInt32(Math.Floor(this[0] + 0.5));
+        }
+
+        public int IGreen
+        {
+            get => Convert.ToInt32(Math.Floor(this[1] + 0.5));
+        }
+
+        public int IBlue
+        {
+            get => Convert.ToInt32(Math.Floor(this[2] + 0.5));
+        }
+
+        public int SingleRgb
+        {
+            get => IRed + IGreen * 256 + IBlue * 65536;
         }
 
         public double FuncMe(Func<double,double,double,double> fme)

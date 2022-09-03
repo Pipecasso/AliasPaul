@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using org.mariuszgromada.math.mxparser;
 
 
+
 namespace GeoFilter
 {
 
@@ -19,8 +20,7 @@ namespace GeoFilter
         private double _minumum;
         private double _maximum;
         private double _mid = Convert.ToDouble(Int32.MaxValue) - 256;
-
-        private ChunkyIntList _sortedValues;
+     
     
         private int _pulsegap;
         private uint _gap;
@@ -35,8 +35,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
-            _sortedValues = new ChunkyIntList(0, 256 * 256 * 256,1000);
-
+       
             if (bIdendity)
             {
                 for (int i = 0; i < dimension; i++)
@@ -62,7 +61,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
-            _sortedValues = new ChunkyIntList(0,256*256*256,1024);
+         
 
             for (int i = 0; i < dimension; i++)
             {
@@ -76,6 +75,8 @@ namespace GeoFilter
             _minumum = dval;
             _maximum = dval;
         }
+
+        protected virtual void Record(double val) { }
 
         public static TransformMatrix operator +(TransformMatrix t1, TransformMatrix t2)
         {
@@ -274,6 +275,49 @@ namespace GeoFilter
 
         }
 
+        private void Process(int i,int j,double fval,double total,ref double tiktok)
+        {
+            if (double.IsNaN(fval) || Math.Abs(fval) > _mid) fval = 0;
+            if (fval < _minumum)
+            {
+                _minumum = fval;
+            }
+
+            if (fval > _maximum)
+            {
+                _maximum = fval;
+            }
+
+            _Pixels[i + _dimension, _dimension - j] = fval;
+            Record(fval);
+            tiktok++;
+
+            if ((tiktok % _pulsegap) == 0)
+            {
+                PulseArgs pa = new PulseArgs(Convert.ToInt32(total)) { Current = Convert.ToInt32(tiktok) };
+                Pulse?.Invoke(this, pa);
+            }
+
+        }
+
+        public void Set(Func<int,int,double> f)
+        {
+            double tiktok = 0;
+            double total = Math.Pow(_dimension * 2 + 1, 2);
+
+            _minumum = Int32.MaxValue;
+            _maximum = Int32.MinValue;
+            for (int i = -_dimension; i <= _dimension; i++)
+            {
+                for (int j = -_dimension; j <= _dimension; j += (int)_gap)
+                {
+                    double fval = f(i, j);
+                    Process(i, j, fval, total, ref tiktok);
+
+                }
+            }
+        }
+
         public void Set(Function f)
         {
             double tiktok = 0;
@@ -290,31 +334,11 @@ namespace GeoFilter
                 {
                     y.setArgumentValue(j);
                     double fval = f.calculate(x, y);
+                    Process(i, j, fval, total, ref tiktok);
 
-                    if (double.IsNaN(fval) || Math.Abs(fval) > _mid) fval = 0;
-                    if (fval < _minumum)
-                    {
-                        _minumum = fval;
-                    }
-
-                    if (fval > _maximum)
-                    {
-                        _maximum = fval;
-                    }
-
-                    _Pixels[i + _dimension, _dimension - j] = fval;
-                    int sortedVal = System.Convert.ToInt32(Math.Floor(fval + 0.5));
-                    _sortedValues.Add(sortedVal);
-                    tiktok++;
-                    
-                    if ( (tiktok % _pulsegap) == 0)
-                    {
-                        PulseArgs pa = new PulseArgs(Convert.ToInt32(total)) { Current = Convert.ToInt32(tiktok) };
-                        Pulse?.Invoke(this, pa);
-                    }
                 }
             }
-
+         
             System.Diagnostics.Debug.Assert(_minumum <= _maximum);
 
         }
@@ -425,44 +449,7 @@ namespace GeoFilter
             return Convert.ToDouble(tick) / Convert.ToDouble(iDim * iDim);
         }
 
-        public void FlatComposition(out double red, out double green, out double blue, out double outofrange)
-        {
-            int iDim = _dimension * 2 + 1;
-            int ired = 0;
-            int igreen = 0;
-            int iblue = 0;
-            int ioor = 0;
-            double area = iDim * iDim;
-            for (int i = 0; i < iDim; i++)
-            {
-                for (int j = 0; j < iDim; j++)
-                {
-                    double d = _Pixels[i, j];
-                    int id = Convert.ToInt32(Math.Floor(d + 0.5));
-                    if (id >= 0 && id < 256)
-                    {
-                        ired++;
-                    }
-                    else if (id >= 256 && id < 65536)
-                    {
-                        igreen++;
-                    }
-                    else if (id >= 65536 && id < 16777216)
-                    {
-                        iblue++;
-                    }
-                    else
-                    {
-                        ioor++;
-                    }
-                }
-            }
-            red = Convert.ToDouble(ired) / area;
-            green = Convert.ToDouble(igreen) / area;
-            blue = Convert.ToDouble(iblue) / area;
-            outofrange = Convert.ToDouble(ioor) / area;
-            Debug.Assert(Math.Abs(red + green + blue + outofrange - 1) < 1e-6);
-        }
+     
 
         public uint Gap
         {
@@ -470,7 +457,7 @@ namespace GeoFilter
             set { _gap = value; }
         }
 
-        public ChunkyIntList SortedValues => _sortedValues;
+      
     }
 
    
