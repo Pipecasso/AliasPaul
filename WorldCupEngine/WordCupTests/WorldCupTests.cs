@@ -259,6 +259,68 @@ namespace WordCupTests
 
         }
 
+        [TestMethod]
+        public void Randy()
+        {
+            Contestent c1 = new Contestent();
+            c1.Name = "Ken Smith";
+            c1.Points = 70;
+           
+            Contestent c2 = new Contestent();
+            c2.Name = "Abraham Gonzalez";
+            c2.Points = 10;
+
+            double randyfactor = 10;
+            const int matches = 1000000;
+
+            Match played = new Match(c1, c2);
+            double flip = played.FlipProbability1(randyfactor);
+            int expectedlosses = Convert.ToInt32(Math.Floor((double)matches * flip));
+
+            //kens turn
+            for (int i = 0; i < matches; i++)
+            {
+                played.RandomPlay(Match.Result.firstw, randyfactor);
+                if (played.result == Match.Result.firstw)
+                {
+                    c1.Wins++;
+                    c2.Losses++;
+                }
+                else
+                {
+                    c1.Losses++;
+                    c2.Wins++;
+                }
+            }
+            c1.Losses = 0;
+            c2.Losses = 0;
+            c1.Wins = 0;
+            c2.Wins = 0;
+
+            flip = played.FlipProbability2(randyfactor);
+            expectedlosses = Convert.ToInt32(Math.Floor((double)matches * flip));
+
+            //kens turn
+            for (int i = 0; i < matches; i++)
+            {
+                played.RandomPlay(Match.Result.secondw, randyfactor);
+                if (played.result == Match.Result.firstw)
+                {
+                    c1.Wins++;
+                    c2.Losses++;
+                }
+                else
+                {
+                    c1.Losses++;
+                    c2.Wins++;
+                }
+            }
+
+            Assert.AreEqual(expectedlosses, c2.Losses);
+
+
+        }
+
         private void OneTournamentAssertions(ContestentPool checkcontestents, int roundnumber)
         {
             int contestents = Convert.ToInt16(Math.Pow(2, roundnumber));
@@ -323,5 +385,7 @@ namespace WordCupTests
             int randy = r.Next(100);
             return randy < 50;
         }
+
+
     }
 }

@@ -108,12 +108,12 @@ namespace GeoFilter
 
         public ComplexNumber Cos()
         {
-            return new ComplexNumber(Math.Cosh(-Y) * Math.Cos(X), Math.Sinh(-Y) * Math.Sinh(X));
+            return new ComplexNumber(Math.Cosh(Y) * Math.Cos(X), -Math.Sin(X) * Math.Sinh(Y));
         }
     
         public ComplexNumber Cosh()
         {
-            return new ComplexNumber(Math.Cos(X) * Math.Cosh(X), Math.Sin(Y) * Math.Sinh(Y));
+            return new ComplexNumber(Math.Cos(Y) * Math.Cosh(X), Math.Sin(Y) * Math.Sinh(X));
         }
 
         public ComplexNumber Tan()
@@ -169,6 +169,11 @@ namespace GeoFilter
                 }
             }
             return result;
+        }
+
+        public ComplexNumber log()
+        {
+            return new ComplexNumber(Math.Log(Mod),Arg);
         }
 
         public bool Equals(ComplexNumber other)

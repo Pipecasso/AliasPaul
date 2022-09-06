@@ -68,6 +68,8 @@ namespace GeoTests
             ComplexNumber rs = _r - _s;
             Assert.AreEqual(13, rs.X);
             Assert.AreEqual(-8, rs.Y);
+            ComplexNumber rsback = rs + _s;
+            Assert.IsTrue(rsback.Equals(_r));
         }
 
         [TestMethod]
@@ -96,6 +98,8 @@ namespace GeoTests
             ComplexNumber rs = _r / _s;
             Assert.AreEqual(-19.0 / 15.0, rs.X);
             Assert.AreEqual(0.2,rs.Y);
+            ComplexNumber rback = rs * _s;
+            Assert.IsTrue(_r == rback);
         }
 
         [TestMethod] 
@@ -145,15 +149,82 @@ namespace GeoTests
             }
             List<ComplexNumber> targets = new List<ComplexNumber>()
             {
-                new ComplexNumber(12,-5),new ComplexNumber(8.463486513975137,-9.867593223667106),
+                new ComplexNumber(12,-5),new ComplexNumber(8.463486513975137,9.867593223667106),
                 new ComplexNumber(-6.769277671037003,11.098507999384415),new ComplexNumber(-12.647130193961735,-3.00833805563494),
                 new ComplexNumber(-1.047078648976399, -12.95776316741658)
             };
             foreach (ComplexNumber t in targets)
             {
-                Assert.IsTrue(GapContains(roots,t,1e-7));
+                Assert.IsTrue(GapContains(roots,t,1e-9));
             }
         }
 
+        [TestMethod]
+        public void Sin()
+        {
+            ComplexNumber sin = _r.Sin();
+            ComplexNumber sin_target = new ComplexNumber(48.75494167, -55.94196773);
+            Assert.IsTrue(GapTestComplex(sin_target, sin, 1e-8));
+        }
+
+        [TestMethod]
+        public void Cos()
+        {
+            ComplexNumber cos = _r.Cos();
+            ComplexNumber cos_target = new ComplexNumber(55.94704749, 48.75051493);
+            Assert.IsTrue(GapTestComplex(cos_target, cos, 1e-8));
+        }
+
+        [TestMethod]
+        public void Tan()
+        {
+            ComplexNumber tan = _r.Tan();
+            ComplexNumber tan_target = new ComplexNumber(8.994589181e-5, -0.9999876);
+            Assert.IsTrue(GapTestComplex(tan_target, tan,1e-7));
+        }
+
+        [TestMethod]
+        public void Sinh()
+        {
+            ComplexNumber shine = _s.Sinh();
+            ComplexNumber shine_target = new ComplexNumber(199.6945123, 28.4661122);
+            Assert.IsTrue(GapTestComplex(shine_target, shine,1e-7));
+        }
+
+
+        [TestMethod]
+        public void Cosh()
+        {
+            ComplexNumber cosh = _s.Cosh();
+            ComplexNumber cosh_target = new ComplexNumber(-199.6969662, -28.4657624);
+            Assert.IsTrue(GapTestComplex(cosh_target, cosh, 1e-7));
+        }
+
+        [TestMethod]
+        public void Tanh()
+        {
+            ComplexNumber tanh = _s.Tanh();
+            ComplexNumber tanh_target = new ComplexNumber(0.002649, 0.9958218);
+            Assert.IsTrue(!GapTestComplex(tanh_target, tanh, 1e-7));
+
+        }
+
+        [TestMethod]
+        public void Log()
+        {
+            ComplexNumber rlog = _r.log();
+            ComplexNumber slog = _s.log();
+            ComplexNumber rslog = (_r * _s).log();
+            ComplexNumber rplusslog = rlog + slog;
+            ComplexNumber rcubedlog = (_r ^ 3).log();
+            ComplexNumber threelogr = rlog * 3;
+
+
+            Assert.IsTrue(GapTestComplex(new ComplexNumber(2.15203255, -0.62024949), rlog,1e-8));
+            Assert.IsTrue(GapTestComplex(new ComplexNumber(1.90333124, 2.67794504), slog, 1e-8));
+            Assert.IsTrue(GapTestComplex(rslog, rplusslog));
+       
+            Assert.IsTrue(GapTestComplex(rcubedlog, threelogr));
+        }
     }
 }
