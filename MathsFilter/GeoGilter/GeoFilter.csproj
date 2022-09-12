@@ -67,6 +67,7 @@
     <Compile Include="TransformMatrix.cs" />
     <Compile Include="VectorBox.cs" />
     <Compile Include="VectorFunction.cs" />
+    <Compile Include="ZMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

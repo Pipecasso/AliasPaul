@@ -26,6 +26,18 @@ namespace GeoFilter
             }
         }
 
+        public ComplexNumber(double x, bool real = true)
+        {
+            if (real)
+            {
+                X = x;
+            }
+            else
+            {
+                Y = x;
+            }
+        }
+
         public ComplexNumber(ComplexNumber other)
         {
             this.X = other.X;
@@ -95,6 +107,15 @@ namespace GeoFilter
         {
             return new ComplexNumber(Math.Pow(r.Mod, n), n * r.Arg, false);
         }
+
+        static public ComplexNumber operator ^(ComplexNumber r, ComplexNumber s)
+        {
+            double drmod2 = r.X*r.X + r.Y*r.Y;
+            double p1 = Math.Pow(drmod2, s.X / 2)*Math.Exp(s.Y*s.Arg);
+            double p2 = s.X * r.Arg + 0.5 * s.Y * Math.Log(drmod2);
+            ComplexNumber powergo = new ComplexNumber(p1*Math.Cos(p2), p1*Math.Sin(p2));
+            return powergo;
+       }
 
         public ComplexNumber Sin()
         {

@@ -226,5 +226,25 @@ namespace GeoTests
        
             Assert.IsTrue(GapTestComplex(rcubedlog, threelogr));
         }
+
+        [TestMethod]
+        public void Power()
+        {
+            ComplexNumber p = new ComplexNumber(1, 1);
+            ComplexNumber ppp = p ^ p;
+            double tp = Math.Sqrt(2) * Math.Exp(Math.PI/4);
+            double qp = Math.PI / 4 + Math.Log(2) / 2;
+            ComplexNumber target = new ComplexNumber(tp * Math.Cos(qp), tp * Math.Sin(qp));
+            Assert.IsTrue(GapTestComplex(target, ppp, 1e-8));
+        }
+
+        [TestMethod]
+        public void ii()
+        {
+            ComplexNumber i = new ComplexNumber(1,false);
+            ComplexNumber ii = i ^ i;
+            ComplexNumber target = new ComplexNumber(0.20787957635);
+            Assert.IsTrue(GapTestComplex(target, ii));
+        }
     }
 }

@@ -78,6 +78,8 @@ namespace GeoFilter
 
         protected virtual void Record(double val) { }
 
+
+
         public static TransformMatrix operator +(TransformMatrix t1, TransformMatrix t2)
         {
             if (t1._dimension == t2._dimension)
@@ -362,11 +364,17 @@ namespace GeoFilter
             }
         }
 
+
+
         public double this[int x, int y]
         {
             get
             {
                 return _Pixels[x, y];
+            }
+            set
+            {
+                _Pixels[x,y] = value;
             }
         }
 
