@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="ComplexTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TMatrixTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

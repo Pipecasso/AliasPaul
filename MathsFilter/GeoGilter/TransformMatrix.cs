@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using org.mariuszgromada.math.mxparser;
 
 
@@ -20,7 +18,7 @@ namespace GeoFilter
         private double _minumum;
         private double _maximum;
         private double _mid = Convert.ToDouble(Int32.MaxValue) - 256;
-     
+        private string _stringRepFunction;
     
         private int _pulsegap;
         private uint _gap;
@@ -302,12 +300,13 @@ namespace GeoFilter
 
         }
 
-        public void Set(Func<int,int,double> f)
+        public void Set(Func<int,int,double> f,string fexpression)
         {
             double tiktok = 0;
             double total = Math.Pow(_dimension * 2 + 1, 2);
+            _stringRepFunction = fexpression;
 
-            _minumum = Int32.MaxValue;
+           _minumum = Int32.MaxValue;
             _maximum = Int32.MinValue;
             for (int i = -_dimension; i <= _dimension; i++)
             {
@@ -324,7 +323,7 @@ namespace GeoFilter
         {
             double tiktok = 0;
             double total = Math.Pow(_dimension * 2 + 1, 2);
-            
+            _stringRepFunction = f.getFunctionExpressionString();
             _minumum = Int32.MaxValue;
             _maximum = Int32.MinValue;
             Argument x = new Argument("x", 0);
@@ -457,7 +456,6 @@ namespace GeoFilter
             return Convert.ToDouble(tick) / Convert.ToDouble(iDim * iDim);
         }
 
-     
 
         public uint Gap
         {
@@ -465,9 +463,38 @@ namespace GeoFilter
             set { _gap = value; }
         }
 
-      
-    }
+        public void Save(string filename)
+        {
+            using (BinaryWriter binWriter = new BinaryWriter(File.Open(filename, FileMode.Create)))
+            {
+                binWriter.Write(_stringRepFunction);
+                binWriter.Write(_dimension);
+                for (int i = 0; i < Dimension2; i++)
+                {
+                    for (int j=0;j < Dimension2; j++)
+                    {
+                        binWriter.Write(_Pixels[i, j]);
+                    }
+                }
+            }
+        }
 
-   
+        public void Load(string filename)
+        {
+            using (BinaryReader binReader = new BinaryReader(File.Open(filename, FileMode.Open)))
+            {
+                _stringRepFunction = binReader.ReadString();
+                _dimension = binReader.ReadInt32();
+                for(int i = 0; i < Dimension2; i++)
+                {
+                    for (int j=0; j < Dimension2; j++)
+                    {
+                        double val = binReader.ReadDouble();
+                        _Pixels[i,j] = val;
+                    }
+                }
+            }
+        }
+    }
 }
       
