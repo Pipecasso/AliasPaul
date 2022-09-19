@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace GeoFilter
 {
@@ -10,11 +11,10 @@ namespace GeoFilter
     {
         private ComplexNumber[,] _Pixels;
         private int _dimension;
-        public double Scale { get; set; }
-        public int OffsetX { get; set; }
-        public int OffsetY { get; set; }
+        private string _name;
+      
 
-     
+        public ZMatrix() { }
 
 
         public ZMatrix(int dimension)
@@ -176,13 +176,15 @@ namespace GeoFilter
             }
         }
 
-        public void Set(Func<ComplexNumber,ComplexNumber> f)
+        public void Set(Func<ComplexNumber,ComplexNumber> f,string name, int xoffset = 0, int yoffset = 0, double scale = 1)
         {
+            _name = name;
+            Func<int, int, int, int, double, ComplexNumber> cmaker = (x, y, ox, oy, d) => new ComplexNumber(new ComplexNumber((x + ox) / d, (y + oy) / d));
             for (int i = -_dimension; i <= _dimension; i++)
             {
                 for (int j = -_dimension; j <= _dimension; j += 1)
                 {
-                    ComplexNumber zin = new ComplexNumber((i+OffsetX)/Scale,(j+OffsetY)/Scale);
+                    ComplexNumber zin = cmaker(i,j,xoffset,yoffset,scale);
                     _Pixels[i + _dimension, _dimension - j] = f(zin);
                 }
             }
@@ -209,6 +211,46 @@ namespace GeoFilter
                 return _Pixels[x, y];
             }
         }
+
+        public void Save(string filename)
+        {
+            using (BinaryWriter binWriter = new BinaryWriter(File.Open(filename, FileMode.Create)))
+            {
+                binWriter.Write(_name);
+                binWriter.Write(_dimension);
+                for (int i = 0; i < Dimension2; i++)
+                {
+                    for (int j = 0; j < Dimension2; j++)
+                    {
+                        ComplexNumber cn = _Pixels[i, j];
+                        binWriter.Write(cn.X);
+                        binWriter.Write(cn.Y);
+                    }
+                }
+            }
+        }
+
+        public void Load(string filename)
+        {
+            using (BinaryReader binReader = new BinaryReader(File.Open(filename, FileMode.Open)))
+            {
+                _name = binReader.ReadString();
+                _dimension = binReader.ReadInt32();
+                int arraydim = 2 * _dimension + 1;
+                _Pixels = new ComplexNumber[arraydim, arraydim];
+                for (int i = 0; i < Dimension2; i++)
+                {
+                    for (int j = 0; j < Dimension2; j++)
+                    {
+                        ComplexNumber cn = new ComplexNumber();
+                        cn.X = binReader.ReadDouble();
+                        cn.Y = binReader.ReadDouble();
+                        _Pixels[i, j] = cn;
+                    }
+                }
+            }
+        }
+
 
         int Dimension { get => _dimension; }
         int Dimension2 { get => _dimension * 2 + 1; }

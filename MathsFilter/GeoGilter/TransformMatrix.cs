@@ -23,7 +23,9 @@ namespace GeoFilter
         private int _pulsegap;
         private uint _gap;
 
-        public event EventHandler<EventArgs> Pulse; 
+        public event EventHandler<EventArgs> Pulse;
+
+        public TransformMatrix() { }
 
         public TransformMatrix(int dimension, bool bIdendity = false)
         {
@@ -300,7 +302,7 @@ namespace GeoFilter
 
         }
 
-        public void Set(Func<int,int,double> f,string fexpression)
+        public void Set(Func<double,double,double> f,string fexpression, int xoffset = 0, int yoffset = 0, double scale = 1)
         {
             double tiktok = 0;
             double total = Math.Pow(_dimension * 2 + 1, 2);
@@ -308,11 +310,18 @@ namespace GeoFilter
 
            _minumum = Int32.MaxValue;
             _maximum = Int32.MinValue;
+
+            Func<int,int,double,double> xoff = (x,xo,s) =>  Convert.ToDouble(x + xo) / s;
+            Func<int, int, double, double> yoff = (y, yo, s) => Convert.ToDouble(y + yo) / s;
+
             for (int i = -_dimension; i <= _dimension; i++)
             {
                 for (int j = -_dimension; j <= _dimension; j += (int)_gap)
                 {
-                    double fval = f(i, j);
+                    double dx = xoff(i, xoffset, scale);
+                    double dy = yoff(i, yoffset, scale);
+
+                    double fval = f(dx, dy);
                     Process(i, j, fval, total, ref tiktok);
 
                 }
@@ -485,7 +494,11 @@ namespace GeoFilter
             {
                 _stringRepFunction = binReader.ReadString();
                 _dimension = binReader.ReadInt32();
-                for(int i = 0; i < Dimension2; i++)
+                int arraydim = 2 * _dimension + 1;
+        
+                _Pixels = new double[arraydim, arraydim];
+
+                for (int i = 0; i < Dimension2; i++)
                 {
                     for (int j=0; j < Dimension2; j++)
                     {
