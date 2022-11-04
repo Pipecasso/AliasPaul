@@ -25,9 +25,6 @@ namespace GeoFilter
             Blue = 4
         }
 
-       
-
-
         public BitmapBox(string path)
         {
             using (Stream bitstream = File.Open(path, System.IO.FileMode.Open))
@@ -48,8 +45,6 @@ namespace GeoFilter
                     _bitmap.SetPixel(i, j, c);
                 }
             }
-
-            
         }
 
         public BitmapBox(VectorBox vb,Bitmap original = null,OutOfBounds oob = OutOfBounds.Reject)
@@ -122,9 +117,8 @@ namespace GeoFilter
 
         }
 
-        public int FinalCol2(int val,OutOfBounds oob)
+        public int FinalCol2(int val,OutOfBounds oob,int uppoerbound = 16777216)
         {
-            const int uppoerbound = 16777216;
             int output = 0;
             if (val < 0 || val >= uppoerbound)
             {
@@ -178,60 +172,13 @@ namespace GeoFilter
             return output;
         }
 
-        private int FinalCol(int delta, int start, OutOfBounds oob,int upperbound)
+        public int FinalCold(double val,OutOfBounds oob,int upperbound = 16777216)
         {
-            int final = start + delta;
-            int mod = upperbound + 1;
-            if (final < 0 || final > upperbound)
-            {
-                switch (oob)
-                {
-                    case OutOfBounds.Reject:
-                        final = start;
-                        break;
-                    case OutOfBounds.Rollover:
-                        if (final > upperbound)
-                        {
-                            final = final % mod;
-                        }
-                        else
-                        {
-                            int below = Math.Abs(final) % mod;
-                            final = mod - below-1;
-                        }
-                        break;
-                    case OutOfBounds.Stop:
-                        if (final > upperbound)
-                        {
-                            final = upperbound;
-                        }
-                        else
-                        {
-                            final = 0;
-                        }
-                        break;
-                    case OutOfBounds.Bounce:
-                        if (final > upperbound)
-                        {
-                            int above = final % mod;
-                            final = upperbound - above;
-                        }
-                        else
-                        {
-                            int below = Math.Abs(final) % mod;
-                            final = below;
-                        }
-                        break;
-
-                }
-
-            }
-            System.Diagnostics.Debug.Assert(final>=0 && final <= upperbound);
-            return final;
-
+            int ival = System.Convert.ToInt32(Math.Floor(val + 0.5));
+            return FinalCol2(ival,oob,upperbound);
         }
 
-        public void ApplyMatrixAndFlatten(TransformMatrix m, int x, int y, OutOfBounds oob = OutOfBounds.Reject)
+        public void ApplyMatrix(TransformMatrix m, int x, int y,int upperbound = 16777216)
         {
             for (int i = -m.Dimension; i <= m.Dimension; i++)
             {
@@ -240,19 +187,19 @@ namespace GeoFilter
 
                     double rgb = m[i + m.Dimension, m.Dimension - j];
                     int irgb = Convert.ToInt32(Math.Floor(rgb + 0.5));
-                    if (irgb < -16777216)
+                    if (irgb < -upperbound)
                     {
                         int absrgb = irgb * -1;
-                        int temprgb = absrgb & 16777216;
-                        irgb = 16777216 + temprgb;
+                        int temprgb = absrgb & upperbound;
+                        irgb = upperbound + temprgb;
                     }
                     else if (irgb < 0)
                     {
-                        irgb = 16777216 + irgb;
+                        irgb = upperbound + irgb;
                     }
-                    else if (irgb >= 16777216)
+                    else if (irgb >= upperbound)
                     {
-                        irgb = irgb % 16777216;
+                        irgb = irgb % upperbound;
                     }
                     
                     Color cnew = FromRGB(irgb);
@@ -260,44 +207,39 @@ namespace GeoFilter
                 }
             }
         }
-        public void ApplyMatrix(TransformMatrix m, int x, int y, Colour cols, OutOfBounds oob)
+     
+        public void ApplyMatrix(TransformMatrix rm,TransformMatrix gm,TransformMatrix bm,OutOfBounds oob = OutOfBounds.Rollover)
         {
-            for (int i = -m.Dimension; i <= m.Dimension; i++)
+            int dimmax = new TransformMatrix[3] { rm, gm, bm }.Max(z => z.Dimension);
+            for (int i=-dimmax;i<dimmax;i++)
             {
-                for (int j = -m.Dimension; j <= m.Dimension; j++)
+                int i2 = Math.Abs(i);
+                for (int j = -dimmax; j < dimmax; j++)
                 {
-                    Color c = _bitmap.GetPixel(x + i, y - j);
-                    int r = c.R;
-                    int g = c.G;
-                    int b = c.B;
-                    double delta = m[i + m.Dimension, m.Dimension - j];
-                    int idelta = 0;
-                  
-                     idelta = Convert.ToInt32(Math.Floor(delta + 0.5));
-               
-                    if ((cols & Colour.Red) == Colour.Red)
+                    int r = 0;
+                    int g = 0;
+                    int b = 0;
+                    int j2 = Math.Abs(j);
+
+                    if (rm!=null && i2 <= rm.Dimension && j2 <= rm.Dimension)
                     {
-                        r = FinalCol(idelta, c.R, oob, 255);
+                        r = FinalCold(rm[i, j], oob, 256);
                     }
 
-                    if ((cols & Colour.Green) == Colour.Green)
+                    if (gm != null && i2 <= gm.Dimension && j2 <= gm.Dimension)
                     {
-                        g = FinalCol(idelta, c.G, oob, 255);
+                        g = FinalCold(gm[i, j], oob, 256);
                     }
 
-                    if ((cols & Colour.Blue) == Colour.Blue)
+                    if (bm != null && i2 <= bm.Dimension && j2 <= bm.Dimension)
                     {
-                        b = FinalCol(idelta, c.B, oob, 255);
+                        b = FinalCold(bm[i, j], oob, 256);
                     }
-
                     Color cnew = Color.FromArgb(r, g, b);
-                    _bitmap.SetPixel(x + i, y - j, cnew);
-                   
+                    _bitmap.SetPixel(i + dimmax, j + dimmax, cnew);
                 }
             }
-
         }
-
         internal void MinMax(int dimension,int x,int y, Colour cols,ref int min,ref int max)
         {
             min = Int32.MaxValue;

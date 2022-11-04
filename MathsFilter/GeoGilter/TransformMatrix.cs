@@ -302,7 +302,7 @@ namespace GeoFilter
 
         }
 
-        public void Set(Func<double,double,double> f,string fexpression, int xoffset = 0, int yoffset = 0, double scale = 1)
+        public void Set(Func<double,double,double,double,double> f,string fexpression, int xoffset = 0, int yoffset = 0, double scale = 1,double a=1,double b=1)
         {
             double tiktok = 0;
             double total = Math.Pow(_dimension * 2 + 1, 2);
@@ -321,7 +321,7 @@ namespace GeoFilter
                     double dx = xoff(i, xoffset, scale);
                     double dy = yoff(i, yoffset, scale);
 
-                    double fval = f(dx, dy);
+                    double fval = f(dx, dy,a,b);
                     Process(i, j, fval, total, ref tiktok);
 
                 }

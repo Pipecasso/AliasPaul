@@ -97,14 +97,12 @@ namespace AutoSrpintReview
             _milestones.Add(1684, "Production");
             _milestones.Add(1683, "Next");
             _milestones.Add(1694, "Isometrics 8");
-            _milestones.Add(1683, "Next");
             _milestones.Add(1711, "Isometrics 7.2 HF");
             _milestones.Add(1704, "Isometrics 7.2");
             _milestones.Add(1695, "Isometrics 2019 R1");
             _milestones.Add(1686, "Isometrics 2019");
             _milestones.Add(1690, "Isomet 2014 R1 SP1");
             _milestones.Add(1701, "Isogen Editions 10");
-            _milestones.Add(1708, "Isogen Edition 10 HF");
             _milestones.Add(1700, "Isogen DB 2019 HF");
             _milestones.Add(1693, "Isogen Database 2019");
             _milestones.Add(1678, "2018");

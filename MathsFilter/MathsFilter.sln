@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTests", "GeoTests\GeoTes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixMaker", "MatrixMaker\MatrixMaker\MatrixMaker.csproj", "{493ADE23-0C5B-42F7-A6DA-FFBE7558B60F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Manalyse", "Manalyse\Manalyse\Manalyse.csproj", "{BB194CC3-5049-47AF-8653-63CD83EA72A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MatrixPainter", "MatrixPainter\MatrixPainter.csproj", "{B6F906F2-8578-451A-A474-5573920B52FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{493ADE23-0C5B-42F7-A6DA-FFBE7558B60F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{493ADE23-0C5B-42F7-A6DA-FFBE7558B60F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{493ADE23-0C5B-42F7-A6DA-FFBE7558B60F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB194CC3-5049-47AF-8653-63CD83EA72A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB194CC3-5049-47AF-8653-63CD83EA72A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB194CC3-5049-47AF-8653-63CD83EA72A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB194CC3-5049-47AF-8653-63CD83EA72A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6F906F2-8578-451A-A474-5573920B52FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6F906F2-8578-451A-A474-5573920B52FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6F906F2-8578-451A-A474-5573920B52FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6F906F2-8578-451A-A474-5573920B52FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
