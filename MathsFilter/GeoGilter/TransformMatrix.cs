@@ -19,7 +19,7 @@ namespace GeoFilter
         private double _maximum;
         private double _mid = Convert.ToDouble(Int32.MaxValue) - 256;
         private string _stringRepFunction;
-    
+
         private int _pulsegap;
         private uint _gap;
 
@@ -35,7 +35,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
-       
+
             if (bIdendity)
             {
                 for (int i = 0; i < dimension; i++)
@@ -46,9 +46,12 @@ namespace GeoFilter
                     }
                 }
             }
+            _stringRepFunction = String.Empty;
 
             mXparser.setDegreesMode();
         }
+
+        public string StringRepFunction { get => _stringRepFunction; set { _stringRepFunction = value; } }
 
         public int Area
         {
@@ -61,7 +64,7 @@ namespace GeoFilter
             double area1 = Convert.ToDouble(arraydim * arraydim) / 100;
             _pulsegap = Convert.ToInt32(Math.Floor(area1 + 0.5));
             _Pixels = new double[arraydim, arraydim];
-         
+
 
             for (int i = 0; i < dimension; i++)
             {
@@ -157,7 +160,7 @@ namespace GeoFilter
             return Column;
         }
         #region staticsandoperators
-        public static bool operator == (TransformMatrix t1, TransformMatrix t2)
+        public static bool operator ==(TransformMatrix t1, TransformMatrix t2)
         {
             if (t1.Dimension == t2.Dimension)
             {
@@ -211,7 +214,7 @@ namespace GeoFilter
                         }
 
                         double f = 0;
-                        for (int m = 0;m< tout.Dimension2;m++)
+                        for (int m = 0; m < tout.Dimension2; m++)
                         {
                             f += rowi[m] * colj[m];
                         }
@@ -230,10 +233,10 @@ namespace GeoFilter
 
         static public TransformMatrix Abs(TransformMatrix t)
         {
-            
+
             TransformMatrix tout = new TransformMatrix(t.Dimension);
             int dim2 = t.Dimension2;
-            for (int i=0;i<dim2;i++)
+            for (int i = 0; i < dim2; i++)
             {
                 for (int j = 0; j < dim2; j++)
                 {
@@ -260,14 +263,14 @@ namespace GeoFilter
 
         }
 
-        public void TimesEquals (double d)
+        public void TimesEquals(double d)
         {
             double dim2 = Dimension2;
             for (int i = 0; i < dim2; i++)
             {
                 for (int j = 0; j < dim2; j++)
                 {
-                   
+
                     _Pixels[i, j] = _Pixels[i, j] * d;
                 }
             }
@@ -277,7 +280,7 @@ namespace GeoFilter
 
         }
 
-        private void Process(int i,int j,double fval,double total,ref double tiktok)
+        private void Process(int i, int j, double fval, double total, ref double tiktok)
         {
             if (double.IsNaN(fval) || Math.Abs(fval) > _mid) fval = 0;
             if (fval < _minumum)
@@ -302,16 +305,16 @@ namespace GeoFilter
 
         }
 
-        public void Set(Func<double,double,double,double,double> f,string fexpression, int xoffset = 0, int yoffset = 0, double scale = 1,double a=1,double b=1)
+        public void Set(Func<double, double, double, double, double> f, string fexpression, int xoffset = 0, int yoffset = 0, double scale = 1, double a = 1, double b = 1)
         {
             double tiktok = 0;
             double total = Math.Pow(_dimension * 2 + 1, 2);
             _stringRepFunction = fexpression;
 
-           _minumum = Int32.MaxValue;
+            _minumum = Int32.MaxValue;
             _maximum = Int32.MinValue;
 
-            Func<int,int,double,double> xoff = (x,xo,s) =>  Convert.ToDouble(x + xo) / s;
+            Func<int, int, double, double> xoff = (x, xo, s) => Convert.ToDouble(x + xo) / s;
             Func<int, int, double, double> yoff = (y, yo, s) => Convert.ToDouble(y + yo) / s;
 
             for (int i = -_dimension; i <= _dimension; i++)
@@ -321,7 +324,7 @@ namespace GeoFilter
                     double dx = xoff(i, xoffset, scale);
                     double dy = yoff(i, yoffset, scale);
 
-                    double fval = f(dx, dy,a,b);
+                    double fval = f(dx, dy, a, b);
                     Process(i, j, fval, total, ref tiktok);
 
                 }
@@ -340,7 +343,7 @@ namespace GeoFilter
             for (int i = -_dimension; i <= _dimension; i++)
             {
                 x.setArgumentValue(i);
-                for (int j = -_dimension; j <= _dimension; j+=(int)_gap)
+                for (int j = -_dimension; j <= _dimension; j += (int)_gap)
                 {
                     y.setArgumentValue(j);
                     double fval = f.calculate(x, y);
@@ -348,13 +351,13 @@ namespace GeoFilter
 
                 }
             }
-         
+
             System.Diagnostics.Debug.Assert(_minumum <= _maximum);
 
         }
 
-       
-        
+
+
 
         public int Dimension
         {
@@ -382,7 +385,7 @@ namespace GeoFilter
             }
             set
             {
-                _Pixels[x,y] = value;
+                _Pixels[x, y] = value;
             }
         }
 
@@ -418,8 +421,8 @@ namespace GeoFilter
         private void SetMinMax()
         {
             double dim2 = Dimension2;
-             _maximum = double.MinValue;
-             _minumum = double.MaxValue;
+            _maximum = double.MinValue;
+            _minumum = double.MaxValue;
             for (int i = 0; i < dim2; i++)
             {
                 for (int j = 0; j < dim2; j++)
@@ -480,7 +483,7 @@ namespace GeoFilter
                 binWriter.Write(_dimension);
                 for (int i = 0; i < Dimension2; i++)
                 {
-                    for (int j=0;j < Dimension2; j++)
+                    for (int j = 0; j < Dimension2; j++)
                     {
                         binWriter.Write(_Pixels[i, j]);
                     }
@@ -495,19 +498,23 @@ namespace GeoFilter
                 _stringRepFunction = binReader.ReadString();
                 _dimension = binReader.ReadInt32();
                 int arraydim = 2 * _dimension + 1;
-        
+
                 _Pixels = new double[arraydim, arraydim];
 
                 for (int i = 0; i < Dimension2; i++)
                 {
-                    for (int j=0; j < Dimension2; j++)
+                    for (int j = 0; j < Dimension2; j++)
                     {
                         double val = binReader.ReadDouble();
-                        _Pixels[i,j] = val;
+                        _Pixels[i, j] = val;
                     }
                 }
             }
         }
+
+
+
     }
+    
 }
       

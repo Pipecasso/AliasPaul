@@ -17,6 +17,9 @@ namespace MatrixMaker
             YOffset = 0;
             a = 1;
             b = 1;
+            picturename = string.Empty;
+            FunctionName = string.Empty;
+            power = 1;
         }
         internal int Dimension { get; set; }    
         internal double Scale { get; set; }
@@ -29,6 +32,8 @@ namespace MatrixMaker
 
         internal string picturename { get; set; }
         internal string matrixpath { get; set; }
+
+        internal uint power { get; set; }
        
     }
 }
