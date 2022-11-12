@@ -322,7 +322,7 @@ namespace GeoFilter
                 for (int j = -_dimension; j <= _dimension; j += (int)_gap)
                 {
                     double dx = xoff(i, xoffset, scale);
-                    double dy = yoff(i, yoffset, scale);
+                    double dy = yoff(j, yoffset, scale);
 
                     double fval = f(dx, dy, a, b);
                     Process(i, j, fval, total, ref tiktok);
@@ -354,6 +354,19 @@ namespace GeoFilter
 
             System.Diagnostics.Debug.Assert(_minumum <= _maximum);
 
+        }
+
+        public void ApplyFunction(Func<double,double> f)
+        {
+            double dim2 = Dimension2;
+            for (int i = 0; i < dim2; i++)
+            {
+                for (int j = 0; j < dim2; j += 1)
+                {
+                  
+                    _Pixels[i, j] = f(_Pixels[i, j]);   
+                }
+            }
         }
 
 
@@ -418,7 +431,7 @@ namespace GeoFilter
             }
         }
 
-        private void SetMinMax()
+        public void SetMinMax()
         {
             double dim2 = Dimension2;
             _maximum = double.MinValue;
@@ -493,6 +506,8 @@ namespace GeoFilter
 
         public void Load(string filename)
         {
+            double min = double.MaxValue;
+            double max = double.MinValue;   
             using (BinaryReader binReader = new BinaryReader(File.Open(filename, FileMode.Open)))
             {
                 _stringRepFunction = binReader.ReadString();
@@ -506,10 +521,14 @@ namespace GeoFilter
                     for (int j = 0; j < Dimension2; j++)
                     {
                         double val = binReader.ReadDouble();
+                        if (val < min) min = val;
+                        if (val > max) max = val;
                         _Pixels[i, j] = val;
                     }
                 }
             }
+            _minumum = min;
+            _maximum = max;
         }
 
 

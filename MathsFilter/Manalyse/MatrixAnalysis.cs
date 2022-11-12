@@ -7,7 +7,7 @@ using GeoFilter;
 
 namespace Manalyse
 {
-    public class TransformResults
+    public class MatrixAnalysis
     {
         public double Minumum { get; private set; }
         public double Maximum { get; private set; }
@@ -18,24 +18,30 @@ namespace Manalyse
 
         public double Mean { get; private set; }
 
+        public int ValCount { get; private set; }
+
+        public int Area { get; private set; }
+    
+
         private int _Negative;
         private int _mono;
         private int _duo;
         private int _rgb;
         int _tooHigh;
-     
+        int _tooHigh2;
         public int Negative => _Negative;
         public int Mono => _mono;
         public int Dou => _duo;
         public int RGB => _rgb;
 
         public int OutOfRange => _tooHigh;
+        public int OutOfRange2 => _tooHigh2;
 
 
         private TransformMatrix _tm;
         private const int _rgbMax = 256 * 256 * 256;
 
-        public TransformResults(TransformMatrix tm)
+        public MatrixAnalysis(TransformMatrix tm)
         {
             _tm = tm;
             _Negative = 0;
@@ -43,12 +49,15 @@ namespace Manalyse
             _duo = 0;
             _rgb = 0;
             _tooHigh = 0;
+            _tooHigh2 = 0;
             Maximum = double.MinValue;
             Minumum = double.MaxValue;
+            double intmax = System.Convert.ToDouble(int.MaxValue);
 
-            int area = tm.Area;
+            Area = tm.Area;
 
-            double[] sortedArray = new double[area];
+            double[] sortedArray = new double[Area];
+            HashSet<double> hashmat = new HashSet<double>();
 
             int tick = 0;
             for (int i=0;i<tm.Dimension2;i++)
@@ -56,6 +65,11 @@ namespace Manalyse
                 for (int j=0;j<tm.Dimension2;j++)
                 {
                     double val = tm[i,j];
+                    if (Math.Abs(val) > intmax)
+                    {
+                        _tooHigh2++;
+                    }
+                    if (!hashmat.Contains(val)) { hashmat.Add(val); }   
                     int ticktest = i * tm.Dimension2 + j;
                     sortedArray[tick] = val;
                     if (tick != ticktest)
@@ -95,13 +109,14 @@ namespace Manalyse
             }
 
             Array.Sort(sortedArray);
-            int q1 = area / 4;
-            int q2 = area / 2;
+            int q1 = Area / 4;
+            int q2 = Area / 2;
             int q3 = q1 + q2;
             Q1 = sortedArray[q1];
             Median = sortedArray[q2];
             Q3 = sortedArray[q3];
             Mean = sortedArray.Average();
+            ValCount = hashmat.Count;
 
         }
 
