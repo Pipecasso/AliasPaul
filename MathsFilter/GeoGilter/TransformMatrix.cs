@@ -11,7 +11,7 @@ namespace GeoFilter
 
     public delegate double ProgressDelegate();
 
-    public class TransformMatrix
+    public class TransformMatrix : IEquatable<TransformMatrix>
     {
         private double[,] _Pixels;
         private int _dimension;
@@ -159,34 +159,82 @@ namespace GeoFilter
             }
             return Column;
         }
-        #region staticsandoperators
-        public static bool operator ==(TransformMatrix t1, TransformMatrix t2)
+
+
+        public bool Equals(TransformMatrix other)
         {
-            if (t1.Dimension == t2.Dimension)
+            bool go;
+
+            if (other == null)
+                go = false;
+            else if (Dimension == other.Dimension)
             {
                 bool bRet = true;
                 int i = 0;
-                while (i < t1.Dimension && bRet)
+                while (i < Dimension && bRet)
                 {
                     int j = 0;
-                    while (j < t1.Dimension && bRet)
+                    while (j < Dimension && bRet)
                     {
-                        bRet = t1[i, j] == t2[i, j];
+                        bRet = this[i, j] == other[i, j];
                         j++;
                     }
                     i++;
                 }
-                return bRet;
+                go = bRet;
             }
             else
             {
-                return false;
+                go = false;
             }
+            return go;
+        }
+
+
+        public override bool Equals(Object obj)
+        {
+            bool go;
+
+            if (obj == null)
+                go = false;
+
+            TransformMatrix other = obj as TransformMatrix;
+            if (other == null)
+                go = false;
+            else
+                go = Equals(other);
+
+            return go;
+        }
+
+        public override int GetHashCode()
+        {
+            return _Pixels.GetHashCode();
+        }
+
+
+        #region staticsandoperators
+        public static bool operator ==(TransformMatrix t1, TransformMatrix t2)
+        {
+            bool go;
+            if (((object)(t1) == null || ((object)t2) == null))
+                go = Object.Equals(t1, t2);
+            else
+                go = t1.Equals(t2);
+
+            return go;
+
         }
 
         public static bool operator !=(TransformMatrix t1, TransformMatrix t2)
         {
-            return !(t1 == t2);
+            bool go;
+            if (((object)(t1) == null || ((object)t2) == null))
+                go = !Object.Equals(t1, t2);
+            else
+                go = !t1.Equals(t2);
+
+            return go;
         }
 
 
@@ -356,15 +404,15 @@ namespace GeoFilter
 
         }
 
-        public void ApplyFunction(Func<double,double> f)
+        public void ApplyFunction(Func<double, double> f)
         {
             double dim2 = Dimension2;
             for (int i = 0; i < dim2; i++)
             {
                 for (int j = 0; j < dim2; j += 1)
                 {
-                  
-                    _Pixels[i, j] = f(_Pixels[i, j]);   
+
+                    _Pixels[i, j] = f(_Pixels[i, j]);
                 }
             }
         }
@@ -387,8 +435,6 @@ namespace GeoFilter
                 return _dimension * 2 + 1;
             }
         }
-
-
 
         public double this[int x, int y]
         {
@@ -507,7 +553,7 @@ namespace GeoFilter
         public void Load(string filename)
         {
             double min = double.MaxValue;
-            double max = double.MinValue;   
+            double max = double.MinValue;
             using (BinaryReader binReader = new BinaryReader(File.Open(filename, FileMode.Open)))
             {
                 _stringRepFunction = binReader.ReadString();
@@ -530,10 +576,11 @@ namespace GeoFilter
             _minumum = min;
             _maximum = max;
         }
-
-
-
     }
-    
+
+
+
+
+
+
 }
-      

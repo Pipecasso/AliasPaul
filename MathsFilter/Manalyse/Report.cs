@@ -16,8 +16,14 @@ namespace Manalyse
             _ma = ma;
         }
 
-        public void Analyse()
+        public void Analyse(string title = null)
         {
+            if (title != null)
+            {
+                System.Console.WriteLine(title);
+                System.Console.WriteLine();
+            }
+            
             System.Console.WriteLine($"   Minimum {_ma.Minumum}");
             System.Console.WriteLine($"        Q1 { _ma.Q1}");
             System.Console.WriteLine($"    Median { _ma.Median}");

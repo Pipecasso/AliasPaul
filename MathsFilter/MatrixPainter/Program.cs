@@ -31,15 +31,21 @@ namespace MatrixPainter
             return pp;
         }
 
-        static void Stretch(TransformMatrix tm,int target_max)
+        static void Stretch(TransformMatrix tm,int target_min,int target_max)
         {     
             double mimimun = tm.minimum;
             double maximum = tm.maximum;
             double range = maximum - mimimun;
-            Func<double, double> stretch_funk = (x) => { return x * target_max / range; };
+            double range2 = target_max - target_min;
+            Func<double, double> stretch_funk = (x) =>
+            {
+                return target_min + ((x - mimimun)*range2 / range);
+            };
             tm.ApplyFunction(stretch_funk);
           
         }
+
+       
 
         static void Main(string[] args)
         {
@@ -56,7 +62,7 @@ namespace MatrixPainter
                     BitmapBox box = new BitmapBox(Color.White,tm.Dimension2, tm.Dimension2);
                     if (pp.Stretch)
                     {
-                        Stretch(tm, pp.StretchTop);
+                        Stretch(tm, 0,pp.StretchTop);
                     }
                     MatrixAnalysis manal = new MatrixAnalysis(tm);
                     Report report = new Report(manal);
@@ -68,7 +74,55 @@ namespace MatrixPainter
             }
             else if (pp.RGB())
             {
+                int dim2 = 0;
+                TransformMatrix red_matrix = null;
+                TransformMatrix green_matrix = null;
+                TransformMatrix blue_matrix = null;
 
+                MatrixAnalysis  redAnal,greenAnal,blueAnal;
+                if (pp.RedMatrix != null)
+                {
+                    red_matrix = new TransformMatrix();
+                    red_matrix.Load(pp.RedMatrix);
+                    redAnal = new MatrixAnalysis(red_matrix);
+                    Report report = new Report(redAnal);
+                    report.Analyse("Red");
+                    if (red_matrix.Dimension2 >  dim2) dim2 = red_matrix.Dimension2;
+                    if (pp.Stretch)
+                    {
+                        Stretch(red_matrix, 0, 255);
+                    }    
+                }
+                if (pp.GreenMatrix != null)
+                {
+                    green_matrix = new TransformMatrix();
+                    green_matrix.Load(pp.GreenMatrix);
+                    greenAnal = new MatrixAnalysis(green_matrix);
+                    Report report = new Report(greenAnal);
+                    report.Analyse("Green");
+                    if (green_matrix.Dimension2 > dim2) dim2 = green_matrix.Dimension2;
+                    if (pp.Stretch)
+                    {
+                        Stretch(green_matrix, 0, 255);
+                    }
+                }
+                if (pp.BlueMatrix != null)
+                {
+                    blue_matrix = new TransformMatrix();
+                    blue_matrix.Load(pp.BlueMatrix);    
+                    blueAnal = new MatrixAnalysis(blue_matrix);
+                    Report report = new Report(blueAnal);
+                    report.Analyse("Blue"); 
+                    if (blue_matrix.Dimension2 > dim2) dim2 = blue_matrix.Dimension2;
+                    if (pp.Stretch)
+                    {
+                        Stretch(blue_matrix, 0, 255);
+                    }
+                }
+                BitmapBox bitmapBox = new BitmapBox(Color.White, dim2 , dim2);
+                bitmapBox.ApplyMatrix(red_matrix, green_matrix, blue_matrix);
+                bitmapBox.Save(picturepath);
+                
             }
 
 

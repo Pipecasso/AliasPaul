@@ -210,33 +210,32 @@ namespace GeoFilter
      
         public void ApplyMatrix(TransformMatrix rm,TransformMatrix gm,TransformMatrix bm,OutOfBounds oob = OutOfBounds.Rollover)
         {
-            int dimmax = new TransformMatrix[3] { rm, gm, bm }.Max(z => z.Dimension);
-            for (int i=-dimmax;i<dimmax;i++)
+            int dimmax = new TransformMatrix[3] { rm, gm, bm }.Max(z => z==null ? 0 : z.Dimension2);
+            for (int i=0;i<dimmax;i++)
             {
-                int i2 = Math.Abs(i);
-                for (int j = -dimmax; j < dimmax; j++)
+     
+                for (int j = 0; j < dimmax; j++)
                 {
                     int r = 0;
                     int g = 0;
                     int b = 0;
-                    int j2 = Math.Abs(j);
-
-                    if (rm!=null && i2 <= rm.Dimension && j2 <= rm.Dimension)
+                 
+                    if (rm!=null && i <= rm.Dimension && j <= rm.Dimension)
                     {
                         r = FinalCold(rm[i, j], oob, 256);
                     }
 
-                    if (gm != null && i2 <= gm.Dimension && j2 <= gm.Dimension)
+                    if (gm != null && i <= gm.Dimension && j <= gm.Dimension)
                     {
                         g = FinalCold(gm[i, j], oob, 256);
                     }
 
-                    if (bm != null && i2 <= bm.Dimension && j2 <= bm.Dimension)
+                    if (bm != null && i <= bm.Dimension && j <= bm.Dimension)
                     {
                         b = FinalCold(bm[i, j], oob, 256);
                     }
                     Color cnew = Color.FromArgb(r, g, b);
-                    _bitmap.SetPixel(i + dimmax, j + dimmax, cnew);
+                    _bitmap.SetPixel(i, j, cnew);
                 }
             }
         }

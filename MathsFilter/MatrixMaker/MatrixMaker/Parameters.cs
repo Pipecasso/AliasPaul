@@ -8,7 +8,9 @@ namespace MatrixMaker
 {
     internal class Parameters
     {
-        
+
+        private List<string> _messages;
+
         internal Parameters()
         {
             Dimension = 1000;
@@ -20,6 +22,7 @@ namespace MatrixMaker
             picturename = string.Empty;
             FunctionName = string.Empty;
             power = 1;
+            _messages = new List<string>();
         }
         internal int Dimension { get; set; }    
         internal double Scale { get; set; }
@@ -34,6 +37,10 @@ namespace MatrixMaker
         internal string matrixpath { get; set; }
 
         internal uint power { get; set; }
+
+        internal List<string> Messages => _messages;
+
+        internal void AddMessage(string mess) { _messages.Add(mess); }
        
     }
 }

@@ -12,6 +12,7 @@ namespace MatrixPainter
         internal bool Stretch { get; set; }
 
         internal int StretchTop { get; set; }
+        internal int StretchBottom { get; set; }
 
         internal string RedMatrix { get; set; }
         internal string GreenMatrix { get; set; }
@@ -25,6 +26,7 @@ namespace MatrixPainter
         {
             Stretch = false;
             StretchTop = 256 * 256 * 256 - 1;
+            StretchBottom = 0;
         }
 
         internal bool All()
