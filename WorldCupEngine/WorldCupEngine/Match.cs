@@ -81,7 +81,7 @@ namespace WorldCupEngine
 
         public void RandomPlay(Result res,double randomfactor)
         {
-            double fflip = res==Result.firstw ? FlipProbability1(randomfactor) : FlipProbability2(randomfactor);
+            double fflip = res==Result.firstw ? FlipProbability2(randomfactor) : FlipProbability1(randomfactor);
             int flipside = Convert.ToInt32(Math.Floor(fflip * 100000)+0.5);
             bool flip = (_randy.Next(100000) + 1) <= flipside;
             if (flip)

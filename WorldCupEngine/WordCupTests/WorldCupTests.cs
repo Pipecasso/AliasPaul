@@ -274,7 +274,7 @@ namespace WordCupTests
             const int matches = 1000000;
 
             Match played = new Match(c1, c2);
-            double flip = played.FlipProbability1(randyfactor);
+            double flip = played.FlipProbability2(randyfactor);
             int expectedlosses = Convert.ToInt32(Math.Floor((double)matches * flip));
 
             //kens turn
@@ -297,7 +297,7 @@ namespace WordCupTests
             c1.Wins = 0;
             c2.Wins = 0;
 
-            flip = played.FlipProbability2(randyfactor);
+            flip = played.FlipProbability1(randyfactor);
             expectedlosses = Convert.ToInt32(Math.Floor((double)matches * flip));
 
             //kens turn

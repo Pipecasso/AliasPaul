@@ -13,8 +13,6 @@ namespace WpfApp1.Model
         private Tournament _tournament;
         private string _xlpath;
         
-        
-     
         internal void Reload(string path,Tournament.Format? format,int totalrounds)
         {
             _xlpath = path; 
@@ -45,9 +43,6 @@ namespace WpfApp1.Model
         
         internal Tournament Tournament { get => _tournament; }
         internal Round CurrentRound { get => _tournament==null ? null : _tournament.CurrentRound; }
-       
-
-    
-    
+     
     }
 }
