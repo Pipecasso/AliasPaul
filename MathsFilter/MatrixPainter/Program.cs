@@ -19,9 +19,9 @@ namespace MatrixPainter
             {
                 switch (args[i])
                 {
-                    case "-red": pp.RedMatrix = args[++i]; break;
-                    case "-green": pp.GreenMatrix = args[++i]; break;
-                    case "-blue": pp.BlueMatrix = args[++i]; break;
+                    case "-red": case "-r":  pp.RedMatrix = args[++i]; break;
+                    case "-green": case "-g": pp.GreenMatrix = args[++i]; break;
+                    case "-blue": case "-b":  pp.BlueMatrix = args[++i]; break;
                     case "-all": pp.AllMatrix = args[++i]; break;
                     case "-stretch": pp.Stretch = true; break;
                     case "-stretch2": pp.Stretch = true; pp.StretchTop = System.Convert.ToInt32(args[++i]); break;

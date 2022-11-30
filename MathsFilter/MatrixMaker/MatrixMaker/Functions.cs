@@ -21,6 +21,7 @@ namespace MatrixMaker
         public Func<double, double, double, double, double> t2001 = (x, y, a, b) => (1 / (Math.Pow(x + y, a) + b));
         public Func<double, double, double, double, double> unionjack = (x, y, a, b) => (x * Math.Cos(a * y) + y * Math.Sin(b * x));
         public Func<double, double, double, double, double> jelly = (x, y, a, b) => (x * Math.Cos(a*y * Math.PI / 180)) + (y * Math.Sin(b*x * Math.PI / 180) + (x + y) * Math.Sin((x + y) * Math.PI / 180));
+        public Func<double, double, double, double, double> brandwood = (x, y, a, b) => (x * y) * Math.Log(Math.Pow(x + y, 8));
 
     
         public Functions()
@@ -37,6 +38,7 @@ namespace MatrixMaker
             _funcmap.Add("t2001", t2001);
             _funcmap.Add("uj", unionjack);
             _funcmap.Add("jelly", jelly);
+            _funcmap.Add("brandwood", brandwood);
         }
 
         public Func<double, double, double, double, double> GetFunction(string name)
